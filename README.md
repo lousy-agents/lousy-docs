@@ -1,0 +1,2 @@
+# lousy-docs
+lousy-* documentation
