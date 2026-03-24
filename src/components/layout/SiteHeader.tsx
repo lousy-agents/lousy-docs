@@ -54,7 +54,7 @@ export function SiteHeader() {
                 <span style={logoStyle}>lousy-docs</span>
                 <span style={tagStyle}>beta</span>
             </Flex>
-            <Flex as="nav" align="center" gap={32} component="nav">
+            <Flex align="center" gap={32} component="nav">
                 <a href="/" style={navLinkStyle}>
                     <Text style={{ ...navLinkStyle, color: "inherit" }}>
                         Home
