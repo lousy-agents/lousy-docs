@@ -243,7 +243,7 @@ describe('fetchUserById', () => {
 - Search npm for latest stable version before adding
 - Run `npm audit` after any dependency change
 - Ensure `package-lock.json` is updated correctly
-- Use Dependabot to keep dependencies current
+- Use Renovate (configured via `renovate.json`) to keep dependencies current
 
 ## GitHub Actions
 
