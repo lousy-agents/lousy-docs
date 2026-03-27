@@ -56,7 +56,7 @@ export function DeveloperPatch() {
             <div style={patchStyle}>
                 <img
                     alt="Lousy Agent icon"
-                    src="/mascot.png"
+                    src="/mascot.jpg"
                     style={mascotStyle}
                 />
                 <div>

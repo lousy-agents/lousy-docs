@@ -23,5 +23,13 @@ describe("DeveloperPatch", () => {
 
             expect(screen.getByText(/--break-loop/i)).toBeInTheDocument();
         });
+
+        it("should render the mascot image with the jpg source", () => {
+            render(<DeveloperPatch />);
+
+            expect(
+                screen.getByRole("img", { name: /lousy agent/i }),
+            ).toHaveAttribute("src", "/mascot.jpg");
+        });
     });
 });

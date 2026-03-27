@@ -48,3 +48,14 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--color-primary-container);
 }
+
+/* Terminal cursor blink animation */
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+}
