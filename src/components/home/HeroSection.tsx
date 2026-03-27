@@ -3,222 +3,384 @@ import { Button, Flex, Typography } from "antd";
 const { Title, Paragraph, Text } = Typography;
 
 const sectionStyle: React.CSSProperties = {
-    minHeight: "calc(100vh - 64px)",
-    backgroundColor: "#121410",
-    padding: "5rem 2rem 4rem",
-    display: "flex",
-    alignItems: "center",
     position: "relative",
+    minHeight: "calc(100vh - 64px)",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "5rem 1.5rem",
     overflow: "hidden",
+    backgroundColor: "#121410",
 };
 
-const gridNoiseStyle: React.CSSProperties = {
+const gridOverlayStyle: React.CSSProperties = {
     position: "absolute",
     inset: 0,
-    backgroundImage: `
-        radial-gradient(circle at 15% 50%, rgba(189, 206, 137, 0.04) 0%, transparent 50%),
-        radial-gradient(circle at 85% 20%, rgba(238, 189, 142, 0.03) 0%, transparent 40%)
-    `,
+    opacity: 0.2,
     pointerEvents: "none",
+    display: "grid",
+    gridTemplateColumns: "repeat(12, 1fr)",
+};
+
+const gridLineStyle: React.CSSProperties = {
+    borderRight: "1px solid rgba(70, 72, 62, 0.1)",
+    height: "100%",
 };
 
 const containerStyle: React.CSSProperties = {
-    maxWidth: "900px",
+    maxWidth: "72rem",
     width: "100%",
     margin: "0 auto",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "3rem",
     position: "relative",
     zIndex: 1,
 };
 
-// Intentional asymmetry per DESIGN.md
-const offsetStyle: React.CSSProperties = {
-    paddingLeft: "1rem",
-    borderLeft: "2px dashed rgba(189, 206, 137, 0.2)",
-    marginBottom: "0.75rem",
+const contentRowStyle: React.CSSProperties = {
+    display: "flex",
+    flexWrap: "wrap",
+    alignItems: "center",
+    gap: "3rem",
+    width: "100%",
 };
 
-const eyebrowStyle: React.CSSProperties = {
-    fontFamily: "'Courier New', Courier, monospace",
+const textColumnStyle: React.CSSProperties = {
+    flex: "1 1 400px",
+    textAlign: "left",
+};
+
+const badgeStyle: React.CSSProperties = {
+    display: "inline-block",
+    padding: "4px 12px",
+    backgroundColor: "#5f6e34",
+    color: "#def0a8",
+    fontFamily: "'Space Grotesk', sans-serif",
     fontSize: "0.75rem",
-    color: "#eebd8e",
-    letterSpacing: "0.15em",
+    fontWeight: 500,
+    letterSpacing: "0.1em",
     textTransform: "uppercase" as const,
-    display: "block",
-    marginBottom: "0.5rem",
+    marginBottom: "1.5rem",
+    borderRadius: "2px",
 };
 
 const headlineStyle: React.CSSProperties = {
     fontFamily: "'Space Grotesk', sans-serif",
-    fontWeight: 700,
+    fontWeight: 900,
     fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
-    lineHeight: 1.05,
+    lineHeight: 1,
     letterSpacing: "-0.03em",
-    color: "#e6ead8",
+    color: "#e3e3dc",
     margin: 0,
 };
 
-const accentStyle: React.CSSProperties = {
+const glowStyle: React.CSSProperties = {
     color: "#bdce89",
+    textShadow: "0 0 8px rgba(189, 206, 137, 0.6)",
 };
 
 const descStyle: React.CSSProperties = {
     fontFamily: "'Manrope', sans-serif",
     fontSize: "1.125rem",
     lineHeight: 1.7,
-    color: "#e6ead8",
-    opacity: 0.7,
-    maxWidth: "560px",
+    color: "#c7c7ba",
+    maxWidth: "28rem",
     marginTop: "1.5rem",
 };
 
 const primaryButtonStyle: React.CSSProperties = {
-    background: "linear-gradient(135deg, #bdce89 0%, #5f6e34 100%)",
+    background: "linear-gradient(to bottom, #bdce89, #5f6e34)",
     border: "none",
-    color: "#121410",
-    fontFamily: "'Manrope', sans-serif",
-    fontWeight: 600,
+    color: "#283501",
+    fontFamily: "'Space Grotesk', sans-serif",
+    fontWeight: 700,
     borderRadius: "6px",
-    height: "44px",
-    padding: "0 1.75rem",
-    fontSize: "0.9375rem",
+    height: "48px",
+    padding: "0 2rem",
+    fontSize: "0.875rem",
+    letterSpacing: "0.05em",
+    textTransform: "uppercase" as const,
 };
 
 const secondaryButtonStyle: React.CSSProperties = {
     background: "transparent",
-    border: "1px solid rgba(189, 206, 137, 0.2)",
+    border: "1px solid rgba(70, 72, 62, 0.3)",
     color: "#bdce89",
-    fontFamily: "'Manrope', sans-serif",
-    fontWeight: 500,
-    borderRadius: "6px",
-    height: "44px",
-    padding: "0 1.75rem",
-    fontSize: "0.9375rem",
-};
-
-const statsStyle: React.CSSProperties = {
-    marginTop: "4rem",
-    paddingTop: "2rem",
-    borderTop: "none",
-    borderImage: "none",
-};
-
-const statLabelStyle: React.CSSProperties = {
-    fontFamily: "'Courier New', Courier, monospace",
-    fontSize: "0.7rem",
-    color: "#e6ead8",
-    opacity: 0.4,
-    textTransform: "uppercase" as const,
-    letterSpacing: "0.1em",
-    display: "block",
-    marginBottom: "4px",
-};
-
-const statValueStyle: React.CSSProperties = {
     fontFamily: "'Space Grotesk', sans-serif",
-    fontSize: "1.5rem",
     fontWeight: 700,
-    color: "#bdce89",
-    display: "block",
+    borderRadius: "6px",
+    height: "48px",
+    padding: "0 2rem",
+    fontSize: "0.875rem",
+    letterSpacing: "0.05em",
+    textTransform: "uppercase" as const,
 };
 
-interface StatItem {
-    label: string;
-    value: string;
-}
-
-const stats: StatItem[] = [
-    { label: "open source", value: "100%" },
-    { label: "framework", value: "astro" },
-    { label: "status", value: "beta" },
-];
-
-const patchStyle: React.CSSProperties = {
-    backgroundColor: "rgba(238, 189, 142, 0.06)",
-    borderLeft: "2px dashed rgba(238, 189, 142, 0.35)",
-    padding: "1rem 1.25rem",
-    borderRadius: "0 6px 6px 0",
-    marginTop: "2rem",
-    maxWidth: "560px",
+const terminalColumnStyle: React.CSSProperties = {
+    flex: "1 1 400px",
+    maxWidth: "36rem",
+    position: "relative",
 };
 
-const patchLabelStyle: React.CSSProperties = {
-    fontFamily: "'Courier New', Courier, monospace",
-    fontSize: "0.7rem",
-    color: "#eebd8e",
+const terminalWrapperStyle: React.CSSProperties = {
+    position: "relative",
+    padding: "4px",
+    backgroundColor: "#292b26",
+    borderRadius: "8px",
+    transform: "rotate(2deg)",
+    transition: "transform 0.5s",
+};
+
+const terminalBodyStyle: React.CSSProperties = {
+    backgroundColor: "#0d0f0b",
+    borderRadius: "6px",
+    overflow: "hidden",
+    position: "relative",
+};
+
+const terminalHeaderStyle: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    padding: "8px 16px",
+    backgroundColor: "#1a1c18",
+};
+
+const dotStyle = (color: string): React.CSSProperties => ({
+    width: "12px",
+    height: "12px",
+    borderRadius: "50%",
+    backgroundColor: color,
+});
+
+const terminalTitleStyle: React.CSSProperties = {
+    marginLeft: "16px",
+    fontFamily: "'Space Grotesk', sans-serif",
+    fontSize: "10px",
+    color: "rgba(199, 199, 186, 0.5)",
     letterSpacing: "0.1em",
     textTransform: "uppercase" as const,
-    display: "block",
-    marginBottom: "0.375rem",
 };
 
-const ECOSYSTEM_LABEL = "// lousy-agents ecosystem";
-const DEV_NOTE_LABEL = "// dev note";
+const terminalContentStyle: React.CSSProperties = {
+    padding: "1.5rem",
+    fontFamily: "'Courier New', Courier, monospace",
+    fontSize: "0.875rem",
+    lineHeight: 1.7,
+};
+
+const crtOverlayStyle: React.CSSProperties = {
+    position: "absolute",
+    inset: 0,
+    background: `
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03))
+    `,
+    backgroundSize: "100% 4px, 3px 100%",
+    pointerEvents: "none",
+};
+
+const mascotWrapperStyle: React.CSSProperties = {
+    position: "absolute",
+    top: "-3rem",
+    right: "-2rem",
+    width: "10rem",
+    height: "10rem",
+};
+
+const mascotGlowStyle: React.CSSProperties = {
+    position: "absolute",
+    inset: 0,
+    backgroundColor: "rgba(189, 206, 137, 0.2)",
+    filter: "blur(32px)",
+};
+
+const mascotImgStyle: React.CSSProperties = {
+    width: "100%",
+    height: "100%",
+    objectFit: "contain",
+    position: "relative",
+    zIndex: 1,
+    filter: "grayscale(1) contrast(1.25) sepia(1)",
+    transition: "filter 0.7s",
+};
 
 export function HeroSection() {
     return (
-        <section style={sectionStyle}>
-            <div style={gridNoiseStyle} />
+        <section style={sectionStyle} aria-label="Hero">
+            <div style={gridOverlayStyle} aria-hidden="true">
+                {["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"].map(
+                    (id) => (
+                        <div key={id} style={gridLineStyle} />
+                    ),
+                )}
+            </div>
+
             <div style={containerStyle}>
-                <div style={offsetStyle}>
-                    <Text style={eyebrowStyle}>{ECOSYSTEM_LABEL}</Text>
-                </div>
+                <div style={contentRowStyle}>
+                    <div style={textColumnStyle}>
+                        <Text style={badgeStyle}>
+                            SYSTEM_STATUS: OPERATIONAL
+                        </Text>
 
-                <Title level={1} style={headlineStyle}>
-                    Docs that <span style={accentStyle}>don&apos;t</span>
-                    <br />
-                    pull punches.
-                </Title>
+                        <Title level={1} style={headlineStyle}>
+                            STOP GUESSING.
+                            <br />
+                            <span style={glowStyle}>START GUIDING.</span>
+                        </Title>
 
-                <Paragraph style={descStyle}>
-                    Technical documentation for the Lousy Agents ecosystem.
-                    Built for developers who read source code first and docs
-                    second—when they absolutely have to.
-                </Paragraph>
+                        <Paragraph style={descStyle}>
+                            The first agentic framework designed for
+                            high-friction environments. Built on the Patchwork
+                            Protocol for deterministic outcomes.
+                        </Paragraph>
 
-                <div style={patchStyle}>
-                    <Text style={patchLabelStyle}>{DEV_NOTE_LABEL}</Text>
-                    <Text
-                        style={{
-                            fontFamily: "'Manrope', sans-serif",
-                            fontSize: "0.875rem",
-                            color: "#e6ead8",
-                            opacity: 0.75,
-                            lineHeight: 1.6,
-                        }}
-                    >
-                        This site is under active construction. Expect rough
-                        edges, missing pages, and occasional correctness.
-                    </Text>
-                </div>
+                        <Flex
+                            gap={16}
+                            wrap="wrap"
+                            style={{ marginTop: "2rem" }}
+                        >
+                            <Button
+                                style={primaryButtonStyle}
+                                size="large"
+                                href="/docs"
+                            >
+                                INITIALIZE_CLI
+                            </Button>
+                            <Button
+                                style={secondaryButtonStyle}
+                                size="large"
+                                href="/about"
+                            >
+                                READ_MANIFESTO
+                            </Button>
+                        </Flex>
+                    </div>
 
-                <Flex gap={12} style={{ marginTop: "2.5rem" }} wrap="wrap">
-                    <Button
-                        style={primaryButtonStyle}
-                        size="large"
-                        href="/docs"
-                    >
-                        Get Started
-                    </Button>
-                    <Button
-                        style={secondaryButtonStyle}
-                        size="large"
-                        href="https://github.com/lousy-agents/lousy-docs"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        View on GitHub
-                    </Button>
-                </Flex>
-
-                <div style={statsStyle}>
-                    <Flex gap={48} wrap="wrap">
-                        {stats.map((stat) => (
-                            <div key={stat.label}>
-                                <Text style={statLabelStyle}>{stat.label}</Text>
-                                <Text style={statValueStyle}>{stat.value}</Text>
+                    <div style={terminalColumnStyle}>
+                        <div style={terminalWrapperStyle}>
+                            <div style={terminalBodyStyle}>
+                                <div style={terminalHeaderStyle}>
+                                    <div
+                                        style={dotStyle(
+                                            "rgba(255, 180, 171, 0.4)",
+                                        )}
+                                    />
+                                    <div
+                                        style={dotStyle(
+                                            "rgba(238, 189, 142, 0.4)",
+                                        )}
+                                    />
+                                    <div
+                                        style={dotStyle(
+                                            "rgba(189, 206, 137, 0.4)",
+                                        )}
+                                    />
+                                    <span style={terminalTitleStyle}>
+                                        shell — agent_v2.0.1
+                                    </span>
+                                </div>
+                                <div style={terminalContentStyle}>
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            gap: "12px",
+                                            marginBottom: "8px",
+                                        }}
+                                    >
+                                        <span style={{ color: "#bdce89" }}>
+                                            $
+                                        </span>
+                                        <span style={{ color: "#e3e3dc" }}>
+                                            lousy deploy --target production
+                                        </span>
+                                    </div>
+                                    <div
+                                        style={{
+                                            color: "rgba(189, 206, 137, 0.7)",
+                                            marginBottom: "8px",
+                                        }}
+                                    >
+                                        [INFO] Handshaking with Patchwork
+                                        Protocol...
+                                    </div>
+                                    <div
+                                        style={{
+                                            color: "rgba(238, 189, 142, 0.8)",
+                                            marginBottom: "8px",
+                                        }}
+                                    >
+                                        [WARN] Legacy agent detected. Upgrading
+                                        to V.2...
+                                    </div>
+                                    <div
+                                        style={{
+                                            color: "#bdce89",
+                                            display: "flex",
+                                            gap: "4px",
+                                        }}
+                                    >
+                                        <span>[OK]</span>
+                                        <span
+                                            style={{
+                                                backgroundColor:
+                                                    "rgba(189, 206, 137, 0.2)",
+                                                padding: "0 4px",
+                                            }}
+                                        >
+                                            Deploying autonomous shell...
+                                        </span>
+                                    </div>
+                                    <div
+                                        style={{
+                                            marginTop: "2rem",
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "flex-end",
+                                        }}
+                                    >
+                                        <span
+                                            style={{
+                                                fontSize: "10px",
+                                                color: "#c7c7ba",
+                                            }}
+                                        >
+                                            NODE_014 ACTIVE
+                                        </span>
+                                        <div
+                                            style={{
+                                                width: "8px",
+                                                height: "20px",
+                                                backgroundColor: "#bdce89",
+                                                animation:
+                                                    "pulse 1s ease-in-out infinite",
+                                            }}
+                                            aria-hidden="true"
+                                        />
+                                    </div>
+                                </div>
+                                <div
+                                    style={crtOverlayStyle}
+                                    aria-hidden="true"
+                                />
                             </div>
-                        ))}
-                    </Flex>
+
+                            <div style={mascotWrapperStyle}>
+                                <div
+                                    style={mascotGlowStyle}
+                                    aria-hidden="true"
+                                />
+                                <img
+                                    alt="Lousy Agents mascot"
+                                    src="/mascot.jpg"
+                                    style={mascotImgStyle}
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

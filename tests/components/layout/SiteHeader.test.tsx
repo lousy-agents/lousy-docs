@@ -10,26 +10,42 @@ describe("SiteHeader", () => {
             expect(screen.getByRole("navigation")).toBeInTheDocument();
         });
 
-        it("should render Home navigation link", () => {
+        it("should render the site branding", () => {
+            render(<SiteHeader />);
+
+            expect(screen.getByText("LOUSY_AGENTS")).toBeInTheDocument();
+        });
+
+        it("should render the Protocol navigation link", () => {
             render(<SiteHeader />);
 
             expect(
-                screen.getByRole("link", { name: /home/i }),
+                screen.getByRole("link", { name: /protocol/i }),
             ).toBeInTheDocument();
         });
 
-        it("should render Docs navigation link", () => {
+        it("should render the Terminal navigation link", () => {
+            render(<SiteHeader />);
+
+            expect(
+                screen.getByRole("link", { name: /terminal/i }),
+            ).toBeInTheDocument();
+        });
+
+        it("should render the Patches navigation link", () => {
+            render(<SiteHeader />);
+
+            expect(
+                screen.getByRole("link", { name: /patches/i }),
+            ).toBeInTheDocument();
+        });
+
+        it("should render the Docs navigation link", () => {
             render(<SiteHeader />);
 
             expect(
                 screen.getByRole("link", { name: /docs/i }),
             ).toBeInTheDocument();
-        });
-
-        it("should render the site logo", () => {
-            render(<SiteHeader />);
-
-            expect(screen.getByText("lousy-docs")).toBeInTheDocument();
         });
     });
 });

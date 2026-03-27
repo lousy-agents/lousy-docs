@@ -1,52 +1,67 @@
-import { Flex, Typography } from "antd";
-
-const { Text } = Typography;
+import { Flex } from "antd";
 
 const footerStyle: React.CSSProperties = {
-    backgroundColor: "#1a1c18",
+    backgroundColor: "#121410",
     padding: "2rem",
     marginTop: "auto",
-    borderTop: "none",
 };
 
-const monoStyle: React.CSSProperties = {
-    fontFamily: "'Courier New', Courier, monospace",
+const brandStyle: React.CSSProperties = {
+    fontFamily: "monospace",
+    fontWeight: 700,
     fontSize: "0.75rem",
-    color: "#e6ead8",
-    opacity: 0.4,
+    color: "#eebd8e",
+    letterSpacing: "-0.02em",
+    textTransform: "uppercase" as const,
 };
 
 const linkStyle: React.CSSProperties = {
-    fontFamily: "'Manrope', sans-serif",
+    fontFamily: "monospace",
     fontSize: "0.75rem",
-    color: "#bdce89",
-    opacity: 0.6,
+    color: "rgba(238, 189, 142, 0.5)",
+    letterSpacing: "-0.02em",
+    textTransform: "uppercase" as const,
     textDecoration: "none",
-    cursor: "pointer",
+    transition: "color 0.15s",
+};
+
+const copyrightStyle: React.CSSProperties = {
+    fontFamily: "monospace",
+    fontSize: "10px",
+    color: "rgba(238, 189, 142, 0.6)",
+    textTransform: "uppercase" as const,
 };
 
 export function SiteFooter() {
-    const year = new Date().getFullYear();
-
     return (
         <footer style={footerStyle}>
             <Flex justify="space-between" align="center" wrap="wrap" gap={16}>
-                <Text style={monoStyle}>
-                    {`// lousy-docs ${year} — built with astro + antd`}
-                </Text>
-                <Flex gap={24}>
+                <span style={brandStyle}>LOUSY_AGENTS</span>
+                <Flex gap={24} wrap="wrap">
+                    <a href="/status" style={linkStyle}>
+                        SYSTEM_STATUS
+                    </a>
+                    <a href="/security" style={linkStyle}>
+                        SECURITY_LOG
+                    </a>
                     <a
-                        href="https://github.com/lousy-agents"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={linkStyle}
+                        href="/feed"
+                        style={{
+                            ...linkStyle,
+                            color: "#eebd8e",
+                            textDecoration: "underline",
+                            textUnderlineOffset: "4px",
+                        }}
                     >
-                        GitHub
+                        ENCRYPTED_FEED
                     </a>
                     <a href="/docs" style={linkStyle}>
-                        Docs
+                        MANUAL
                     </a>
                 </Flex>
+                <span style={copyrightStyle}>
+                    &copy;1979 PATCHWORK PROTOCOL V.2.0.1
+                </span>
             </Flex>
         </footer>
     );
