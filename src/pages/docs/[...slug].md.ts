@@ -9,11 +9,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
     }));
 };
 
-export const GET: APIRoute = async ({ props }) => {
+export const GET: APIRoute = async ({ props, params }) => {
     const body = props.body;
     if (typeof body !== "string") {
         throw new Error(
-            `Missing markdown body for doc endpoint. Check that the content collection entry has content.`,
+            `Missing markdown body for doc "${params.slug}". Check that the content collection entry has content.`,
         );
     }
     return new Response(body, {
