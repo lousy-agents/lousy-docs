@@ -1,10 +1,11 @@
 import { Button, Flex, Typography } from "antd";
+import { HEADER_HEIGHT_PX } from "@/lib/layout-constants";
 
 const { Title, Paragraph, Text } = Typography;
 
 const sectionStyle: React.CSSProperties = {
     position: "relative",
-    minHeight: "calc(100vh - 64px)",
+    minHeight: `calc(100vh - ${HEADER_HEIGHT_PX}px)`,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",

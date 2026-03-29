@@ -11,6 +11,13 @@ cleanup() {
 }
 trap cleanup EXIT
 
+on_network_error() {
+    echo "ERROR: Failed to fetch docs from the lousy-agents repository." >&2
+    echo "       Check your network connection or GitHub availability." >&2
+    echo "       For reproducible builds, set DOCS_REF=<tag|branch|commit>." >&2
+}
+trap on_network_error ERR
+
 echo "Fetching docs from lousy-agents repository..."
 
 if [ -n "$DOCS_REF" ]; then

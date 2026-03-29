@@ -79,7 +79,7 @@ export function DocsSidebar({ docs, currentSlug }: DocsSidebarProps) {
     return (
         <aside style={sidebarStyle}>
             <nav aria-label="Documentation">
-                <div style={headingStyle}>Documentation</div>
+                <h2 style={headingStyle}>Documentation</h2>
                 <Flex vertical gap={2}>
                     {sortedDocs.map((doc) => {
                         const label =
