@@ -1,5 +1,6 @@
 import { Flex } from "antd";
 import type { ReactNode } from "react";
+import { DocsContentToolbar } from "@/components/docs/DocsContentToolbar";
 import { DocsSidebar } from "@/components/docs/DocsSidebar";
 import { DocsTableOfContents } from "@/components/docs/DocsTableOfContents";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -52,7 +53,10 @@ export function DocsLayoutShell({
                     }}
                 >
                     <DocsSidebar docs={docs} currentSlug={currentSlug} />
-                    <main style={contentStyle}>{children}</main>
+                    <main style={contentStyle}>
+                        <DocsContentToolbar currentSlug={currentSlug} />
+                        {children}
+                    </main>
                     <DocsTableOfContents headings={headings} />
                 </Flex>
                 <SiteFooter />
