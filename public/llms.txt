@@ -3,8 +3,8 @@
 > Developer tooling for coding agent governance, observability, and least-privilege infrastructure.
 
 ## Projects
-- [agent-shell](/projects/agent-shell): Rust-based shell shim for agent observability and governance
-- [lousy-iam](/projects/lousy-iam): Least-privilege IAM policy generator
+- agent-shell: Rust-based shell shim for agent observability and governance
+- lousy-iam: Least-privilege IAM policy generator
 
 ## Documentation
 - [Overview](/docs/README)

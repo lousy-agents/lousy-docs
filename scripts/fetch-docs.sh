@@ -2,6 +2,7 @@
 set -euo pipefail
 
 REPO_URL="https://github.com/zpratt/lousy-agents.git"
+DOCS_REF="${DOCS_REF:-}"
 DOCS_DIR="src/content/docs"
 TEMP_DIR=$(mktemp -d)
 
@@ -12,7 +13,11 @@ trap cleanup EXIT
 
 echo "Fetching docs from lousy-agents repository..."
 
-git clone --depth 1 --quiet "$REPO_URL" "$TEMP_DIR/lousy-agents"
+if [ -n "$DOCS_REF" ]; then
+    git clone --depth 1 --branch "$DOCS_REF" --quiet "$REPO_URL" "$TEMP_DIR/lousy-agents"
+else
+    git clone --depth 1 --quiet "$REPO_URL" "$TEMP_DIR/lousy-agents"
+fi
 
 rm -rf "$DOCS_DIR"
 mkdir -p "$DOCS_DIR"
