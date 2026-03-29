@@ -59,3 +59,155 @@ body {
         opacity: 0;
     }
 }
+
+/* Docs content styles */
+.docs-content {
+    color: var(--color-on-background);
+    font-family: var(--font-body);
+    line-height: 1.7;
+}
+
+.docs-content h1 {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+    margin-top: 0;
+    letter-spacing: -0.02em;
+}
+
+.docs-content h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-on-background);
+    margin-top: 2.5rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(70, 72, 62, 0.25);
+}
+
+.docs-content h3 {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-on-background);
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.docs-content h4 {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    color: rgba(230, 234, 216, 0.85);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.docs-content p {
+    margin-bottom: 1rem;
+}
+
+.docs-content a {
+    color: var(--color-primary);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(189, 206, 137, 0.3);
+    transition: border-color 0.15s;
+}
+
+.docs-content a:hover {
+    border-bottom-color: var(--color-primary);
+}
+
+.docs-content ul,
+.docs-content ol {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+}
+
+.docs-content li {
+    margin-bottom: 0.375rem;
+}
+
+.docs-content code {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 0.875em;
+    background-color: var(--color-surface-container);
+    color: var(--color-secondary);
+    padding: 0.125rem 0.375rem;
+    border-radius: 3px;
+}
+
+.docs-content pre {
+    background-color: var(--color-surface-container-low);
+    border: 1px solid rgba(70, 72, 62, 0.2);
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    margin-bottom: 1.25rem;
+    margin-top: 0.5rem;
+}
+
+.docs-content pre code {
+    background: none;
+    padding: 0;
+    font-size: 0.8125rem;
+    color: var(--color-on-background);
+    line-height: 1.6;
+}
+
+.docs-content blockquote {
+    border-left: 3px solid var(--color-primary-container);
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+    background-color: rgba(95, 110, 52, 0.1);
+    border-radius: 0 4px 4px 0;
+}
+
+.docs-content blockquote p {
+    margin-bottom: 0;
+    color: rgba(230, 234, 216, 0.8);
+}
+
+.docs-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.25rem;
+    font-size: 0.875rem;
+}
+
+.docs-content th {
+    text-align: left;
+    padding: 0.625rem 0.75rem;
+    background-color: var(--color-surface-container-low);
+    color: var(--color-primary);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid rgba(70, 72, 62, 0.3);
+}
+
+.docs-content td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid rgba(70, 72, 62, 0.15);
+}
+
+.docs-content hr {
+    border: none;
+    border-top: 1px solid rgba(70, 72, 62, 0.25);
+    margin: 2rem 0;
+}
+
+.docs-content strong {
+    font-weight: 600;
+    color: var(--color-on-background);
+}
+
+.docs-content img {
+    max-width: 100%;
+    border-radius: 6px;
+}

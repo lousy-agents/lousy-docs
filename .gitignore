@@ -141,3 +141,4 @@ vite.config.ts.timestamp-*
 tmp
 .astro/
 .agent-shell/
+src/content/docs/

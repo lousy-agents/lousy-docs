@@ -1,8 +1,9 @@
 import { Flex } from "antd";
+import { HEADER_HEIGHT_PX } from "@/lib/layout-constants";
 
 const headerStyle: React.CSSProperties = {
     padding: "0 1.5rem",
-    height: "64px",
+    height: `${HEADER_HEIGHT_PX}px`,
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",

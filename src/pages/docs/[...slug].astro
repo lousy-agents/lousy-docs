@@ -1,0 +1,32 @@
+---
+import { getCollection, render } from "astro:content";
+// biome-ignore lint/correctness/noUnusedImports: used in Astro HTML template
+import { DocsLayoutShell } from "../../components/docs/DocsLayoutShell";
+// biome-ignore lint/correctness/noUnusedImports: used in Astro HTML template
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+    const docs = await getCollection("docs");
+    const docEntries = docs.map((d) => ({
+        id: d.id,
+        title: d.data.title,
+    }));
+    return docs.map((doc) => ({
+        params: { slug: doc.id },
+        props: { doc, docEntries },
+    }));
+}
+
+// biome-ignore lint/correctness/noUnusedVariables: used in Astro HTML template
+const { doc, docEntries } = Astro.props;
+// biome-ignore lint/correctness/noUnusedVariables: used in Astro HTML template
+const { Content, headings } = await render(doc);
+---
+
+<BaseLayout title={`${doc.data.title} — Lousy Agents Docs`} description={doc.data.description}>
+    <DocsLayoutShell client:only="react" docs={docEntries} currentSlug={doc.id} headings={headings}>
+        <div class="docs-content">
+            <Content />
+        </div>
+    </DocsLayoutShell>
+</BaseLayout>

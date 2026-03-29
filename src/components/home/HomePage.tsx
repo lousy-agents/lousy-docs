@@ -6,6 +6,7 @@ import { SpecDrivenSection } from "@/components/home/SpecDrivenSection";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { AntDProvider } from "@/components/providers/AntDProvider";
+import { HEADER_HEIGHT_PX } from "@/lib/layout-constants";
 
 export function HomePage() {
     return (
@@ -15,7 +16,7 @@ export function HomePage() {
                 style={{ minHeight: "100vh", backgroundColor: "#121410" }}
             >
                 <SiteHeader />
-                <main style={{ flex: 1, paddingTop: "64px" }}>
+                <main style={{ flex: 1, paddingTop: `${HEADER_HEIGHT_PX}px` }}>
                     <HeroSection />
                     <CoreModulesSection />
                     <SpecDrivenSection />
