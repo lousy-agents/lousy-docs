@@ -29,6 +29,8 @@ else
     git clone --depth 1 --quiet "$REPO_URL" "$TEMP_DIR/lousy-agents"
 fi
 
+# Git operations succeeded; remove network-specific ERR trap before file processing.
+# set -euo pipefail still exits the script on any subsequent failure.
 trap - ERR
 
 rm -rf "$DOCS_DIR"
