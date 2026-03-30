@@ -5,14 +5,14 @@
     "type": "module",
     "scripts": {
         "prebuild": "bash scripts/fetch-docs.sh",
-        "dev": "bash scripts/fetch-docs.sh && astro dev --host 0.0.0.0",
         "build": "npm run prebuild && astro build",
-        "preview": "astro preview",
-        "test": "vitest run",
+        "dev": "bash scripts/fetch-docs.sh && astro dev --host 0.0.0.0",
         "lint": "biome check .",
         "lint:fix": "biome check --write .",
         "lint:workflows": "actionlint",
-        "lint:yaml": "yamllint ."
+        "lint:yaml": "yamllint .",
+        "preview": "astro preview",
+        "test": "vitest run"
     },
     "dependencies": {
         "@astrojs/react": "5.0.2",
@@ -26,21 +26,21 @@
     },
     "devDependencies": {
         "@biomejs/biome": "2.4.9",
-        "@types/chance": "1.1.7",
-        "chance": "1.1.13",
-        "msw": "2.12.14",
         "@lousy-agents/mcp": "5.7.1",
         "@modelcontextprotocol/server-sequential-thinking": "2025.12.18",
         "@testing-library/jest-dom": "6.9.1",
         "@testing-library/react": "16.3.2",
         "@testing-library/user-event": "14.6.1",
+        "@types/chance": "1.1.7",
         "@types/react": "19.2.14",
         "@types/react-dom": "19.2.3",
         "@upstash/context7-mcp": "2.1.6",
         "@vitejs/plugin-react": "6.0.1",
         "@vitest/ui": "4.1.2",
+        "chance": "1.1.13",
         "happy-dom": "20.8.9",
         "jsdom": "29.0.1",
+        "msw": "2.12.14",
         "typescript": "6.0.2",
         "vitest": "4.1.2",
         "whatwg-fetch": "3.6.20"
