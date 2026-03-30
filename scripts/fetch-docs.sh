@@ -15,7 +15,7 @@ trap cleanup EXIT
 on_network_error() {
     echo "ERROR: Failed to fetch docs from the lousy-agents repository." >&2
     echo "       Check your network connection or GitHub availability." >&2
-    echo "       For reproducible builds, set DOCS_REF=<tag|branch|commit>." >&2
+    echo "       For reproducible builds, set DOCS_REF=<tag|branch>." >&2
 }
 trap on_network_error ERR
 
@@ -23,7 +23,7 @@ echo "Fetching docs from lousy-agents repository..."
 
 if [ -n "$DOCS_REF" ]; then
     git clone --depth 1 --quiet "$REPO_URL" "$TEMP_DIR/lousy-agents"
-    git -C "$TEMP_DIR/lousy-agents" fetch --depth 1 origin "$DOCS_REF"
+    git -C "$TEMP_DIR/lousy-agents" fetch --depth 1 origin -- "$DOCS_REF"
     git -C "$TEMP_DIR/lousy-agents" checkout --quiet FETCH_HEAD
 else
     git clone --depth 1 --quiet "$REPO_URL" "$TEMP_DIR/lousy-agents"
