@@ -92,5 +92,81 @@ describe("DocsContentToolbar", () => {
                 screen.getByRole("button", { name: /copied/i }),
             ).toBeInTheDocument();
         });
+
+        it("should not transition to copied state when fetch fails", async () => {
+            const slug = chance.word();
+            const user = userEvent.setup();
+
+            const fetchMarkdown = vi
+                .fn()
+                .mockRejectedValue(new Error("Network error"));
+            const copyToClipboard = vi.fn();
+
+            render(
+                <DocsContentToolbar
+                    currentSlug={slug}
+                    fetchMarkdown={fetchMarkdown}
+                    copyToClipboard={copyToClipboard}
+                />,
+            );
+
+            await user.click(
+                screen.getByRole("button", { name: /copy markdown/i }),
+            );
+
+            expect(
+                screen.getByRole("button", { name: /copy markdown/i }),
+            ).toBeInTheDocument();
+        });
+
+        it("should not call copyToClipboard when fetch fails", async () => {
+            const slug = chance.word();
+            const user = userEvent.setup();
+
+            const fetchMarkdown = vi
+                .fn()
+                .mockRejectedValue(new Error("Network error"));
+            const copyToClipboard = vi.fn();
+
+            render(
+                <DocsContentToolbar
+                    currentSlug={slug}
+                    fetchMarkdown={fetchMarkdown}
+                    copyToClipboard={copyToClipboard}
+                />,
+            );
+
+            await user.click(
+                screen.getByRole("button", { name: /copy markdown/i }),
+            );
+
+            expect(copyToClipboard).not.toHaveBeenCalled();
+        });
+
+        it("should not show copied state when clipboard write fails", async () => {
+            const slug = chance.word();
+            const user = userEvent.setup();
+
+            const fetchMarkdown = vi.fn().mockResolvedValue(chance.paragraph());
+            const copyToClipboard = vi
+                .fn()
+                .mockRejectedValue(new Error("Clipboard error"));
+
+            render(
+                <DocsContentToolbar
+                    currentSlug={slug}
+                    fetchMarkdown={fetchMarkdown}
+                    copyToClipboard={copyToClipboard}
+                />,
+            );
+
+            await user.click(
+                screen.getByRole("button", { name: /copy markdown/i }),
+            );
+
+            expect(
+                screen.getByRole("button", { name: /copy markdown/i }),
+            ).toBeInTheDocument();
+        });
     });
 });
