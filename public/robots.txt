@@ -10,4 +10,7 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
+User-agent: Google-Extended
+Allow: /
+
 Sitemap: https://lousy-docs.lousy-agents.workers.dev/sitemap-index.xml

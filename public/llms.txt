@@ -2,18 +2,16 @@
 
 > Developer tooling for coding agent governance, observability, and least-privilege infrastructure.
 
+- [Full documentation (single file)](/llms-full.txt)
+
 ## Projects
 - agent-shell: Rust-based shell shim for agent observability and governance
 - lousy-iam: Least-privilege IAM policy generator
 
 ## Documentation
-- [Overview](/docs/README)
-- [init Command](/docs/init)
-- [new Command](/docs/new)
-- [lint Command](/docs/lint)
-- [copilot-setup Command](/docs/copilot-setup)
-- [MCP Server](/docs/mcp-server)
-
-## Raw Markdown (for AI agents)
-All documentation is available as raw markdown at the same path with a .md extension.
-Example: /docs/init.md
+- [Overview](/docs/readme.md)
+- [init Command](/docs/init.md)
+- [new Command](/docs/new.md)
+- [lint Command](/docs/lint.md)
+- [copilot-setup Command](/docs/copilot-setup.md)
+- [MCP Server](/docs/mcp-server.md)
