@@ -15,7 +15,7 @@ export const GET: APIRoute = async () => {
 
     const docsById = new Map(allDocs.map((doc) => [doc.id, doc] as const));
 
-    const sorted = DOC_ORDER.map((slug) => {
+    const orderedDocs = DOC_ORDER.map((slug) => {
         const doc = docsById.get(slug);
 
         if (!doc) {
@@ -26,6 +26,13 @@ export const GET: APIRoute = async () => {
 
         return doc;
     });
+
+    const orderedIds = new Set(DOC_ORDER);
+    const remainingDocs = allDocs
+        .filter((doc) => !orderedIds.has(doc.id))
+        .sort((a, b) => a.id.localeCompare(b.id));
+
+    const sorted = [...orderedDocs, ...remainingDocs];
 
     const header = [
         "# Lousy Agents",
