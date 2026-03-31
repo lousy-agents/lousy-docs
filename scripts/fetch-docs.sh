@@ -103,7 +103,7 @@ for file in "$DOCS_DIR"/*.md; do
     # absolute URLs (e.g. https://example.com/file.md) and relative paths with directories
     # (e.g. ../other/file.md) are never matched or transformed.
     sed -i.bak -E \
-        -e 's/!\[[^]]*\](\.\.\/media\/[^)]*)//g' \
+        -e 's/!\[[^]]*\]\(\.\.\/media\/[^)]*\)//g' \
         -e 's/\]\(([a-z0-9_-]+)\.md\)/](\/docs\/\1)/g' \
         "$file"
     rm "${file}.bak"
