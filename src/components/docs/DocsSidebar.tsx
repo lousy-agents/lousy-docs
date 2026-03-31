@@ -52,7 +52,7 @@ function formatNavLabel(id: string): string {
 }
 
 const navOrder = [
-    "README",
+    "readme",
     "init",
     "new",
     "lint",
@@ -61,16 +61,18 @@ const navOrder = [
 ];
 
 export function DocsSidebar({ docs, currentSlug }: DocsSidebarProps) {
-    const sortedDocs = [...docs].sort((a, b) => {
-        const aIndex = navOrder.indexOf(a.id);
-        const bIndex = navOrder.indexOf(b.id);
-        const aOrder = aIndex === -1 ? navOrder.length : aIndex;
-        const bOrder = bIndex === -1 ? navOrder.length : bIndex;
-        if (aOrder !== bOrder) {
-            return aOrder - bOrder;
-        }
-        return a.id.localeCompare(b.id);
-    });
+    const sortedDocs = [...docs]
+        .map((doc) => ({ ...doc, normalizedId: doc.id.toLowerCase() }))
+        .sort((a, b) => {
+            const aIndex = navOrder.indexOf(a.normalizedId);
+            const bIndex = navOrder.indexOf(b.normalizedId);
+            const aOrder = aIndex === -1 ? navOrder.length : aIndex;
+            const bOrder = bIndex === -1 ? navOrder.length : bIndex;
+            if (aOrder !== bOrder) {
+                return aOrder - bOrder;
+            }
+            return a.normalizedId.localeCompare(b.normalizedId);
+        });
 
     return (
         <aside style={sidebarStyle}>
@@ -78,16 +80,18 @@ export function DocsSidebar({ docs, currentSlug }: DocsSidebarProps) {
                 <h2 style={headingStyle}>Documentation</h2>
                 <Flex vertical gap={2}>
                     {sortedDocs.map((doc) => {
+                        const { normalizedId } = doc;
                         const label =
-                            doc.id === "README"
+                            normalizedId === "readme"
                                 ? "Overview"
-                                : doc.title || formatNavLabel(doc.id);
-                        const isActive = currentSlug === doc.id;
+                                : doc.title || formatNavLabel(normalizedId);
+                        const isActive =
+                            currentSlug.toLowerCase() === normalizedId;
 
                         return (
                             <a
                                 key={doc.id}
-                                href={`/docs/${doc.id}`}
+                                href={`/docs/${normalizedId}`}
                                 style={isActive ? activeLinkStyle : linkStyle}
                                 aria-current={isActive ? "page" : undefined}
                             >

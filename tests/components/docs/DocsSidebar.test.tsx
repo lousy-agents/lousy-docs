@@ -3,7 +3,7 @@ import Chance from "chance";
 import { describe, expect, it } from "vitest";
 import { DocsSidebar } from "@/components/docs/DocsSidebar";
 
-const chance = new Chance();
+const chance = new Chance(42);
 
 function createDocEntry(overrides?: { id?: string; title?: string }) {
     return {
@@ -54,9 +54,9 @@ describe("DocsSidebar", () => {
         });
 
         it("should render the README entry as Overview in the navigation", () => {
-            const docs = [createDocEntry({ id: "README", title: "" })];
+            const docs = [createDocEntry({ id: "readme", title: "" })];
 
-            render(<DocsSidebar docs={docs} currentSlug="README" />);
+            render(<DocsSidebar docs={docs} currentSlug="readme" />);
 
             expect(
                 screen.getByRole("link", { name: "Overview" }),
@@ -65,9 +65,9 @@ describe("DocsSidebar", () => {
 
         it("should render the README entry as Overview even when title is present", () => {
             const title = chance.sentence({ words: 3 });
-            const docs = [createDocEntry({ id: "README", title })];
+            const docs = [createDocEntry({ id: "readme", title })];
 
-            render(<DocsSidebar docs={docs} currentSlug="README" />);
+            render(<DocsSidebar docs={docs} currentSlug="readme" />);
 
             expect(
                 screen.getByRole("link", { name: "Overview" }),

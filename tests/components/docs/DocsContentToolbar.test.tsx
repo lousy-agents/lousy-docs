@@ -4,7 +4,7 @@ import Chance from "chance";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { DocsContentToolbar } from "@/components/docs/DocsContentToolbar";
 
-const chance = new Chance();
+const chance = new Chance(42);
 
 describe("DocsContentToolbar", () => {
     afterEach(() => {

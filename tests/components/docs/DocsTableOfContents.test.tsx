@@ -3,7 +3,7 @@ import Chance from "chance";
 import { describe, expect, it } from "vitest";
 import { DocsTableOfContents } from "@/components/docs/DocsTableOfContents";
 
-const chance = new Chance();
+const chance = new Chance(42);
 
 function createHeading(overrides?: {
     depth?: number;

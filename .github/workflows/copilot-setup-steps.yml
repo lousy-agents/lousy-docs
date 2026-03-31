@@ -30,4 +30,3 @@ jobs:
         run: npm install -g @lousy-agents/agent-shell@v5.7.1
       - name: Install Node.js dependencies
         run: npm ci
-

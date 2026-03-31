@@ -2,7 +2,11 @@
 set -euo pipefail
 shopt -s nullglob
 
-REPO_URL="https://github.com/zpratt/lousy-agents.git"
+if [ -n "${DOCS_GITHUB_TOKEN:-}" ]; then
+    REPO_URL="https://x-access-token:${DOCS_GITHUB_TOKEN}@github.com/zpratt/lousy-agents.git"
+else
+    REPO_URL="https://github.com/zpratt/lousy-agents.git"
+fi
 DOCS_REF="${DOCS_REF:-}"
 DOCS_DIR="src/content/docs"
 TEMP_DIR=$(mktemp -d "${TMPDIR:-/tmp}/lousy-docs.XXXXXX")

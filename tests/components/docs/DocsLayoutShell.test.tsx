@@ -3,7 +3,7 @@ import Chance from "chance";
 import { describe, expect, it } from "vitest";
 import { DocsLayoutShell } from "@/components/docs/DocsLayoutShell";
 
-const chance = new Chance();
+const chance = new Chance(42);
 
 function createDocEntry(overrides?: { id?: string; title?: string }) {
     return {

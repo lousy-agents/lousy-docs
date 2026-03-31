@@ -142,3 +142,7 @@ tmp
 .astro/
 .agent-shell/
 src/content/docs/
+
+# Playwright
+test-results/
+playwright-report/
