@@ -42,8 +42,9 @@ export class DocsPage {
     }
 
     async expectSidebarLinkToBeActive(name: string): Promise<void> {
-        await expect(
-            this.sidebar.getByRole("link", { name }),
-        ).toHaveAttribute("aria-current", "page");
+        await expect(this.sidebar.getByRole("link", { name })).toHaveAttribute(
+            "aria-current",
+            "page",
+        );
     }
 }

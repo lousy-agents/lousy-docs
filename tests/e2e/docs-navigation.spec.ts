@@ -34,7 +34,9 @@ test.describe("Documentation navigation", () => {
 
             // Assert
             await docsPage.expectToBeOnReadmePage();
-            await docsPage.expectHeadingToBeVisible("Lousy Agents Documentation");
+            await docsPage.expectHeadingToBeVisible(
+                "Lousy Agents Documentation",
+            );
             await docsPage.expectSidebarLinkToBeActive("Overview");
         });
     });
@@ -52,7 +54,9 @@ test.describe("Documentation navigation", () => {
 
             // Assert
             await docsPage.expectToBeOnReadmePage();
-            await docsPage.expectHeadingToBeVisible("Lousy Agents Documentation");
+            await docsPage.expectHeadingToBeVisible(
+                "Lousy Agents Documentation",
+            );
             await docsPage.expectSidebarLinkToBeActive("Overview");
         });
     });
