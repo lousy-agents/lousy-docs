@@ -13,4 +13,7 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
+User-agent: Grok
+Allow: /
+
 Sitemap: https://lousy-docs.lousy-agents.workers.dev/sitemap-index.xml
