@@ -40,7 +40,13 @@ if [ "${#docs_files[@]}" -eq 0 ]; then
     echo "ERROR: No markdown files found in upstream docs/ directory." >&2
     exit 1
 fi
-cp "${docs_files[@]}" "$DOCS_DIR/"
+
+# Copy files with lowercase filenames for consistent URL routing across all platforms
+for src_file in "${docs_files[@]}"; do
+    filename=$(basename "$src_file")
+    lowercase_filename=$(echo "$filename" | tr '[:upper:]' '[:lower:]')
+    cp "$src_file" "$DOCS_DIR/$lowercase_filename"
+done
 
 inject_frontmatter() {
     local file="$1"
@@ -85,11 +91,17 @@ inject_frontmatter() {
 
 for file in "$DOCS_DIR"/*.md; do
     inject_frontmatter "$file"
-done
 
-# Remove local image references that won't resolve in the docs site
-for file in "$DOCS_DIR"/*.md; do
-    sed -i.bak 's/!\[[^]]*\](\.\.\/media\/[^)]*)//g' "$file"
+    # Remove local image references that won't resolve in the docs site
+    # Convert relative .md links to absolute /docs/ paths for proper routing
+    # e.g., [init](init.md) -> [init](/docs/init)
+    # The character class [a-z0-9_-] intentionally excludes ':', '.', and '/' so that
+    # absolute URLs (e.g. https://example.com/file.md) and relative paths with directories
+    # (e.g. ../other/file.md) are never matched or transformed.
+    sed -i.bak -E \
+        -e 's/!\[[^]]*\](\.\.\/media\/[^)]*)//g' \
+        -e 's/\]\(([a-z0-9_-]+)\.md\)/](\/docs\/\1)/g' \
+        "$file"
     rm "${file}.bak"
 done
 
