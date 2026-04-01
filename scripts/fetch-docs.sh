@@ -52,6 +52,14 @@ for src_file in "${docs_files[@]}"; do
     cp "$src_file" "$DOCS_DIR/$lowercase_filename"
 done
 
+# Copy package-level README files as standalone docs
+agent_shell_readme="$TEMP_DIR/lousy-agents/packages/agent-shell/README.md"
+if [ -f "$agent_shell_readme" ]; then
+    cp "$agent_shell_readme" "$DOCS_DIR/agent-shell.md"
+else
+    echo "WARNING: agent-shell README not found at packages/agent-shell/README.md" >&2
+fi
+
 inject_frontmatter() {
     local file="$1"
     local filename

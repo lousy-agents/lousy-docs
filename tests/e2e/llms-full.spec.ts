@@ -49,6 +49,7 @@ test.describe("/llms-full.txt endpoint", () => {
                 "`lint` Command",
                 "copilot-setup",
                 "MCP Server",
+                "@lousy-agents/agent-shell",
             ];
 
             // Act

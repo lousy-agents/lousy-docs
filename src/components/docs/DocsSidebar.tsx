@@ -58,6 +58,7 @@ const navOrder = [
     "lint",
     "copilot-setup",
     "mcp-server",
+    "agent-shell",
 ];
 
 export function DocsSidebar({ docs, currentSlug }: DocsSidebarProps) {

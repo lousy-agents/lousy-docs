@@ -13,6 +13,7 @@ export default defineConfig({
             "**/dist/**",
             "**/e2e/**",
             "**/*.spec.ts",
+            "lousy-agents/**",
         ],
     },
     resolve: {
