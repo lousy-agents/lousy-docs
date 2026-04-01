@@ -142,6 +142,7 @@ tmp
 .astro/
 .agent-shell/
 src/content/docs/
+lousy-agents/
 
 # Playwright
 test-results/

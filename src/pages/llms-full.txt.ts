@@ -8,6 +8,7 @@ const DOC_ORDER = [
     "lint",
     "copilot-setup",
     "mcp-server",
+    "agent-shell",
 ];
 
 export const GET: APIRoute = async () => {
