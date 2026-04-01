@@ -1,7 +1,6 @@
 import { expect, test } from "@playwright/test";
 
 const SEPARATOR = "\n\n---\n\n";
-const DOC_ORDER_COUNT = 6;
 
 test.describe("/llms-full.txt endpoint", () => {
     test.describe("given a request for the full documentation file", () => {
@@ -41,21 +40,30 @@ test.describe("/llms-full.txt endpoint", () => {
             expect(body).toContain(SEPARATOR);
         });
 
-        test("includes all curated docs as distinct sections", async ({
-            request,
-        }) => {
-            // Arrange
-            const expectedSectionCount = 1 + DOC_ORDER_COUNT; // header section + one per curated doc
+        test("includes sections for each curated doc", async ({ request }) => {
+            // Arrange — markers that uniquely identify each curated doc's body
+            const curatedMarkers = [
+                "Lousy Agents Documentation",
+                "`init` Command",
+                "`new` Command",
+                "`lint` Command",
+                "copilot-setup",
+                "MCP Server",
+            ];
 
             // Act
             const response = await request.get("/llms-full.txt");
             const body = await response.text();
             const sections = body.split(SEPARATOR);
 
-            // Assert
+            // Assert — header section + at least one section per curated doc
             expect(sections.length).toBeGreaterThanOrEqual(
-                expectedSectionCount,
+                1 + curatedMarkers.length,
             );
+
+            for (const marker of curatedMarkers) {
+                expect(body).toContain(marker);
+            }
         });
 
         test("places the readme doc before the init doc", async ({
@@ -64,12 +72,19 @@ test.describe("/llms-full.txt endpoint", () => {
             // Act
             const response = await request.get("/llms-full.txt");
             const body = await response.text();
+            const sections = body.split(SEPARATOR);
 
-            // Assert — readme content precedes init content in the response
-            const readmeIndex = body.indexOf("# Lousy Agents");
-            const initIndex = body.indexOf("init Command");
-            expect(readmeIndex).toBeGreaterThanOrEqual(0);
-            expect(initIndex).toBeGreaterThan(readmeIndex);
+            // Assert — find sections containing readme and init markers
+            const readmeSectionIndex = sections.findIndex((section) =>
+                section.includes("Lousy Agents Documentation"),
+            );
+            const initSectionIndex = sections.findIndex((section) =>
+                section.includes(
+                    "Scaffolds new projects with everything needed",
+                ),
+            );
+            expect(readmeSectionIndex).toBeGreaterThanOrEqual(0);
+            expect(initSectionIndex).toBeGreaterThan(readmeSectionIndex);
         });
     });
 });
