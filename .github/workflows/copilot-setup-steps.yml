@@ -27,6 +27,6 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - name: Install agent-shell
-        run: npm install -g @lousy-agents/agent-shell@v5.7.1
+        run: npm install -g @lousy-agents/agent-shell@v5.8.0
       - name: Install Node.js dependencies
         run: npm ci
