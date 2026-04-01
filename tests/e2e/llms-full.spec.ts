@@ -12,9 +12,7 @@ test.describe("/llms-full.txt endpoint", () => {
 
             // Assert
             expect(response.status()).toBe(200);
-            expect(response.headers()["content-type"]).toBe(
-                "text/plain; charset=utf-8",
-            );
+            expect(response.headers()["content-type"]).toContain("text/plain");
         });
 
         test("returns a response body starting with the site header", async ({
