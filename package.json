@@ -31,7 +31,7 @@
         "@biomejs/biome": "2.4.10",
         "@lousy-agents/mcp": "5.7.1",
         "@modelcontextprotocol/server-sequential-thinking": "2025.12.18",
-        "@playwright/mcp": "0.0.69",
+        "@playwright/mcp": "0.0.70",
         "@playwright/test": "1.58.2",
         "@testing-library/jest-dom": "6.9.1",
         "@testing-library/react": "16.3.2",
