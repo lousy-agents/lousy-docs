@@ -94,6 +94,7 @@ jobs:
         run: npm run build
         env:
           DOCS_GITHUB_TOKEN: ${{ secrets.DOCS_GITHUB_TOKEN }}
+          PUBLIC_CF_BEACON_TOKEN: ${{ vars.PUBLIC_CF_BEACON_TOKEN }}
 
       - name: Upload dist artifact
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f  # v7.0.0
