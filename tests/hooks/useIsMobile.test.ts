@@ -121,16 +121,21 @@ describe("useIsMobile", () => {
 
     describe("given the viewport changes between render and effect mount", () => {
         it("reflects the current media query state when the effect syncs on mount", () => {
-            const { matchMediaFn, mql } = createMockMatchMedia(false);
+            // useState initializer sees desktop (false) — the pre-race state
+            const { mql: renderMql } = createMockMatchMedia(false);
+            // useEffect sees mobile (true) — viewport changed during the race window
+            const { mql: effectMql } = createMockMatchMedia(true);
+            const matchMediaFn = vi
+                .fn()
+                .mockReturnValueOnce(renderMql) // first call: useState lazy initializer
+                .mockReturnValueOnce(effectMql); // second call: useEffect
             window.matchMedia =
                 matchMediaFn as unknown as typeof window.matchMedia;
 
-            // Simulate viewport changing to mobile before the effect runs
-            mql.matches = true;
-
             const { result } = renderHook(() => useIsMobile());
 
-            // Effect fires synchronously in test env; state should reflect mql.matches
+            // Initial state was false (from useState); effect syncs mql.matches=true
+            // This assertion fails if setIsMobile(mql.matches) is removed from the hook
             expect(result.current).toBe(true);
         });
     });
