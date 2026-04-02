@@ -63,6 +63,16 @@ body {
     }
 }
 
+.fade-in-shell {
+    animation: fade-in 0.1s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fade-in-shell {
+        animation: none;
+    }
+}
+
 /* Terminal cursor blink animation */
 @keyframes pulse {
     0%,

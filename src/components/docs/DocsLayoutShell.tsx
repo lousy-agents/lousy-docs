@@ -62,10 +62,11 @@ export function DocsLayoutShell({
         <AntDProvider>
             <Flex
                 vertical
+                className="fade-in-shell"
+                data-testid="docs-shell"
                 style={{
                     minHeight: "100vh",
                     backgroundColor: "#121410",
-                    animation: "fade-in 0.1s ease-out both",
                 }}
             >
                 <SiteHeader

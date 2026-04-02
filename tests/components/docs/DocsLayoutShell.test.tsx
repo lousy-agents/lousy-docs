@@ -67,11 +67,8 @@ describe("DocsLayoutShell", () => {
             </DocsLayoutShell>,
         );
 
-        const header = screen.getByRole("banner");
-        const shellContainer = header.parentElement;
-        expect(shellContainer).toHaveStyle(
-            "animation: fade-in 0.1s ease-out both",
-        );
+        const shellContainer = screen.getByTestId("docs-shell");
+        expect(shellContainer).toHaveClass("fade-in-shell");
     });
 
     describe("given a desktop viewport", () => {
