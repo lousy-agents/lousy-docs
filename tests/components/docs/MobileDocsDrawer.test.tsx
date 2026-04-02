@@ -74,7 +74,9 @@ describe("MobileDocsDrawer", () => {
             );
 
             expect(
-                screen.getByText("Documentation navigation"),
+                screen.getByRole("dialog", {
+                    name: "Documentation navigation",
+                }),
             ).toBeInTheDocument();
         });
     });
