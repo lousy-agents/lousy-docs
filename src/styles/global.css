@@ -12,6 +12,8 @@
     --color-error: #ffb4ab;
     --font-display: "Space Grotesk", sans-serif;
     --font-body: "Manrope", sans-serif;
+    /* Header height (4rem = 64px) + 1rem breathing room */
+    --docs-scroll-offset: 5rem;
 }
 
 *,
@@ -76,7 +78,7 @@ body {
     margin-bottom: 1rem;
     margin-top: 0;
     letter-spacing: -0.02em;
-    scroll-margin-top: 5rem;
+    scroll-margin-top: var(--docs-scroll-offset);
     text-wrap: balance;
 }
 
@@ -89,7 +91,7 @@ body {
     margin-bottom: 0.75rem;
     padding-bottom: 0.5rem;
     border-bottom: 1px solid rgba(70, 72, 62, 0.25);
-    scroll-margin-top: 5rem;
+    scroll-margin-top: var(--docs-scroll-offset);
     text-wrap: balance;
 }
 
@@ -100,7 +102,7 @@ body {
     color: var(--color-on-background);
     margin-top: 2rem;
     margin-bottom: 0.5rem;
-    scroll-margin-top: 5rem;
+    scroll-margin-top: var(--docs-scroll-offset);
     text-wrap: balance;
 }
 
@@ -111,7 +113,7 @@ body {
     color: rgba(230, 234, 216, 0.85);
     margin-top: 1.5rem;
     margin-bottom: 0.5rem;
-    scroll-margin-top: 5rem;
+    scroll-margin-top: var(--docs-scroll-offset);
     text-wrap: balance;
 }
 
