@@ -119,6 +119,22 @@ describe("useIsMobile", () => {
         });
     });
 
+    describe("given the viewport changes between render and effect mount", () => {
+        it("reflects the current media query state when the effect syncs on mount", () => {
+            const { matchMediaFn, mql } = createMockMatchMedia(false);
+            window.matchMedia =
+                matchMediaFn as unknown as typeof window.matchMedia;
+
+            // Simulate viewport changing to mobile before the effect runs
+            mql.matches = true;
+
+            const { result } = renderHook(() => useIsMobile());
+
+            // Effect fires synchronously in test env; state should reflect mql.matches
+            expect(result.current).toBe(true);
+        });
+    });
+
     describe("given the media query string", () => {
         it("queries for the correct mobile breakpoint", () => {
             const { matchMediaFn } = createMockMatchMedia(false);

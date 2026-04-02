@@ -15,6 +15,8 @@ export function useIsMobile(): boolean {
         };
 
         mql.addEventListener("change", handler);
+        // Sync any change that occurred between initial render and this effect
+        setIsMobile(mql.matches);
         return () => {
             mql.removeEventListener("change", handler);
         };
