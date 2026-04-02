@@ -55,6 +55,22 @@ describe("DocsLayoutShell", () => {
         vi.restoreAllMocks();
     });
 
+    it("should render the shell with a fade-in animation to prevent flash of unstyled content", () => {
+        mockMatchMedia(false);
+        render(
+            <DocsLayoutShell
+                docs={[createDocEntry()]}
+                currentSlug="test"
+                headings={[]}
+            >
+                <p>Content</p>
+            </DocsLayoutShell>,
+        );
+
+        const shellContainer = screen.getByTestId("docs-shell");
+        expect(shellContainer).toHaveClass("fade-in-shell");
+    });
+
     describe("given a desktop viewport", () => {
         beforeEach(() => {
             mockMatchMedia(false);

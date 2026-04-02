@@ -62,7 +62,12 @@ export function DocsLayoutShell({
         <AntDProvider>
             <Flex
                 vertical
-                style={{ minHeight: "100vh", backgroundColor: "#121410" }}
+                className="fade-in-shell"
+                data-testid="docs-shell"
+                style={{
+                    minHeight: "100vh",
+                    backgroundColor: "#121410",
+                }}
             >
                 <SiteHeader
                     isMobile={isMobile}
@@ -73,16 +78,31 @@ export function DocsLayoutShell({
                     style={{
                         flex: 1,
                         paddingTop: `${HEADER_HEIGHT_PX}px`,
+                        width: "100%",
                     }}
                 >
-                    {!isMobile && (
-                        <DocsSidebar docs={docs} currentSlug={currentSlug} />
-                    )}
-                    <main style={contentStyle}>
-                        <DocsContentToolbar currentSlug={currentSlug} />
-                        {children}
-                    </main>
-                    {!isMobile && <DocsTableOfContents headings={headings} />}
+                    <Flex
+                        style={{
+                            flex: 1,
+                            maxWidth: "1260px",
+                            width: "100%",
+                            margin: "0 auto",
+                        }}
+                    >
+                        {!isMobile && (
+                            <DocsSidebar
+                                docs={docs}
+                                currentSlug={currentSlug}
+                            />
+                        )}
+                        <main style={contentStyle}>
+                            <DocsContentToolbar currentSlug={currentSlug} />
+                            {children}
+                        </main>
+                        {!isMobile && (
+                            <DocsTableOfContents headings={headings} />
+                        )}
+                    </Flex>
                 </Flex>
                 <SiteFooter />
             </Flex>

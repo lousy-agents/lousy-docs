@@ -52,6 +52,27 @@ body {
     background: var(--color-primary-container);
 }
 
+/* Page entry animation — masks the blank frame that client:only islands show
+   before React's startTransition-deferred render commits to the DOM */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.fade-in-shell {
+    animation: fade-in 0.1s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fade-in-shell {
+        animation: none;
+    }
+}
+
 /* Terminal cursor blink animation */
 @keyframes pulse {
     0%,
