@@ -29,7 +29,7 @@
     },
     "devDependencies": {
         "@biomejs/biome": "2.4.10",
-        "@lousy-agents/mcp": "5.8.0",
+        "@lousy-agents/mcp": "5.8.2",
         "@modelcontextprotocol/server-sequential-thinking": "2025.12.18",
         "@playwright/mcp": "0.0.70",
         "@playwright/test": "1.59.1",
