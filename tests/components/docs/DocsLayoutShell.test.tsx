@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import Chance from "chance";
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { DocsLayoutShell } from "@/components/docs/DocsLayoutShell";
 
 const chance = new Chance(42);
@@ -24,8 +25,41 @@ function createHeading(overrides?: {
     };
 }
 
+function mockMatchMedia(matches: boolean) {
+    const listeners: Array<(event: { matches: boolean }) => void> = [];
+    const mql = {
+        matches,
+        media: "",
+        addEventListener: vi.fn(
+            (_event: string, cb: (event: { matches: boolean }) => void) => {
+                listeners.push(cb);
+            },
+        ),
+        removeEventListener: vi.fn(),
+    };
+    window.matchMedia = vi
+        .fn()
+        .mockReturnValue(mql) as unknown as typeof window.matchMedia;
+    return { mql, listeners };
+}
+
 describe("DocsLayoutShell", () => {
-    describe("given docs, headings, and children content", () => {
+    let originalMatchMedia: typeof window.matchMedia;
+
+    beforeEach(() => {
+        originalMatchMedia = window.matchMedia;
+    });
+
+    afterEach(() => {
+        window.matchMedia = originalMatchMedia;
+        vi.restoreAllMocks();
+    });
+
+    describe("given a desktop viewport", () => {
+        beforeEach(() => {
+            mockMatchMedia(false);
+        });
+
         it("should render the site header with branding", () => {
             const docs = [createDocEntry()];
             const headings = [createHeading()];
@@ -118,6 +152,97 @@ describe("DocsLayoutShell", () => {
             );
 
             expect(screen.getByRole("main")).toBeInTheDocument();
+        });
+    });
+
+    describe("given a mobile viewport", () => {
+        beforeEach(() => {
+            mockMatchMedia(true);
+        });
+
+        it("should not render the sidebar inline", () => {
+            const doc = createDocEntry({ id: "init", title: "init Command" });
+
+            render(
+                <DocsLayoutShell docs={[doc]} currentSlug="init" headings={[]}>
+                    <p>Content</p>
+                </DocsLayoutShell>,
+            );
+
+            expect(
+                screen.queryByRole("navigation", { name: "Documentation" }),
+            ).not.toBeInTheDocument();
+        });
+
+        it("should not render the table of contents", () => {
+            const heading = createHeading({ depth: 2 });
+
+            render(
+                <DocsLayoutShell
+                    docs={[createDocEntry()]}
+                    currentSlug="test"
+                    headings={[heading]}
+                >
+                    <p>Content</p>
+                </DocsLayoutShell>,
+            );
+
+            expect(
+                screen.queryByRole("navigation", {
+                    name: /table of contents/i,
+                }),
+            ).not.toBeInTheDocument();
+        });
+
+        it("should render the main content area", () => {
+            const childText = chance.sentence();
+
+            render(
+                <DocsLayoutShell
+                    docs={[createDocEntry()]}
+                    currentSlug="test"
+                    headings={[]}
+                >
+                    <p>{childText}</p>
+                </DocsLayoutShell>,
+            );
+
+            expect(screen.getByText(childText)).toBeInTheDocument();
+        });
+
+        it("should render a menu button in the header", () => {
+            render(
+                <DocsLayoutShell
+                    docs={[createDocEntry()]}
+                    currentSlug="test"
+                    headings={[]}
+                >
+                    <p>Content</p>
+                </DocsLayoutShell>,
+            );
+
+            expect(
+                screen.getByRole("button", { name: /open menu/i }),
+            ).toBeInTheDocument();
+        });
+
+        it("should show sidebar navigation in a drawer when menu button is clicked", async () => {
+            const user = userEvent.setup();
+            const doc = createDocEntry({ id: "init", title: "init Command" });
+
+            render(
+                <DocsLayoutShell docs={[doc]} currentSlug="init" headings={[]}>
+                    <p>Content</p>
+                </DocsLayoutShell>,
+            );
+
+            await user.click(
+                screen.getByRole("button", { name: /open menu/i }),
+            );
+
+            expect(
+                screen.getByRole("navigation", { name: "Documentation" }),
+            ).toBeInTheDocument();
         });
     });
 });

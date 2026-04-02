@@ -5,9 +5,10 @@ import { HEADER_HEIGHT_PX } from "@/lib/layout-constants";
 interface DocsSidebarProps {
     docs: DocEntry[];
     currentSlug: string;
+    variant?: "inline" | "drawer";
 }
 
-const sidebarStyle: React.CSSProperties = {
+const inlineSidebarStyle: React.CSSProperties = {
     width: "240px",
     minWidth: "240px",
     padding: "1.5rem 1rem",
@@ -16,6 +17,10 @@ const sidebarStyle: React.CSSProperties = {
     position: "sticky",
     top: `${HEADER_HEIGHT_PX}px`,
     overflowY: "auto",
+};
+
+const drawerSidebarStyle: React.CSSProperties = {
+    padding: "1.5rem 1rem",
 };
 
 const headingStyle: React.CSSProperties = {
@@ -61,7 +66,11 @@ const navOrder = [
     "agent-shell",
 ];
 
-export function DocsSidebar({ docs, currentSlug }: DocsSidebarProps) {
+export function DocsSidebar({
+    docs,
+    currentSlug,
+    variant = "inline",
+}: DocsSidebarProps) {
     const sortedDocs = [...docs]
         .map((doc) => ({ ...doc, normalizedId: doc.id.toLowerCase() }))
         .sort((a, b) => {
@@ -74,6 +83,9 @@ export function DocsSidebar({ docs, currentSlug }: DocsSidebarProps) {
             }
             return a.normalizedId.localeCompare(b.normalizedId);
         });
+
+    const sidebarStyle =
+        variant === "drawer" ? drawerSidebarStyle : inlineSidebarStyle;
 
     return (
         <aside style={sidebarStyle}>

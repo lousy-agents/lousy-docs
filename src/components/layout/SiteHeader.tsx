@@ -1,4 +1,5 @@
 import { Flex } from "antd";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { HEADER_HEIGHT_PX } from "@/lib/layout-constants";
 
 const headerStyle: React.CSSProperties = {
@@ -26,6 +27,12 @@ const logoStyle: React.CSSProperties = {
     userSelect: "none",
 };
 
+const mobileLogoStyle: React.CSSProperties = {
+    ...logoStyle,
+    fontSize: "1.125rem",
+    letterSpacing: "0.05em",
+};
+
 const activeLinkStyle: React.CSSProperties = {
     fontFamily: "'Space Grotesk', sans-serif",
     fontWeight: 700,
@@ -49,7 +56,15 @@ const linkStyle: React.CSSProperties = {
     transition: "color 0.15s",
 };
 
-export function SiteHeader() {
+const iconButtonStyle: React.CSSProperties = {
+    background: "none",
+    border: "none",
+    padding: "8px",
+    color: "#bdce89",
+    cursor: "pointer",
+};
+
+function DesktopHeader() {
     return (
         <header style={headerStyle}>
             <Flex align="center" gap={16}>
@@ -74,26 +89,14 @@ export function SiteHeader() {
             <Flex align="center" gap={16}>
                 <button
                     type="button"
-                    style={{
-                        background: "none",
-                        border: "none",
-                        padding: "8px",
-                        color: "#bdce89",
-                        cursor: "pointer",
-                    }}
+                    style={iconButtonStyle}
                     aria-label="Settings"
                 >
                     <span className="material-symbols-outlined">settings</span>
                 </button>
                 <button
                     type="button"
-                    style={{
-                        background: "none",
-                        border: "none",
-                        padding: "8px",
-                        color: "#bdce89",
-                        cursor: "pointer",
-                    }}
+                    style={iconButtonStyle}
                     aria-label="Open terminal"
                 >
                     <span className="material-symbols-outlined">terminal</span>
@@ -101,4 +104,49 @@ export function SiteHeader() {
             </Flex>
         </header>
     );
+}
+
+interface MobileHeaderProps {
+    onMenuToggle?: () => void;
+}
+
+export function MobileHeader({ onMenuToggle }: MobileHeaderProps) {
+    return (
+        <header style={headerStyle}>
+            <Flex align="center" gap={8}>
+                <button
+                    type="button"
+                    style={iconButtonStyle}
+                    aria-label="Open menu"
+                    onClick={onMenuToggle}
+                >
+                    <span className="material-symbols-outlined">menu</span>
+                </button>
+                <span style={mobileLogoStyle}>LOUSY_AGENTS</span>
+            </Flex>
+            <Flex align="center" gap={8}>
+                <button
+                    type="button"
+                    style={iconButtonStyle}
+                    aria-label="Settings"
+                >
+                    <span className="material-symbols-outlined">settings</span>
+                </button>
+            </Flex>
+        </header>
+    );
+}
+
+interface SiteHeaderProps {
+    onMobileMenuToggle?: () => void;
+}
+
+export function SiteHeader({ onMobileMenuToggle }: SiteHeaderProps) {
+    const isMobile = useIsMobile();
+
+    if (isMobile) {
+        return <MobileHeader onMenuToggle={onMobileMenuToggle} />;
+    }
+
+    return <DesktopHeader />;
 }

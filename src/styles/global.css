@@ -211,3 +211,41 @@ body {
     max-width: 100%;
     border-radius: 6px;
 }
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+    .docs-content h1 {
+        font-size: 1.5rem;
+    }
+
+    .docs-content h2 {
+        font-size: 1.25rem;
+        margin-top: 2rem;
+    }
+
+    .docs-content h3 {
+        font-size: 1.1rem;
+        margin-top: 1.5rem;
+    }
+
+    .docs-content pre {
+        padding: 0.75rem;
+        font-size: 0.8rem;
+        border-radius: 4px;
+    }
+
+    .docs-content pre code {
+        font-size: 0.75rem;
+    }
+
+    .docs-content table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .docs-content blockquote {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
