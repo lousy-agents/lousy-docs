@@ -1,8 +1,9 @@
-import { Drawer, Flex } from "antd";
+import { Flex } from "antd";
 import { type ReactNode, useCallback, useState } from "react";
 import { DocsContentToolbar } from "@/components/docs/DocsContentToolbar";
 import { DocsSidebar } from "@/components/docs/DocsSidebar";
 import { DocsTableOfContents } from "@/components/docs/DocsTableOfContents";
+import { MobileDocsDrawer } from "@/components/docs/MobileDocsDrawer";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { AntDProvider } from "@/components/providers/AntDProvider";
@@ -30,11 +31,6 @@ const mobileContentStyle: React.CSSProperties = {
     minWidth: 0,
     padding: "1rem",
     overflowWrap: "break-word",
-};
-
-const drawerBodyStyle: React.CSSProperties = {
-    backgroundColor: "#121410",
-    padding: 0,
 };
 
 export function DocsLayoutShell({
@@ -81,23 +77,12 @@ export function DocsLayoutShell({
                 <SiteFooter />
             </Flex>
             {isMobile && (
-                <Drawer
-                    placement="left"
+                <MobileDocsDrawer
+                    docs={docs}
+                    currentSlug={currentSlug}
                     open={drawerOpen}
                     onClose={handleDrawerClose}
-                    size="default"
-                    styles={{
-                        body: drawerBodyStyle,
-                        wrapper: { maxWidth: "280px" },
-                    }}
-                    closable={false}
-                >
-                    <DocsSidebar
-                        docs={docs}
-                        currentSlug={currentSlug}
-                        variant="drawer"
-                    />
-                </Drawer>
+                />
             )}
         </AntDProvider>
     );
