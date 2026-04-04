@@ -1,12 +1,8 @@
 import { render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 
 describe("SiteHeader", () => {
-    afterEach(() => {
-        vi.unstubAllGlobals();
-    });
-
     describe("given a desktop viewport", () => {
         it("should render a nav element for navigation links", () => {
             render(<SiteHeader isMobile={false} />);
@@ -55,8 +51,7 @@ describe("SiteHeader", () => {
         });
 
         it("should mark no nav link as active when on the homepage", () => {
-            vi.stubGlobal("location", { pathname: "/" });
-            render(<SiteHeader isMobile={false} />);
+            render(<SiteHeader isMobile={false} currentPathname="/" />);
 
             expect(
                 screen.queryByRole("link", { current: "page" }),
@@ -64,8 +59,7 @@ describe("SiteHeader", () => {
         });
 
         it("should mark the Docs link as active when on the docs index page", () => {
-            vi.stubGlobal("location", { pathname: "/docs" });
-            render(<SiteHeader isMobile={false} />);
+            render(<SiteHeader isMobile={false} currentPathname="/docs" />);
 
             expect(screen.getByRole("link", { name: /docs/i })).toHaveAttribute(
                 "aria-current",
@@ -74,8 +68,9 @@ describe("SiteHeader", () => {
         });
 
         it("should mark the Docs link as active when on a docs sub-page", () => {
-            vi.stubGlobal("location", { pathname: "/docs/readme" });
-            render(<SiteHeader isMobile={false} />);
+            render(
+                <SiteHeader isMobile={false} currentPathname="/docs/readme" />,
+            );
 
             expect(screen.getByRole("link", { name: /docs/i })).toHaveAttribute(
                 "aria-current",
@@ -84,8 +79,7 @@ describe("SiteHeader", () => {
         });
 
         it("should mark the Protocol link as active when on the protocol page", () => {
-            vi.stubGlobal("location", { pathname: "/protocol" });
-            render(<SiteHeader isMobile={false} />);
+            render(<SiteHeader isMobile={false} currentPathname="/protocol" />);
 
             expect(
                 screen.getByRole("link", { name: /protocol/i }),

@@ -74,9 +74,11 @@ function isNavLinkActive(href: string, pathname: string): boolean {
     return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-function DesktopHeader() {
-    const pathname = window.location.pathname;
+interface DesktopHeaderProps {
+    currentPathname: string;
+}
 
+function DesktopHeader({ currentPathname }: DesktopHeaderProps) {
     return (
         <header style={headerStyle}>
             <Flex align="center" gap={16}>
@@ -87,7 +89,7 @@ function DesktopHeader() {
             <nav>
                 <Flex align="center" gap={32}>
                     {navLinks.map(({ href, label }) => {
-                        const isActive = isNavLinkActive(href, pathname);
+                        const isActive = isNavLinkActive(href, currentPathname);
                         return (
                             <a
                                 key={href}
@@ -182,12 +184,16 @@ interface SiteHeaderProps {
     isMobile: boolean;
     onMobileMenuToggle?: () => void;
     isMobileMenuOpen?: boolean;
+    currentPathname?: string;
 }
 
 export function SiteHeader({
     isMobile,
     onMobileMenuToggle,
     isMobileMenuOpen,
+    currentPathname = typeof window !== "undefined"
+        ? window.location.pathname
+        : "",
 }: SiteHeaderProps) {
     if (isMobile) {
         return (
@@ -198,5 +204,5 @@ export function SiteHeader({
         );
     }
 
-    return <DesktopHeader />;
+    return <DesktopHeader currentPathname={currentPathname} />;
 }
