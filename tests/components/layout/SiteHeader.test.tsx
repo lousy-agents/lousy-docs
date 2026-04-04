@@ -7,7 +7,9 @@ describe("SiteHeader", () => {
         it("should render a nav element for navigation links", () => {
             render(<SiteHeader isMobile={false} />);
 
-            expect(screen.getByRole("navigation")).toBeInTheDocument();
+            expect(
+                screen.getByRole("navigation", { name: "Site navigation" }),
+            ).toBeInTheDocument();
         });
 
         it("should render the site branding as a link to the homepage", () => {

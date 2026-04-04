@@ -86,7 +86,7 @@ function DesktopHeader({ currentPathname }: DesktopHeaderProps) {
                     LOUSY_AGENTS
                 </a>
             </Flex>
-            <nav>
+            <nav aria-label="Site navigation">
                 <Flex align="center" gap={32}>
                     {navLinks.map(({ href, label }) => {
                         const isActive = isNavLinkActive(href, currentPathname);
