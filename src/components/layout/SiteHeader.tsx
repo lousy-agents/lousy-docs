@@ -22,7 +22,7 @@ const logoStyle: React.CSSProperties = {
     color: "#bdce89",
     letterSpacing: "0.1em",
     textTransform: "uppercase" as const,
-    cursor: "default",
+    textDecoration: "none",
     userSelect: "none",
 };
 
@@ -63,26 +63,44 @@ const iconButtonStyle: React.CSSProperties = {
     cursor: "pointer",
 };
 
-function DesktopHeader() {
+const navLinks = [
+    { href: "/protocol", label: "PROTOCOL" },
+    { href: "/terminal", label: "TERMINAL" },
+    { href: "/patches", label: "PATCHES" },
+    { href: "/docs", label: "DOCS" },
+] as const;
+
+function isNavLinkActive(href: string, pathname: string): boolean {
+    return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+interface DesktopHeaderProps {
+    currentPathname: string;
+}
+
+function DesktopHeader({ currentPathname }: DesktopHeaderProps) {
     return (
         <header style={headerStyle}>
             <Flex align="center" gap={16}>
-                <span style={logoStyle}>LOUSY_AGENTS</span>
+                <a href="/" style={logoStyle}>
+                    LOUSY_AGENTS
+                </a>
             </Flex>
-            <nav>
+            <nav aria-label="Site navigation">
                 <Flex align="center" gap={32}>
-                    <a href="/protocol" style={activeLinkStyle}>
-                        PROTOCOL
-                    </a>
-                    <a href="/terminal" style={linkStyle}>
-                        TERMINAL
-                    </a>
-                    <a href="/patches" style={linkStyle}>
-                        PATCHES
-                    </a>
-                    <a href="/docs" style={linkStyle}>
-                        DOCS
-                    </a>
+                    {navLinks.map(({ href, label }) => {
+                        const isActive = isNavLinkActive(href, currentPathname);
+                        return (
+                            <a
+                                key={href}
+                                href={href}
+                                style={isActive ? activeLinkStyle : linkStyle}
+                                aria-current={isActive ? "page" : undefined}
+                            >
+                                {label}
+                            </a>
+                        );
+                    })}
                 </Flex>
             </nav>
             <Flex align="center" gap={16}>
@@ -140,7 +158,9 @@ export function MobileHeader({ onMenuToggle, isMenuOpen }: MobileHeaderProps) {
                         </span>
                     </button>
                 )}
-                <span style={mobileLogoStyle}>LOUSY_AGENTS</span>
+                <a href="/" style={mobileLogoStyle}>
+                    LOUSY_AGENTS
+                </a>
             </Flex>
             <Flex align="center" gap={8}>
                 <button
@@ -164,12 +184,16 @@ interface SiteHeaderProps {
     isMobile: boolean;
     onMobileMenuToggle?: () => void;
     isMobileMenuOpen?: boolean;
+    currentPathname?: string;
 }
 
 export function SiteHeader({
     isMobile,
     onMobileMenuToggle,
     isMobileMenuOpen,
+    currentPathname = typeof window !== "undefined"
+        ? window.location.pathname
+        : "",
 }: SiteHeaderProps) {
     if (isMobile) {
         return (
@@ -180,5 +204,5 @@ export function SiteHeader({
         );
     }
 
-    return <DesktopHeader />;
+    return <DesktopHeader currentPathname={currentPathname} />;
 }
