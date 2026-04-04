@@ -1,8 +1,12 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 
 describe("SiteHeader", () => {
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
     describe("given a desktop viewport", () => {
         it("should render a nav element for navigation links", () => {
             render(<SiteHeader isMobile={false} />);
@@ -10,10 +14,12 @@ describe("SiteHeader", () => {
             expect(screen.getByRole("navigation")).toBeInTheDocument();
         });
 
-        it("should render the site branding", () => {
+        it("should render the site branding as a link to the homepage", () => {
             render(<SiteHeader isMobile={false} />);
 
-            expect(screen.getByText("LOUSY_AGENTS")).toBeInTheDocument();
+            const logo = screen.getByRole("link", { name: "LOUSY_AGENTS" });
+            expect(logo).toBeInTheDocument();
+            expect(logo).toHaveAttribute("href", "/");
         });
 
         it("should render the Protocol navigation link", () => {
@@ -48,6 +54,44 @@ describe("SiteHeader", () => {
             ).toBeInTheDocument();
         });
 
+        it("should mark no nav link as active when on the homepage", () => {
+            vi.stubGlobal("location", { pathname: "/" });
+            render(<SiteHeader isMobile={false} />);
+
+            expect(
+                screen.queryByRole("link", { current: "page" }),
+            ).not.toBeInTheDocument();
+        });
+
+        it("should mark the Docs link as active when on the docs index page", () => {
+            vi.stubGlobal("location", { pathname: "/docs" });
+            render(<SiteHeader isMobile={false} />);
+
+            expect(screen.getByRole("link", { name: /docs/i })).toHaveAttribute(
+                "aria-current",
+                "page",
+            );
+        });
+
+        it("should mark the Docs link as active when on a docs sub-page", () => {
+            vi.stubGlobal("location", { pathname: "/docs/readme" });
+            render(<SiteHeader isMobile={false} />);
+
+            expect(screen.getByRole("link", { name: /docs/i })).toHaveAttribute(
+                "aria-current",
+                "page",
+            );
+        });
+
+        it("should mark the Protocol link as active when on the protocol page", () => {
+            vi.stubGlobal("location", { pathname: "/protocol" });
+            render(<SiteHeader isMobile={false} />);
+
+            expect(
+                screen.getByRole("link", { name: /protocol/i }),
+            ).toHaveAttribute("aria-current", "page");
+        });
+
         it("should not render a mobile menu button", () => {
             render(<SiteHeader isMobile={false} />);
 
@@ -58,10 +102,12 @@ describe("SiteHeader", () => {
     });
 
     describe("given a mobile viewport", () => {
-        it("should render the site branding", () => {
+        it("should render the site branding as a link to the homepage", () => {
             render(<SiteHeader isMobile={true} />);
 
-            expect(screen.getByText("LOUSY_AGENTS")).toBeInTheDocument();
+            const logo = screen.getByRole("link", { name: "LOUSY_AGENTS" });
+            expect(logo).toBeInTheDocument();
+            expect(logo).toHaveAttribute("href", "/");
         });
 
         it("should not render the desktop navigation links", () => {
