@@ -75,8 +75,7 @@ function isNavLinkActive(href: string, pathname: string): boolean {
 }
 
 function DesktopHeader() {
-    const pathname =
-        typeof window !== "undefined" ? window.location.pathname : "/";
+    const pathname = window.location.pathname;
 
     return (
         <header style={headerStyle}>
