@@ -355,6 +355,26 @@ body {
     overscroll-behavior: contain;
 }
 
+.search-overlay__close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    color: var(--color-on-background);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+    line-height: 1;
+    z-index: 1;
+}
+
+.search-overlay__close:hover {
+    opacity: 1;
+}
+
 /* Pagefind highlight on destination pages */
 mark[data-pagefind-highlight] {
     background-color: var(--color-primary-highlight);

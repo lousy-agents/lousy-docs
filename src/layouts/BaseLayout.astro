@@ -47,7 +47,14 @@ const cfBeaconToken = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
             data-pagefind-ignore="all"
         >
             <div class="search-overlay__backdrop"></div>
-            <div class="search-overlay__panel" role="dialog" aria-label="Search documentation">
+            <div class="search-overlay__panel" role="dialog" aria-modal="true" aria-label="Search documentation">
+                <button
+                    type="button"
+                    class="search-overlay__close"
+                    aria-label="Close search"
+                >
+                    <span class="material-symbols-outlined" aria-hidden="true">close</span>
+                </button>
                 <Search
                     id="search"
                     className="pagefind-ui analog-terminal"
@@ -63,9 +70,12 @@ const cfBeaconToken = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
             (function () {
                 const overlay = document.getElementById("search-overlay");
                 const panel = overlay && overlay.querySelector(".search-overlay__panel");
+                const closeBtn = overlay && overlay.querySelector(".search-overlay__close");
+                let previouslyFocused = null;
 
                 function openSearch() {
                     if (!overlay) return;
+                    previouslyFocused = document.activeElement;
                     overlay.classList.add("search-overlay--open");
                     document.body.style.overflow = "hidden";
                     const input = overlay.querySelector(".pagefind-ui__search-input");
@@ -79,13 +89,38 @@ const cfBeaconToken = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
                     if (!overlay) return;
                     overlay.classList.remove("search-overlay--open");
                     document.body.style.overflow = "";
+                    if (previouslyFocused && typeof previouslyFocused.focus === "function") {
+                        previouslyFocused.focus();
+                    }
+                    previouslyFocused = null;
                 }
 
                 function isSearchOpen() {
                     return overlay && overlay.classList.contains("search-overlay--open");
                 }
 
+                function trapFocus(e) {
+                    if (!panel || !isSearchOpen()) return;
+                    const focusable = panel.querySelectorAll(
+                        'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+                    );
+                    if (focusable.length === 0) return;
+                    const first = focusable[0];
+                    const last = focusable[focusable.length - 1];
+                    if (e.shiftKey && document.activeElement === first) {
+                        e.preventDefault();
+                        last.focus();
+                    } else if (!e.shiftKey && document.activeElement === last) {
+                        e.preventDefault();
+                        first.focus();
+                    }
+                }
+
                 window.addEventListener("open-search", openSearch);
+
+                if (closeBtn) {
+                    closeBtn.addEventListener("click", closeSearch);
+                }
 
                 if (overlay) {
                     overlay.addEventListener("click", function (e) {
@@ -106,6 +141,9 @@ const cfBeaconToken = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
                     }
                     if (e.key === "Escape" && isSearchOpen()) {
                         closeSearch();
+                    }
+                    if (e.key === "Tab" && isSearchOpen()) {
+                        trapFocus(e);
                     }
                 });
             })();

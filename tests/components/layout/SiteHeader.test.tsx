@@ -17,10 +17,13 @@ describe("SiteHeader", () => {
             const handler = vi.fn();
             window.addEventListener("open-search", handler);
 
-            screen.getByRole("button", { name: /search/i }).click();
+            try {
+                screen.getByRole("button", { name: /search/i }).click();
 
-            expect(handler).toHaveBeenCalledTimes(1);
-            window.removeEventListener("open-search", handler);
+                expect(handler).toHaveBeenCalledTimes(1);
+            } finally {
+                window.removeEventListener("open-search", handler);
+            }
         });
 
         it("should render a nav element for navigation links", () => {
@@ -130,10 +133,13 @@ describe("SiteHeader", () => {
             const handler = vi.fn();
             window.addEventListener("open-search", handler);
 
-            screen.getByRole("button", { name: /search/i }).click();
+            try {
+                screen.getByRole("button", { name: /search/i }).click();
 
-            expect(handler).toHaveBeenCalledTimes(1);
-            window.removeEventListener("open-search", handler);
+                expect(handler).toHaveBeenCalledTimes(1);
+            } finally {
+                window.removeEventListener("open-search", handler);
+            }
         });
 
         it("should render the site branding as a link to the homepage", () => {
