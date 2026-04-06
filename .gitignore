@@ -147,3 +147,6 @@ lousy-agents/
 # Playwright
 test-results/
 playwright-report/
+
+.DS_Store
+.playwright-mcp

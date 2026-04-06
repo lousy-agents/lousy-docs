@@ -298,6 +298,7 @@ body {
 .pagefind-ui.analog-terminal .pagefind-ui__search-input {
     font-family: "Courier New", Courier, monospace;
     color: var(--color-on-background);
+    padding-right: 65px;
 }
 
 .pagefind-ui.analog-terminal .pagefind-ui__search-input::placeholder {
@@ -358,8 +359,8 @@ body {
 
 .search-overlay__close {
     position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
+    top: calc(1.5rem + 10px);
+    right: calc(1.5rem + 17px);
     background: none;
     border: none;
     color: var(--color-on-background);
@@ -392,7 +393,7 @@ body {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    right: 12px;
+    right: 17px;
     margin: 0;
     display: flex;
     align-items: center;
