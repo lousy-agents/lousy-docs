@@ -13,7 +13,7 @@ lousy-docs is a static documentation site for the lousy-agents ecosystem, built 
 nvm use
 
 # Development
-npm run dev              # Astro dev server (http://0.0.0.0:3000)
+npm run dev              # Astro dev server (http://0.0.0.0:4321)
 npm run build            # Production static build -> dist/
 npm run preview          # Preview built site locally
 
@@ -121,7 +121,7 @@ Any component that overlays or traps user attention (dialogs, modals, drawers, s
 - Tab focus trap within the dialog
 - Save active element on open, restore focus on close
 - `inert` attribute on background content when open
-- `:focus-visible` outlines meeting WCAG 2.1 SC 1.4.11 Non-text Contrast (3:1 against adjacent colors)
+- `:focus-visible` outlines meeting `DESIGN.md` §2 WCAG Compliance requirements (3:1 against adjacent colors)
 - Keyboard dismiss (Escape key at minimum)
 
 ## Dependencies

@@ -93,10 +93,19 @@ Required when the component has `:hover`, `:focus`, `:focus-visible`, or `:activ
 3. browser_take_screenshot → capture :focus-visible state
 4. Verify ALL of:
    - Focus outline is VISIBLE in the screenshot (not just present in CSS)
-   - Outline uses primary (#bdce89) color
-   - Outline is at least 2px
-   - Contrast ratio against adjacent surface meets 3:1 per WCAG 2.1 SC 1.4.11
+   - Outline meets `DESIGN.md` §2 WCAG Compliance requirements (primary color, minimum width, contrast ratio)
 5. IF any check fails → fix CSS, reload, re-verify from step 1
+6. To programmatically verify contrast when screenshot analysis is ambiguous:
+   ```
+   browser_evaluate:
+     function: (el) => {
+       const style = getComputedStyle(el);
+       const parent = getComputedStyle(el.parentElement);
+       return { outline: style.outlineColor, bg: parent.backgroundColor };
+     }
+     ref: <target element ref>
+   ```
+   Compare returned values against the pre-verified reference: `#bdce89` on `#121410` = ~5.3:1 contrast.
 ```
 
 ### Active/pressed state (if applicable)
@@ -192,7 +201,7 @@ When analyzing screenshots, cross-reference these specific DESIGN.md rules:
 | Buttons | §5 — Primary uses gradient, Secondary is ghost-style | Flat solid buttons without gradient, or outlined buttons with visible border |
 | Inputs | §5 Terminal Input — monospace font, dark background | Sans-serif font in input fields, or input on wrong surface color |
 | Text contrast | §2 WCAG — 4.5:1 body, 4.5:1 placeholder | Dim, hard-to-read text or placeholder text that disappears into background |
-| Focus rings | §2 WCAG — `primary` at 2px, 3:1 contrast | No visible focus ring, or ring using `outline-variant` (~1.2:1 contrast) |
+| Focus rings | `DESIGN.md` §2 WCAG Compliance | No visible focus ring, or ring using `outline-variant` (~1.2:1 contrast) |
 
 ---
 
