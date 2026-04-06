@@ -10,6 +10,7 @@
     --color-on-background: #e6ead8;
     --color-outline-variant: #46483e;
     --color-error: #ffb4ab;
+    --color-primary-highlight: rgba(189, 206, 137, 0.25);
     --font-display: "Space Grotesk", sans-serif;
     --font-body: "Manrope", sans-serif;
     /* Header height (4rem = 64px) + 1rem breathing room */
@@ -312,7 +313,7 @@ body {
 }
 
 .pagefind-ui.analog-terminal mark {
-    background-color: rgba(189, 206, 137, 0.25);
+    background-color: var(--color-primary-highlight);
     color: var(--color-primary);
     padding: 0.05em 0.15em;
     border-radius: 2px;
@@ -356,7 +357,7 @@ body {
 
 /* Pagefind highlight on destination pages */
 mark[data-pagefind-highlight] {
-    background-color: rgba(189, 206, 137, 0.25);
+    background-color: var(--color-primary-highlight);
     color: var(--color-primary);
     padding: 0.05em 0.15em;
     border-radius: 2px;
