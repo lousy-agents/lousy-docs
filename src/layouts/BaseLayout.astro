@@ -81,6 +81,10 @@ const cfBeaconToken = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
                     document.body.style.overflow = "";
                 }
 
+                function isSearchOpen() {
+                    return overlay && overlay.classList.contains("search-overlay--open");
+                }
+
                 window.addEventListener("open-search", openSearch);
 
                 if (overlay) {
@@ -94,13 +98,13 @@ const cfBeaconToken = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
                 document.addEventListener("keydown", function (e) {
                     if ((e.metaKey || e.ctrlKey) && e.key === "k") {
                         e.preventDefault();
-                        if (overlay && overlay.classList.contains("search-overlay--open")) {
+                        if (isSearchOpen()) {
                             closeSearch();
                         } else {
                             openSearch();
                         }
                     }
-                    if (e.key === "Escape" && overlay && overlay.classList.contains("search-overlay--open")) {
+                    if (e.key === "Escape" && isSearchOpen()) {
                         closeSearch();
                     }
                 });
