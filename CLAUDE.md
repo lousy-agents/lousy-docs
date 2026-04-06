@@ -81,6 +81,8 @@ Dependencies point inward only: Entities -> Use Cases -> Adapters -> Infrastruct
 - Mock HTTP with MSW only (never mock fetch directly)
 - Never export functions solely for testing -- use dependency injection via parameters
 - Reset MSW handlers between tests for isolation
+- Event listeners added in tests MUST be removed in `try/finally` or `afterEach` -- never rely on cleanup after assertions
+- Interactive UI (dialogs, overlays, drawers, keyboard shortcuts) MUST have e2e tests covering open, close (all methods), focus management, and keyboard navigation
 
 ## UI Design and Mockups
 
@@ -92,6 +94,29 @@ Use the **Stitch MCP server** for UI mockups and design work. Stitch tools are a
 - Managing projects and screens (`create_project`, `list_projects`, `list_screens`)
 
 When creating UI mockups, reference the "Analog Terminal" design system documented in `DESIGN.md` for colors, typography, elevation, and component guidelines.
+
+## UI Implementation Checklist
+
+Before writing CSS or implementing any interactive UI component, cross-reference `DESIGN.md`:
+
+1. **Surface tier**: Identify the component type (base, sectioning, card, floating) and use the correct surface color from §2
+2. **Floating panels**: Must use `surface-container-highest` + `backdrop-filter: blur()` per the Glass & Gradient Rule (§2)
+3. **Borders**: Use ghost borders at 15% opacity per §4 -- never solid 1px borders
+4. **Shadows**: Ambient shadows use `on-surface` at 6% opacity with 40px blur per §4
+5. **Inputs**: Must use monospace font per §5 "Terminal Input"
+6. **Contrast**: All text and placeholder colors must meet WCAG 2.1 AA 4.5:1 minimum
+
+### Accessibility Requirements for Interactive UI
+
+Any component that overlays or traps user attention (dialogs, modals, drawers, search overlays) MUST implement:
+
+- `role="dialog"` with `aria-modal="true"` and `aria-label`
+- Visible, focusable close button with accessible name (`aria-label`)
+- Tab focus trap within the dialog
+- Save active element on open, restore focus on close
+- `inert` attribute on background content when open
+- `:focus-visible` outlines meeting WCAG 2.2 SC 2.4.11 (3:1 contrast, minimum area)
+- Keyboard dismiss (Escape key at minimum)
 
 ## Dependencies
 
@@ -116,4 +141,4 @@ See `.github/instructions/spec.instructions.md` for full EARS syntax and spec st
 
 **Ask first:** Adding new dependencies, changing project structure, modifying GitHub Actions workflows.
 
-**Never:** Skip TDD workflow, use Jest (use Vitest), mock fetch directly (use MSW), use type assertions on external data, add dependencies without exact version numbers, use `'use client'` directive.
+**Never:** Skip TDD workflow, use Jest (use Vitest), mock fetch directly (use MSW), use type assertions on external data, add dependencies without exact version numbers, use `'use client'` directive, use empty `catch` blocks that swallow errors silently (always log or rethrow).

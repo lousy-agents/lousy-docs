@@ -56,6 +56,18 @@ describe('ComponentName', () => {
 15. Write tests that would FAIL if production code regressed.
 16. **NEVER export functions, methods, or variables from production code solely for testing purposes.**
 17. **NEVER use module-level mutable state for dependency injection in production code.**
+18. **Event listeners added during tests MUST be removed in `try/finally` or `afterEach`** — never place cleanup after assertions, as a failed assertion will skip it and leak the listener into subsequent tests.
+
+## Interactive UI Testing
+
+Interactive components (dialogs, overlays, drawers, popovers, keyboard shortcuts) require **e2e tests** in addition to unit tests. Unit tests verify event dispatch and rendering; e2e tests verify the actual user experience.
+
+### Required e2e coverage for overlay/dialog components:
+- Open via all trigger methods (button click, keyboard shortcut)
+- Close via all dismiss methods (close button, Escape, backdrop click)
+- Focus is trapped within the dialog while open
+- Focus returns to the previously focused element on close
+- Keyboard navigation works correctly within the component
 
 ## Dependency Injection for Testing
 

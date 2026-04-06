@@ -30,6 +30,12 @@ Treat the UI as a series of physical plates.
 ### The Glass & Gradient Rule
 To achieve "lo-fi" depth, use semi-transparent surface colors with a `backdrop-blur` of 8px-12px for floating panels. For primary buttons, use a subtle linear gradient from `primary` (`#bdce89`) to `primary-container` (`#5f6e34`) to mimic the soft glow of a backlit physical button.
 
+### WCAG Compliance
+All surface/text combinations must meet WCAG 2.1 AA contrast minimums:
+*   **Body text**: 4.5:1 ratio against its background
+*   **Placeholder text**: 4.5:1 ratio — do not rely on low-opacity values without verifying contrast
+*   **Focus indicators**: `:focus-visible` outlines must achieve 3:1 contrast against adjacent colors per WCAG 2.2 SC 2.4.11; use `primary` (`#bdce89`) at 2px minimum, not `outline-variant` which only achieves ~1.2:1 on dark surfaces
+
 ---
 
 ## 3. Typography
@@ -48,7 +54,7 @@ We reject traditional drop shadows in favor of **Tonal Layering**.
 
 *   **The Layering Principle:** Place a `surface-container-lowest` element on a `surface-container-low` background to create a "recessed" look. Place a `surface-container-high` element to create a "raised" look.
 *   **Ambient Shadows:** If an element must float (e.g., a modal), use a shadow tinted with `on-surface` at 6% opacity with a 40px blur. It should feel like a soft glow, not a shadow.
-*   **The "Ghost Border":** If accessibility requires a stroke, use `outline-variant` (`#46483e`) at 15% opacity. It should be barely felt, appearing only as a change in texture.
+*   **The "Ghost Border":** For decorative or structural separation (e.g., card edges, panel boundaries), use `outline-variant` (`#46483e`) at 15% opacity. It should be barely felt, appearing only as a change in texture. **This does not apply to interactive focus indicators** — see the WCAG Compliance section in §2 for `:focus-visible` requirements.
 *   **Stitch Detail:** Inspired by the "Lousy Agent" character, use 2px dashed "Ghost Borders" in secondary colors to denote "beta" or "experimental" containers, mimicking the patches on the character's coat.
 
 ---
@@ -61,7 +67,8 @@ We reject traditional drop shadows in favor of **Tonal Layering**.
 *   **Tertiary:** `surface-container-highest` background, monospace labels.
 
 ### Input Fields & Terminal Blocks
-*   **The Terminal Input:** Dark `surface-container-lowest` background with a `primary` cursor blink. Text must be monospace.
+*   **The Terminal Input:** Dark `surface-container-lowest` background with a `primary` cursor blink. Text must be monospace (`"Courier New", Courier, monospace`). This applies to all search inputs, form fields, and any input that accepts user text.
+*   **Placeholder text:** Must use a color that achieves WCAG 2.1 AA 4.5:1 contrast against the input background. On dark surfaces, `rgba(230, 234, 216, 0.58)` is the tested minimum.
 *   **Validation:** Use the `error` (`#ffb4ab`) color only for critical failures. For warnings, use the `secondary` amber.
 
 ### Cards & Lists

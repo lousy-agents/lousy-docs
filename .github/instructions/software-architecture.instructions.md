@@ -437,4 +437,8 @@ export class GetProductsUseCase {
 - Pages use `client:only="react"` for Ant Design islands
 - Layouts contain only HTML structure and global styles — no React or Ant Design
 - Use cases are testable with simple mocks (no HTTP)
+- CSS for new UI components cross-references `DESIGN.md` surface hierarchy, border, and shadow rules
+- Interactive overlays/dialogs implement full accessibility: `aria-modal`, focus trap, focus restore, `inert`, keyboard dismiss
+- No empty `catch` blocks — all errors are logged or rethrown
+- Focus indicators use `primary` color (not `outline-variant`) for WCAG 2.2 SC 2.4.11 compliance
 
