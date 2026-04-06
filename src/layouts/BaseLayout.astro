@@ -157,15 +157,20 @@ const cfBeaconToken = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
         </script>
         <script is:inline>
             document.addEventListener("DOMContentLoaded", function () {
-                try {
-                    const script = document.createElement("script");
-                    script.type = "module";
-                    script.textContent =
-                        "try { await import('/pagefind/pagefind-highlight.js'); new PagefindHighlight({ highlightParam: 'highlight' }); } catch(e) {}";
-                    document.head.appendChild(script);
-                } catch (e) {
-                    console.debug("[pagefind-highlight] Failed to load:", e);
-                }
+                const script = document.createElement("script");
+                script.type = "module";
+                script.src = "/pagefind/pagefind-highlight.js";
+                script.onload = function () {
+                    try {
+                        new window.PagefindHighlight({ highlightParam: "highlight" });
+                    } catch (e) {
+                        console.debug("[pagefind-highlight] Initialization failed:", e);
+                    }
+                };
+                script.onerror = function () {
+                    console.debug("[pagefind-highlight] Script not found (expected before first build)");
+                };
+                document.head.appendChild(script);
             });
         </script>
         {cfBeaconToken && (
