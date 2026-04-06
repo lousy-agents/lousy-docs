@@ -375,6 +375,36 @@ body {
     opacity: 1;
 }
 
+/* Static content mirror used for Pagefind indexing (hidden from users) */
+.pagefind-index-content {
+    display: none;
+}
+
+/* Pagefind clear button — override browser/Ant Design defaults */
+.pagefind-ui.analog-terminal .pagefind-ui__search-clear {
+    background: none;
+    border: none;
+    color: rgba(230, 234, 216, 0.6);
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    outline: none;
+    transition: color 0.15s;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.pagefind-ui.analog-terminal .pagefind-ui__search-clear:hover {
+    color: var(--color-on-background);
+}
+
+.pagefind-ui.analog-terminal .pagefind-ui__search-clear:focus-visible {
+    outline: 1px solid var(--color-outline-variant);
+    outline-offset: 2px;
+}
+
 /* Pagefind highlight on destination pages */
 mark[data-pagefind-highlight] {
     background-color: var(--color-primary-highlight);
