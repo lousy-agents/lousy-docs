@@ -5,6 +5,6 @@ import { HomePage } from "../components/home/HomePage";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="lousy-docs — Analog Terminal">
+<BaseLayout title="lousy-docs — Analog Terminal" pagefindIgnore={true}>
     <HomePage client:only="react" />
 </BaseLayout>

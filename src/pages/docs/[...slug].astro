@@ -31,8 +31,11 @@ const { Content, headings } = await render(doc);
     </DocsLayoutShell>
     <!-- Rendered as static HTML so Pagefind can index it at build time.
          The slot above lands inside <template data-astro-template> (client:only)
-         which Pagefind cannot read. This mirror is hidden from users. -->
-    <div class="pagefind-index-content" data-pagefind-body>
+         which Pagefind cannot read. This mirror is hidden from users (display:none).
+         Known limitation: heading IDs from <Content /> are duplicated in the live DOM
+         after JS hydration — a consequence of the client:only + static mirror pattern.
+         Anchors and getElementById resolve correctly to the visible heading first. -->
+    <div class="pagefind-index-content" data-pagefind-body aria-hidden="true">
         <Content />
     </div>
 </BaseLayout>
