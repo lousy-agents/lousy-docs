@@ -25,16 +25,19 @@ Treat the UI as a series of physical plates.
 1.  **Base:** `surface` (`#121410`)
 2.  **Sectioning:** `surface-container-low` (`#1a1c18`)
 3.  **Components/Cards:** `surface-container` (`#1e201c`)
-4.  **Floating/Active:** `surface-container-highest` (`#333531`)
+4.  **Raised:** `surface-container-high` (`#252720`)
+5.  **Floating/Active:** `surface-container-highest` (`#333531`)
+
+> **Note:** `surface-container-lowest` appears in §4 (recessed layering) and §5 (input backgrounds) as a conceptual tier below `surface`. It does not have a dedicated CSS custom property — use `surface` (`#121410`) for these recessed contexts.
 
 ### The Glass & Gradient Rule
 To achieve "lo-fi" depth, use semi-transparent surface colors with a `backdrop-blur` of 8px-12px for floating panels. For primary buttons, use a subtle linear gradient from `primary` (`#bdce89`) to `primary-container` (`#5f6e34`) to mimic the soft glow of a backlit physical button.
 
 ### WCAG Compliance
-All surface/text combinations must meet WCAG 2.1 AA contrast minimums:
+All surface/text combinations must meet WCAG AA accessibility requirements. Contrast minimums come from WCAG 2.1; focus indicator guidance draws on both 2.1 and 2.2:
 *   **Body text**: 4.5:1 ratio against its background
-*   **Placeholder text**: 4.5:1 ratio — do not rely on low-opacity values without verifying contrast
-*   **Focus indicators**: `:focus-visible` outlines must achieve 3:1 contrast against adjacent colors per WCAG 2.2 SC 2.4.11; use `primary` (`#bdce89`) at 2px minimum, not `outline-variant` which only achieves ~1.2:1 on dark surfaces
+*   **Placeholder text**: 4.5:1 ratio — do not rely on low-opacity values without verifying contrast against the specific background surface
+*   **Focus indicators**: `:focus-visible` outlines must achieve 3:1 contrast against adjacent colors per WCAG 2.1 SC 1.4.11 (Non-text Contrast); use `primary` (`#bdce89`) at 2px minimum, not `outline-variant` which only achieves ~1.2:1 on dark surfaces
 
 ---
 
@@ -68,7 +71,7 @@ We reject traditional drop shadows in favor of **Tonal Layering**.
 
 ### Input Fields & Terminal Blocks
 *   **The Terminal Input:** Dark `surface-container-lowest` background with a `primary` cursor blink. Text must be monospace (`"Courier New", Courier, monospace`). This applies to all search inputs, form fields, and any input that accepts user text.
-*   **Placeholder text:** Must use a color that achieves WCAG 2.1 AA 4.5:1 contrast against the input background. On dark surfaces, `rgba(230, 234, 216, 0.58)` is the tested minimum.
+*   **Placeholder text:** Must use a color that achieves WCAG 2.1 AA 4.5:1 contrast against the input background. For inputs on `surface` / `surface-container-lowest` (`#121410`), `rgba(230, 234, 216, 0.58)` is the tested minimum after compositing. If the input uses a different surface token, re-verify the rendered contrast.
 *   **Validation:** Use the `error` (`#ffb4ab`) color only for critical failures. For warnings, use the `secondary` amber.
 
 ### Cards & Lists

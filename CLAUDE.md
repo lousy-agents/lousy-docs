@@ -97,7 +97,7 @@ When creating UI mockups, reference the "Analog Terminal" design system document
 
 ## UI Implementation Checklist
 
-Before writing CSS or implementing any interactive UI component, cross-reference `DESIGN.md`:
+Before writing CSS or implementing any interactive UI component, cross-reference `DESIGN.md`. This checklist applies when creating new components with custom styles or interactive behavior — it does not apply to pure business logic, data-fetching, or test changes.
 
 1. **Surface tier**: Identify the component type (base, sectioning, card, floating) and use the correct surface color from §2
 2. **Floating panels**: Must use `surface-container-highest` + `backdrop-filter: blur()` per the Glass & Gradient Rule (§2)
@@ -110,12 +110,12 @@ Before writing CSS or implementing any interactive UI component, cross-reference
 
 Any component that overlays or traps user attention (dialogs, modals, drawers, search overlays) MUST implement:
 
-- `role="dialog"` with `aria-modal="true"` and `aria-label`
-- Visible, focusable close button with accessible name (`aria-label`)
+- `role="dialog"` with `aria-modal="true"` and an accessible name (`aria-label` or `aria-labelledby` referencing a visible heading)
+- Visible, focusable close button with accessible name (visible text, `aria-label`, or `aria-labelledby`; use `aria-label` for icon-only buttons)
 - Tab focus trap within the dialog
 - Save active element on open, restore focus on close
 - `inert` attribute on background content when open
-- `:focus-visible` outlines meeting WCAG 2.2 SC 2.4.11 (3:1 contrast, minimum area)
+- `:focus-visible` outlines meeting WCAG 2.1 SC 1.4.11 Non-text Contrast (3:1 against adjacent colors)
 - Keyboard dismiss (Escape key at minimum)
 
 ## Dependencies
