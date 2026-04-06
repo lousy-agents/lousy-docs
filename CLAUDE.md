@@ -18,12 +18,15 @@ npm run build            # Production static build -> dist/
 npm run preview          # Preview built site locally
 
 # Testing
-npm test                 # Vitest run
+npm test                 # Vitest unit tests
 npm test path/to/file.test.ts  # Single test file
+npm run test:e2e         # Playwright e2e tests
+npm run test:e2e:dist    # e2e tests against production build
+npm run test:e2e:ui      # Playwright UI mode (interactive dev)
 
 # Linting
 npx biome check          # Lint + format check
-npx biome check --write  # Auto-fix lint/format
+npx biome check --write  # Auto-fix lint/format (alias: npm run lint:fix)
 npx biome check path/to/file.ts  # Single file
 npm run lint:workflows   # Validate GitHub Actions (actionlint)
 npm run lint:yaml        # Validate YAML (yamllint)

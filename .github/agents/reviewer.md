@@ -32,16 +32,18 @@ Perform the following analysis, documenting your reasoning:
 
 4.  **Design System Compliance:** Verify adherence to `DESIGN.md`:
     * **No-Line Rule:** Are borders used for sectioning instead of background color shifts?
-    * **Surface Hierarchy:** Is the tonal layering correct (surface → surface-container-low → surface-container)?
+    * **Surface Hierarchy:** Is the tonal layering correct (surface → surface-container-low → surface-container → surface-container-high → surface-container-highest)?
     * **Typography Pairing:** Is Space Grotesk used for display/headlines, Manrope for body?
     * **Color Usage:** Is `#bdce89` (primary) used correctly? Is error color (`#ffb4ab`) reserved for critical failures?
 
 5.  **TDD & Test Quality:** Verify per `.github/instructions/test.instructions.md`:
     * **Missing Tests:** Does new functionality have corresponding test coverage?
+    * **E2E Tests:** Do interactive UI components (dialogs, overlays, drawers) have e2e tests covering open, close, focus trap, and keyboard navigation?
     * **Test Isolation:** Are tests deterministic? Any shared mutable state?
     * **MSW Usage:** Are HTTP calls mocked with MSW (not direct fetch mocks)?
     * **Chance.js Fixtures:** Are hardcoded test values avoided?
     * **Test-Only Exports:** Are functions exported solely for testing (violation)?
+    * **Event Listener Cleanup:** Are event listeners added in tests removed in `try/finally` or `afterEach` (not after assertions)?
 
 ## Review Protocol
 

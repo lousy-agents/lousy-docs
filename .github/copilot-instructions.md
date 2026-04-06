@@ -16,10 +16,15 @@ nvm use
 
 # Core commands
 npm install              # Install deps (updates package-lock.json)
-npm test                 # Run tests (vitest)
+npm test                 # Run unit tests (vitest)
 npm run build            # Production build
 npx biome check          # Lint check
-npx biome check --write  # Auto-fix lint/format
+npx biome check --write  # Auto-fix lint/format (alias: npm run lint:fix)
+
+# E2E tests
+npm run test:e2e         # Playwright e2e tests
+npm run test:e2e:dist    # E2e tests against production build
+npm run test:e2e:ui      # Playwright UI mode (interactive dev)
 
 # File-scoped (faster feedback)
 npx biome check path/to/file.ts
