@@ -19,9 +19,7 @@ test.describe("Search", () => {
             await search.expectToBeVisible();
             await search.search("init");
 
-            // Assert — search results must appear; currently fails because
-            // data-pagefind-body is inside <template data-astro-template> (a
-            // client:only slot) so Pagefind never indexes the docs content.
+            // Assert — search results should appear for matching docs content.
             await search.expectResultsToBeVisible();
         });
 

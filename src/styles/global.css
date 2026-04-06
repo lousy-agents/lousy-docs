@@ -288,7 +288,7 @@ body {
     --pagefind-ui-scale: 0.85;
     --pagefind-ui-primary: var(--color-primary);
     --pagefind-ui-text: var(--color-on-background);
-    --pagefind-ui-background: var(--color-surface-container-low);
+    --pagefind-ui-background: var(--color-surface-container-highest);
     --pagefind-ui-border: var(--color-outline-variant);
     --pagefind-ui-border-width: 1px;
     --pagefind-ui-border-radius: 6px;
@@ -389,6 +389,14 @@ body {
 
 /* Pagefind clear button — override browser/Ant Design defaults */
 .pagefind-ui.analog-terminal .pagefind-ui__search-clear {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 12px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    height: auto;
     background: none;
     border: none;
     color: rgba(230, 234, 216, 0.6);
@@ -399,8 +407,6 @@ body {
     border-radius: 4px;
     outline: none;
     transition: color 0.15s;
-    top: 50%;
-    transform: translateY(-50%);
 }
 
 .pagefind-ui.analog-terminal .pagefind-ui__search-clear:hover {
