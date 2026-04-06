@@ -44,7 +44,9 @@ All code changes must follow this sequence:
 3. **Implement minimal code** -> **Verify pass** with `npm test`
 4. **Refactor** -> **Validate**: `npx biome check && npm test && npm run build`
 
-Task is NOT complete until full validation passes.
+**For UI-layer changes** (components, layouts, styles, pages), the Visual Debugging Protocol adds mandatory steps between 3 and 4. See `.github/instructions/visual-verification.instructions.md` for the full protocol. In short: capture baseline screenshot → implement → screenshot again → analyze visual delta → verify interactive states → check responsive breakpoints → loop until correct. The agent must self-verify via Playwright MCP before returning control to the human.
+
+Task is NOT complete until full validation passes (code AND visual).
 
 ## Tech Stack
 
@@ -108,6 +110,7 @@ Before writing CSS or implementing any interactive UI component, cross-reference
 4. **Shadows**: Ambient shadows use `on-surface` at 6% opacity with 40px blur per §4
 5. **Inputs**: Must use monospace font per §5 "Terminal Input"
 6. **Contrast**: All text and placeholder colors must meet WCAG 2.1 AA 4.5:1 minimum
+7. **Visual verification**: ALL items above must be verified via Playwright MCP screenshot (not just code review). See `.github/instructions/visual-verification.instructions.md` for the full protocol.
 
 ### Accessibility Requirements for Interactive UI
 
@@ -144,4 +147,4 @@ See `.github/instructions/spec.instructions.md` for full EARS syntax and spec st
 
 **Ask first:** Adding new dependencies, changing project structure, modifying GitHub Actions workflows.
 
-**Never:** Skip TDD workflow, use Jest (use Vitest), mock fetch directly (use MSW), use type assertions on external data, add dependencies without exact version numbers, use `'use client'` directive, use empty `catch` blocks that swallow errors silently (always log or rethrow).
+**Never:** Skip TDD workflow, use Jest (use Vitest), mock fetch directly (use MSW), use type assertions on external data, add dependencies without exact version numbers, use `'use client'` directive, use empty `catch` blocks that swallow errors silently (always log or rethrow), declare a UI task complete without visual verification via Playwright MCP screenshots.
