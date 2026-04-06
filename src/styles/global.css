@@ -296,12 +296,12 @@ body {
 }
 
 .pagefind-ui.analog-terminal .pagefind-ui__search-input {
-    font-family: var(--font-body);
+    font-family: "Courier New", Courier, monospace;
     color: var(--color-on-background);
 }
 
 .pagefind-ui.analog-terminal .pagefind-ui__search-input::placeholder {
-    color: rgba(230, 234, 216, 0.4);
+    color: rgba(230, 234, 216, 0.58);
 }
 
 .pagefind-ui.analog-terminal .pagefind-ui__result-link {
