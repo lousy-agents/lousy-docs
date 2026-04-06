@@ -25,7 +25,7 @@ const { Content, headings } = await render(doc);
 
 <BaseLayout title={`${doc.data.title} — Lousy Agents Docs`} description={doc.data.description}>
     <DocsLayoutShell client:only="react" docs={docEntries} currentSlug={doc.id} headings={headings}>
-        <div class="docs-content">
+        <div class="docs-content" data-pagefind-body>
             <Content />
         </div>
     </DocsLayoutShell>

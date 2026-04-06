@@ -4,6 +4,25 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 
 describe("SiteHeader", () => {
     describe("given a desktop viewport", () => {
+        it("should render a search button", () => {
+            render(<SiteHeader isMobile={false} />);
+
+            expect(
+                screen.getByRole("button", { name: /search/i }),
+            ).toBeInTheDocument();
+        });
+
+        it("should dispatch open-search event when search button is clicked", () => {
+            render(<SiteHeader isMobile={false} />);
+            const handler = vi.fn();
+            window.addEventListener("open-search", handler);
+
+            screen.getByRole("button", { name: /search/i }).click();
+
+            expect(handler).toHaveBeenCalledTimes(1);
+            window.removeEventListener("open-search", handler);
+        });
+
         it("should render a nav element for navigation links", () => {
             render(<SiteHeader isMobile={false} />);
 
@@ -98,6 +117,25 @@ describe("SiteHeader", () => {
     });
 
     describe("given a mobile viewport", () => {
+        it("should render a search button", () => {
+            render(<SiteHeader isMobile={true} />);
+
+            expect(
+                screen.getByRole("button", { name: /search/i }),
+            ).toBeInTheDocument();
+        });
+
+        it("should dispatch open-search event when search button is clicked", () => {
+            render(<SiteHeader isMobile={true} />);
+            const handler = vi.fn();
+            window.addEventListener("open-search", handler);
+
+            screen.getByRole("button", { name: /search/i }).click();
+
+            expect(handler).toHaveBeenCalledTimes(1);
+            window.removeEventListener("open-search", handler);
+        });
+
         it("should render the site branding as a link to the homepage", () => {
             render(<SiteHeader isMobile={true} />);
 

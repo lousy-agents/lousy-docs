@@ -78,6 +78,10 @@ interface DesktopHeaderProps {
     currentPathname: string;
 }
 
+function openSearch() {
+    window.dispatchEvent(new CustomEvent("open-search"));
+}
+
 function DesktopHeader({ currentPathname }: DesktopHeaderProps) {
     return (
         <header style={headerStyle}>
@@ -104,6 +108,19 @@ function DesktopHeader({ currentPathname }: DesktopHeaderProps) {
                 </Flex>
             </nav>
             <Flex align="center" gap={16}>
+                <button
+                    type="button"
+                    style={iconButtonStyle}
+                    aria-label="Search"
+                    onClick={openSearch}
+                >
+                    <span
+                        className="material-symbols-outlined"
+                        aria-hidden="true"
+                    >
+                        search
+                    </span>
+                </button>
                 <button
                     type="button"
                     style={iconButtonStyle}
@@ -163,6 +180,19 @@ export function MobileHeader({ onMenuToggle, isMenuOpen }: MobileHeaderProps) {
                 </a>
             </Flex>
             <Flex align="center" gap={8}>
+                <button
+                    type="button"
+                    style={iconButtonStyle}
+                    aria-label="Search"
+                    onClick={openSearch}
+                >
+                    <span
+                        className="material-symbols-outlined"
+                        aria-hidden="true"
+                    >
+                        search
+                    </span>
+                </button>
                 <button
                     type="button"
                     style={iconButtonStyle}
