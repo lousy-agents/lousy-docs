@@ -75,7 +75,7 @@ const shortcutBadgeStyle: React.CSSProperties = {
     fontFamily: "'Courier New', Courier, monospace",
     fontSize: "0.6875rem",
     color: "rgba(189, 206, 137, 0.5)",
-    border: "1px solid rgba(70, 72, 62, 0.4)",
+    border: "1px solid rgba(70, 72, 62, 0.15)",
     borderRadius: "4px",
     padding: "1px 5px",
     lineHeight: 1.4,
