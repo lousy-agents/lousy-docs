@@ -37,9 +37,9 @@ jobs:
   lint-agents:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
       - name: Lousy Agents Lint
-        uses: zpratt/lousy-agents@main
+        uses: zpratt/lousy-agents@e4d7eea8ebe635b34c99b118936b95bdaab36411  # v5.9.4
 ```
 
 > For all available lint rules and CLI options, see the [lint Command](/docs/lint) documentation.
@@ -52,10 +52,11 @@ Add this to your MCP configuration:
 
 ```json
 {
-  "mcpServers": {
-    "lousy": {
+  "servers": {
+    "lousy-agents": {
+      "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@lousy-agents/mcp"]
+      "args": ["-y", "-p", "@lousy-agents/mcp", "lousy-agents-mcp"]
     }
   }
 }

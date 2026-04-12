@@ -2,8 +2,8 @@ import { getCollection } from "astro:content";
 import type { APIRoute } from "astro";
 
 const DOC_ORDER = [
-    "readme",
     "quickstart",
+    "readme",
     "init",
     "new",
     "lint",
