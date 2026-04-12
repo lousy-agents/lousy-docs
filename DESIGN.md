@@ -110,10 +110,11 @@ We reject traditional drop shadows in favor of **Tonal Layering** and **Ambient 
 
 ### Border Radius Scale
 The system defines three radius tiers:
-*   **`sm`** (4px): Small controls, inline code badges, and compact elements.
+*   **`sm`** (4px): Small controls and compact elements.
 *   **`md`** (6px): The default. Buttons, cards, inputs, and most interactive components.
 *   **`lg`** (8px): Larger containers and elevated panels.
-*   **Exception:** Full-panel overlays (e.g., the search modal) may use 12px for a softer floating appearance. This is an explicit exception, not a general-purpose radius.
+*   **Exception — inline code:** Inline code in prose uses 3px—between `sm` and the 2px used for search marks—matching the compact scale of inline text elements.
+*   **Exception — full-panel overlays:** The search modal uses 12px for a softer floating appearance. This is an explicit exception, not a general-purpose radius.
 
 ### Input Fields & Terminal Blocks
 *   **The Terminal Input:** Dark `surface` (recessed) background with a `primary`-colored cursor blink. Text must be monospace (`"Courier New", Courier, monospace`). This applies to all search inputs, form fields, and any input that accepts user text—the monospace font is a non-negotiable brand signal.
