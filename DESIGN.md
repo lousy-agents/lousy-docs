@@ -40,7 +40,7 @@ Treat the UI as a series of physical plates bolted onto the console. Each surfac
 | 4. Raised | `surface-container-high` | `#252720` | Active panels, hover states, elevated UI |
 | 5. Floating | `surface-container-highest` | `#333531` | Modals, popovers, floating overlays |
 
-> **Note:** `surface-container-lowest` appears in §4 (recessed layering) and §5 (input backgrounds) as a conceptual tier below `surface`. It does not have a dedicated CSS custom property—use `surface` (`#121410`) for these recessed contexts.
+> **Note:** `surface-container-lowest` is a conceptual tier below `surface`, referenced by "(recessed)" annotations in §4 and §5. It does not have a dedicated CSS custom property—use `surface` (`#121410`) for these recessed contexts.
 
 ### The "No-Line" Rule
 High-contrast or opaque borders are prohibited for layout sectioning. Containment is achieved through:
@@ -55,10 +55,10 @@ For floating panels (modals, search overlays), use semi-transparent `surface-con
 For primary buttons, use a subtle linear gradient from `primary` (`#bdce89`) to `primary-container` (`#5f6e34`) to mimic the soft glow of a backlit physical button.
 
 ### WCAG Compliance
-All surface/text combinations must meet WCAG AA accessibility requirements. Contrast minimums come from WCAG 2.1; focus indicator guidance draws on both 2.1 and 2.2:
+All surface/text combinations must meet WCAG AA accessibility requirements. Contrast minimums come from WCAG 2.1; touch target guidance draws on 2.2:
 *   **Body text**: 4.5:1 ratio against its background
 *   **Placeholder text**: 4.5:1 ratio—do not rely on low-opacity values without verifying contrast against the specific background surface. For inputs on `surface` (`#121410`), `rgba(230, 234, 216, 0.58)` is the tested minimum after compositing.
-*   **Focus indicators**: `:focus-visible` outlines must achieve 3:1 contrast against adjacent colors per WCAG 2.1 SC 1.4.11 (Non-text Contrast); use `primary` (`#bdce89`) at 2px minimum width, not `outline-variant` which only achieves ~1.6–2.0:1 on dark surfaces and fails the 3:1 minimum
+*   **Focus indicators**: `:focus-visible` outlines must achieve 3:1 contrast against adjacent colors per WCAG 2.1 SC 1.4.11 (Non-text Contrast); use `primary` (`#bdce89`) at 2px minimum width, not `outline-variant` which only achieves ~1.3–2.0:1 on dark surfaces (as low as ~1.3:1 on `surface-container-highest`) and fails the 3:1 minimum
 *   **Interactive targets**: All clickable/tappable elements must meet minimum 44×44px touch target size. This is a stricter project standard that exceeds WCAG 2.2 SC 2.5.8's 24×24px minimum.
 
 ---
@@ -135,7 +135,7 @@ Markdown-rendered content in the docs area has opinionated brand styling:
 *   **Code blocks (`<pre>`):** `surface-container-low` background with a 1px `outline-variant` border at 20% opacity and `md` (6px) radius. Content text uses `on-background` color.
 *   **Blockquotes:** 3px solid `primary-container` left border with a 10% `primary-container` tinted background. Text is slightly muted (`on-background` at 80%). This is the "terminal sidebar accent" pattern.
 *   **Heading underlines (H2):** `outline-variant` at 25% opacity—a content landmark stronger than structural ghost separators but within the accepted opacity range.
-*   **Table headers:** `surface-container-low` background, `primary` text, uppercase with 0.05em letter-spacing. This "terminal column header" treatment reinforces the engineering aesthetic.
+*   **Table headers:** `surface-container-low` background, `primary` text, uppercase with 0.05em letter-spacing. Border-bottom uses `outline-variant` at 30% opacity—the strongest ghost separator tier. This "terminal column header" treatment reinforces the engineering aesthetic.
 *   **Table cell borders:** `outline-variant` at 15% opacity—standard ghost separator weight.
 
 ### Special Component: "The Patch"
