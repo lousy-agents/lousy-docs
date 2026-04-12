@@ -18,7 +18,8 @@ try {
         target: "es2020",
     });
     await writeFile(filePath, result.code, "utf-8");
-    const savedBytes = source.length - result.code.length;
+    const savedBytes =
+        Buffer.byteLength(source) - Buffer.byteLength(result.code);
     console.log(
         `[minify-pagefind] Minified pagefind-highlight.js (saved ${savedBytes} bytes)`,
     );

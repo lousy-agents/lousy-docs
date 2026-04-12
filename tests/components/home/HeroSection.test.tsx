@@ -53,9 +53,9 @@ describe("HeroSection", () => {
         it("should render the mascot image with descriptive alt text", () => {
             render(<HeroSection />);
 
-            expect(
-                screen.getByRole("img", { name: /mascot/i }),
-            ).toBeInTheDocument();
+            const mascot = screen.getByRole("img", { name: /mascot/i });
+            expect(mascot).toBeInTheDocument();
+            expect(mascot).toHaveAttribute("src", "/mascot-160w.jpg");
         });
     });
 });
