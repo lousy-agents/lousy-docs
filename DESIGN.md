@@ -58,7 +58,7 @@ For primary buttons, use a subtle linear gradient from `primary` (`#bdce89`) to 
 All surface/text combinations must meet WCAG AA accessibility requirements. Contrast minimums come from WCAG 2.1; focus indicator guidance draws on both 2.1 and 2.2:
 *   **Body text**: 4.5:1 ratio against its background
 *   **Placeholder text**: 4.5:1 ratio—do not rely on low-opacity values without verifying contrast against the specific background surface. For inputs on `surface` (`#121410`), `rgba(230, 234, 216, 0.58)` is the tested minimum after compositing.
-*   **Focus indicators**: `:focus-visible` outlines must achieve 3:1 contrast against adjacent colors per WCAG 2.1 SC 1.4.11 (Non-text Contrast); use `primary` (`#bdce89`) at 2px minimum width, not `outline-variant` which only achieves ~1.2:1 on dark surfaces
+*   **Focus indicators**: `:focus-visible` outlines must achieve 3:1 contrast against adjacent colors per WCAG 2.1 SC 1.4.11 (Non-text Contrast); use `primary` (`#bdce89`) at 2px minimum width, not `outline-variant` which only achieves ~1.6–2.0:1 on dark surfaces and fails the 3:1 minimum
 *   **Interactive targets**: All clickable/tappable elements must meet minimum 44×44px touch target size. This is a stricter project standard that exceeds WCAG 2.2 SC 2.5.8's 24×24px minimum.
 
 ---
