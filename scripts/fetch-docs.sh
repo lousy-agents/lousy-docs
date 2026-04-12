@@ -121,14 +121,14 @@ done
 # These already have frontmatter, so no injection is needed.
 LOCAL_DOCS_DIR="src/content/local-docs"
 if [ -d "$LOCAL_DOCS_DIR" ]; then
-    local_files=("$LOCAL_DOCS_DIR/"*.md)
-    if [ "${#local_files[@]}" -gt 0 ]; then
-        for src_file in "${local_files[@]}"; do
+    local_md_files=("$LOCAL_DOCS_DIR/"*.md)
+    if [ "${#local_md_files[@]}" -gt 0 ]; then
+        for src_file in "${local_md_files[@]}"; do
             filename=$(basename "$src_file")
             lowercase_filename=$(echo "$filename" | tr '[:upper:]' '[:lower:]')
             cp "$src_file" "$DOCS_DIR/$lowercase_filename"
         done
-        echo "Copied ${#local_files[@]} local doc(s) into $DOCS_DIR"
+        echo "Copied ${#local_md_files[@]} local doc(s) into $DOCS_DIR"
     fi
 fi
 
