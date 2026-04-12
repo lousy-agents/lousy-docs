@@ -27,6 +27,9 @@ test.describe("Documentation navigation", () => {
             await docsPage.goto("readme");
 
             // Act
+            await docsPage.expectHeadingToBeVisible(
+                "Get up and running in three steps",
+            );
             await docsPage.clickContentLink(
                 "Get up and running in three steps",
             );
@@ -54,6 +57,9 @@ test.describe("Documentation navigation", () => {
             await docsPage.expectToBeOnReadmePage();
             await docsPage.expectHeadingToBeVisible(
                 "Lousy Agents Documentation",
+            );
+            await docsPage.expectHeadingToBeVisible(
+                "Get up and running in three steps",
             );
             await docsPage.expectSidebarLinkToBeActive("Overview");
         });
