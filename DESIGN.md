@@ -27,6 +27,7 @@ The palette is rooted in an earthy, organic "Lichen & Slate" foundation—oxidiz
 *   **On-Background — "Phosphor White"** (`#e6ead8`): The primary text color. A warm off-white with a subtle greenish cast, evoking phosphor screen text.
 *   **Outline Variant — "Ghost Seam"** (`#46483e`): The default token for ghost borders and structural hints, applied at low opacity (15–30%). Full-strength usage is acceptable for small, non-structural UI affordances such as scrollbar thumbs.
 *   **Error — "Fault Signal"** (`#ffb4ab`): Reserved for critical failure states and validation errors. A soft coral-red that remains legible without being alarming.
+*   **Primary Highlight** (`rgba(189, 206, 137, 0.25)`): A translucent primary tint used for search result marks and text highlighting. Defined as a CSS custom property (`--color-primary-highlight`).
 
 ### Surface Hierarchy & Nesting
 Treat the UI as a series of physical plates bolted onto the console. Each surface tier creates depth through tonal shift alone—no drop shadows required for static layering.
@@ -49,7 +50,7 @@ High-contrast or opaque borders are prohibited for layout sectioning. Containmen
 4.  **Dashed Patchwork (decorative only):** When a "stitched" seam is needed for brand personality, use 1px or 2px dashed lines with `outline-variant` at 15% opacity. This is a texture, not a structural border.
 
 ### The Glass & Gradient Rule
-For floating panels (modals, search overlays), use semi-transparent `surface-container-highest` with a `backdrop-filter: blur(8px–12px)` to allow underlying content to bleed through softly. This creates a frosted-glass effect that evokes CRT light diffusion.
+For floating panels (modals, search overlays), use semi-transparent `surface-container-highest` with a `backdrop-filter: blur(8px–12px)` to allow underlying content to bleed through softly. This creates a frosted-glass effect that evokes CRT light diffusion. Overlay backdrops use `rgba(0, 0, 0, 0.6)` for content dimming—this is the sole permitted use of pure black in the system.
 
 For primary buttons, use a subtle linear gradient from `primary` (`#bdce89`) to `primary-container` (`#5f6e34`) to mimic the soft glow of a backlit physical button.
 
@@ -107,6 +108,13 @@ We reject traditional drop shadows in favor of **Tonal Layering** and **Ambient 
 *   **Hover Behavior:** Smooth 150ms transitions. Primary buttons subtly darken; secondary buttons gain a faint background tint.
 *   **Shape:** Consistent `md` roundedness (6px) across all button variants. Never pill-shaped, never fully squared—a machined, technical feel.
 
+### Border Radius Scale
+The system defines three radius tiers:
+*   **`sm`** (4px): Small controls, inline code badges, and compact elements.
+*   **`md`** (6px): The default. Buttons, cards, inputs, and most interactive components.
+*   **`lg`** (8px): Larger containers and elevated panels.
+*   **Exception:** Full-panel overlays (e.g., the search modal) may use 12px for a softer floating appearance. This is an explicit exception, not a general-purpose radius.
+
 ### Input Fields & Terminal Blocks
 *   **The Terminal Input:** Dark `surface` (recessed) background with a `primary`-colored cursor blink. Text must be monospace (`"Courier New", Courier, monospace`). This applies to all search inputs, form fields, and any input that accepts user text—the monospace font is a non-negotiable brand signal.
 *   **Placeholder text:** Must achieve WCAG 2.1 AA 4.5:1 contrast against the input background. For inputs on `surface` (`#121410`), `rgba(230, 234, 216, 0.58)` is the tested minimum after compositing. If the input uses a different surface token, re-verify the rendered contrast.
@@ -114,10 +122,20 @@ We reject traditional drop shadows in favor of **Tonal Layering** and **Ambient 
 *   **Validation:** Use `error` (`#ffb4ab`) for critical failures. Use `secondary` amber (`#eebd8e`) for warnings.
 
 ### Cards & Containers
-*   **No Dividers:** Separate items using spacing increments (`1.5` / 0.3rem to `3` / 0.6rem), never horizontal rules or border lines.
+*   **No Dividers:** Separate items using spacing increments (`1.5` / 0.375rem to `3` / 0.75rem), never horizontal rules or border lines.
 *   **Nesting:** A card should be `surface-container` sitting on a `surface-container-low` parent. Raised cards use `surface-container-high`.
 *   **Corner Style:** Consistent `md` roundedness (6px)—subtly softened edges that feel precision-machined, not playful.
 *   **Terminal Frame (optional):** For signature "terminal window" containers, add a solid 4px top-bar using `primary-container` as the header accent. This mimics a terminal title bar.
+
+### Content Prose Elements
+Markdown-rendered content in the docs area has opinionated brand styling:
+*   **Links:** `primary` text with a `primary` underline at 30% opacity. On hover, the underline strengthens to full `primary`. No standard blue—ever.
+*   **Inline code:** `secondary` amber text on a `surface-container` background with `sm` (3px) radius. The amber color signals "data" or "literal value" within body prose.
+*   **Code blocks (`<pre>`):** `surface-container-low` background with a 1px `outline-variant` border at 20% opacity and `md` (6px) radius. Content text uses `on-background` color.
+*   **Blockquotes:** 3px solid `primary-container` left border with a 10% `primary-container` tinted background. Text is slightly muted (`on-background` at 80%). This is the "terminal sidebar accent" pattern.
+*   **Heading underlines (H2):** `outline-variant` at 25% opacity—a content landmark stronger than structural ghost separators but within the accepted opacity range.
+*   **Table headers:** `surface-container-low` background, `primary` text, uppercase with 0.05em letter-spacing. This "terminal column header" treatment reinforces the engineering aesthetic.
+*   **Table cell borders:** `outline-variant` at 15% opacity—standard ghost separator weight.
 
 ### Special Component: "The Patch"
 A custom callout container for "Pro-Tips," "Developer Notes," or "Experimental" features. Uses a subtle `secondary-container` background with a `secondary` dashed border on one side only (asymmetric), optionally incorporating a small 16×16px version of the brand character in the corner. This is the system's signature "hand-stitched" element.
@@ -163,11 +181,11 @@ For sections requiring extra brand personality (e.g., "Experimental" or "Coming 
 
 ### Don't
 *   **Don't** use high-contrast or opaque borders for layout sectioning. Use tonal shifts, ghost separators (≤30% opacity), or spacing instead.
-*   **Don't** use standard blue for links. Use `primary` or `secondary` only.
+*   **Don't** use standard blue for links. Use `primary` for standard links; `secondary` is permitted only for accent links on base `surface` backgrounds where AA contrast is verified.
 *   **Don't** use large, round "pill" buttons. Stick to `md` (6px) roundedness to maintain the machined, hardware feel.
-*   **Don't** use pure black (`#000000`). Use the `surface` palette to preserve the earthy, organic depth.
+*   **Don't** use pure black (`#000000`) for surfaces or backgrounds. Use the `surface` palette to preserve the earthy, organic depth. (Exception: translucent overlay backdrops use `rgba(0, 0, 0, 0.6)` for content dimming—see §2 Glass & Gradient Rule.)
 *   **Don't** use traditional black drop shadows. Use tonal layer shifts or the ambient glow system described in §4.
-*   **Don't** center body text or layout content. Left-aligned, terminal-style composition is the default. Center alignment reads as "marketing template" and breaks the engineer's console aesthetic.
+*   **Don't** center body text or layout content. Left-aligned, terminal-style composition is the default. Center alignment is reserved for hero sections, empty states, and centered modals/overlays (which are centered by convention).
 
 ---
 
@@ -183,9 +201,13 @@ When prompting AI tools (Stitch, Copilot, Claude) to generate new screens or com
 
 ### Color References (always include hex)
 *   Primary: "Terminal Glow lichen-green (`#bdce89`)"
+*   Primary Container: "Moss Depth deep green (`#5f6e34`)"
 *   Background: "Powered-Down CRT deep slate (`#121410`)"
 *   Secondary: "Cautionary Amber sun-baked tone (`#eebd8e`)"
 *   Text: "Phosphor White warm off-white (`#e6ead8`)"
+*   Outline Variant: "Ghost Seam slate (`#46483e`)" — use at 15–30% opacity
+*   Error: "Fault Signal coral-red (`#ffb4ab`)"
+*   Surface tiers: `#121410` → `#1a1c18` → `#1e201c` → `#252720` → `#333531` (see §2 table)
 
 ### Component Prompts
 *   "Create a terminal-style card with a solid 4px primary-container top-bar, ghost border at 15% opacity, and recessed surface background"
