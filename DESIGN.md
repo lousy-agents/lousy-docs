@@ -25,7 +25,7 @@ The palette is rooted in an earthy, organic "Lichen & Slate" foundation—oxidiz
 *   **Secondary — "Cautionary Amber"** (`#eebd8e`): A warm, sun-baked tone. Used for highlights that break the green monochrome—warnings, secondary interactive states, and accent elements.
 *   **Background — "Powered-Down CRT"** (`#121410`): The deep, matte base of the entire canvas. An almost-black with a faint olive undertone that avoids the harshness of pure black.
 *   **On-Background — "Phosphor White"** (`#e6ead8`): The primary text color. A warm off-white with a subtle greenish cast, evoking phosphor screen text.
-*   **Outline Variant — "Ghost Seam"** (`#46483e`): Used exclusively for decorative ghost borders and structural hints at low opacity (15%). Never used at full strength.
+*   **Outline Variant — "Ghost Seam"** (`#46483e`): The default token for ghost borders and structural hints, applied at low opacity (15–30%). Full-strength usage is acceptable for small, non-structural UI affordances such as scrollbar thumbs.
 *   **Error — "Fault Signal"** (`#ffb4ab`): Reserved for critical failure states and validation errors. A soft coral-red that remains legible without being alarming.
 
 ### Surface Hierarchy & Nesting
@@ -42,10 +42,11 @@ Treat the UI as a series of physical plates bolted onto the console. Each surfac
 > **Note:** `surface-container-lowest` appears in §4 (recessed layering) and §5 (input backgrounds) as a conceptual tier below `surface`. It does not have a dedicated CSS custom property—use `surface` (`#121410`) for these recessed contexts.
 
 ### The "No-Line" Rule
-Standard 1px solid borders are strictly prohibited for layout sectioning. Containment must be achieved through:
-1.  **Background Shifts:** Distinguish a sidebar using `surface-container-low` against the main `surface` background. The tonal difference creates the boundary.
-2.  **Spacing Voids:** Use the spacing scale to create visual separation between grouped elements within a container.
-3.  **Dashed Patchwork (decorative only):** When a "stitched" seam is needed for brand personality, use 1px or 2px dashed lines with `outline-variant` at 15% opacity. This is a texture, not a structural border.
+High-contrast or opaque borders are prohibited for layout sectioning. Containment is achieved through:
+1.  **Background Shifts (preferred):** Distinguish a sidebar using `surface-container-low` against the main `surface` background. The tonal difference creates the boundary.
+2.  **Ghost Separators:** When a tonal shift alone is insufficient (e.g., sidebar edges, table-of-contents rails), use 1px solid `outline-variant` at 15% opacity. These low-opacity ghost lines provide structural guidance without visible hardness. The accepted range is 10–30% depending on context; never use `outline-variant` at full opacity for layout borders.
+3.  **Spacing Voids:** Use the spacing scale to create visual separation between grouped elements within a container.
+4.  **Dashed Patchwork (decorative only):** When a "stitched" seam is needed for brand personality, use 1px or 2px dashed lines with `outline-variant` at 15% opacity. This is a texture, not a structural border.
 
 ### The Glass & Gradient Rule
 For floating panels (modals, search overlays), use semi-transparent `surface-container-highest` with a `backdrop-filter: blur(8px–12px)` to allow underlying content to bleed through softly. This creates a frosted-glass effect that evokes CRT light diffusion.
@@ -101,7 +102,7 @@ We reject traditional drop shadows in favor of **Tonal Layering** and **Ambient 
 
 ### Buttons
 *   **Primary:** Solid `primary` gradient (from `#bdce89` to `#5f6e34`), `on-primary` text. `md` (0.375rem / 6px) roundedness. Comfortable padding for touch targets.
-*   **Secondary:** Ghost-style. Transparent background, `primary` text, `outline` stroke at 20% opacity. On hover, background fills with a whisper-soft `primary` tint.
+*   **Secondary:** Ghost-style. Transparent background, `primary` text, solid `primary` (`#bdce89`) border at 20% opacity. On hover, background fills with a whisper-soft `primary` tint.
 *   **Tertiary:** `surface-container-highest` background, monospace labels. Used for technical actions and "terminal command" style affordances.
 *   **Hover Behavior:** Smooth 150ms transitions. Primary buttons subtly darken; secondary buttons gain a faint background tint.
 *   **Shape:** Consistent `md` roundedness (6px) across all button variants. Never pill-shaped, never fully squared—a machined, technical feel.
@@ -121,8 +122,11 @@ We reject traditional drop shadows in favor of **Tonal Layering** and **Ambient 
 ### Special Component: "The Patch"
 A custom callout container for "Pro-Tips," "Developer Notes," or "Experimental" features. Uses a subtle `secondary-container` background with a `secondary` dashed border on one side only (asymmetric), optionally incorporating a small 16×16px version of the brand character in the corner. This is the system's signature "hand-stitched" element.
 
-### The Patchwork Divider
-When a visual separator is needed between major content sections, instead of a solid horizontal rule, use a repeating dashed pattern with subtle `outline-variant` coloring at 25% opacity. This is intentionally stronger than the 15% ghost border used for structural separation—dividers serve as visible content landmarks, not invisible seams. Horizontal rules in markdown content are styled as thin `outline-variant` lines at 25% opacity.
+### Content Dividers
+Markdown `<hr>` elements are styled as solid 1px `outline-variant` lines at 25% opacity—intentionally stronger than the 15% ghost borders used for structural separation, serving as visible content landmarks.
+
+### The Patchwork Divider (specialized)
+For sections requiring extra brand personality (e.g., "Experimental" or "Coming Soon" zones), a dashed variant of the divider may be used: a repeating dashed pattern with `outline-variant` at 25% opacity. This is a decorative flourish, not a replacement for the standard `<hr>` styling.
 
 ---
 
@@ -158,7 +162,7 @@ When a visual separator is needed between major content sections, instead of a s
 *   **Do** verify WCAG contrast ratios for every new surface/text combination before committing.
 
 ### Don't
-*   **Don't** use 1px solid white or high-contrast borders for layout sectioning. Use tonal shifts and spacing instead.
+*   **Don't** use high-contrast or opaque borders for layout sectioning. Use tonal shifts, ghost separators (≤30% opacity), or spacing instead.
 *   **Don't** use standard blue for links. Use `primary` or `secondary` only.
 *   **Don't** use large, round "pill" buttons. Stick to `md` (6px) roundedness to maintain the machined, hardware feel.
 *   **Don't** use pure black (`#000000`). Use the `surface` palette to preserve the earthy, organic depth.
@@ -185,13 +189,13 @@ When prompting AI tools (Stitch, Copilot, Claude) to generate new screens or com
 
 ### Component Prompts
 *   "Create a terminal-style card with a solid 4px primary-container top-bar, ghost border at 15% opacity, and recessed surface background"
-*   "Design a ghost-style secondary button with dashed outline-variant border that solidifies on hover"
+*   "Design a ghost-style secondary button with subtle solid primary border at 20% opacity that strengthens on hover"
 *   "Add a monospace search input on dark recessed surface with primary-colored cursor blink and phosphor-white placeholder text"
 
 ### Key Constraints for AI
 *   Never generate components with pill-shaped buttons or `xl`/`full` border-radius
 *   Never use pure black (`#000000`) or pure white (`#ffffff`) backgrounds
-*   Never use 1px solid borders for layout sectioning—use tonal surface shifts per the No-Line Rule (§2)
+*   Never use high-contrast or opaque borders for layout sectioning—use tonal surface shifts or ghost separators (≤30% opacity) per the No-Line Rule (§2)
 *   All floating panels must use `backdrop-filter: blur(8px–12px)` per the Glass Rule
 *   All text must meet WCAG AA 4.5:1 contrast minimum against its background surface
 *   Monospace font is mandatory for all input fields and code-adjacent UI
