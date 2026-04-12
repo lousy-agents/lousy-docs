@@ -102,7 +102,7 @@ We reject traditional drop shadows in favor of **Tonal Layering** and **Ambient 
 ## 5. Component Stylings
 
 ### Buttons
-*   **Primary:** Solid `primary` gradient (from `#bdce89` to `#5f6e34`), dark text (`#293417`) for legibility on the light primary surface. `md` (0.375rem / 6px) roundedness. Comfortable padding for touch targets.
+*   **Primary:** Solid `primary` gradient (from `#bdce89` to `#5f6e34`), dark text for legibility on the light primary surface (Ant Design's dark algorithm auto-calculates the contrast color). `md` (0.375rem / 6px) roundedness. Comfortable padding for touch targets.
 *   **Secondary:** Ghost-style. Transparent background, `primary` text, solid `primary` (`#bdce89`) border at 20% opacity. On hover, background fills with a whisper-soft `primary` tint.
 *   **Tertiary:** `surface-container-highest` background, monospace labels. Used for technical actions and "terminal command" style affordances.
 *   **Hover Behavior:** Smooth 150ms transitions. Primary buttons subtly darken; secondary buttons gain a faint background tint.
