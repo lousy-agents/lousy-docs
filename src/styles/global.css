@@ -428,6 +428,10 @@ mark[data-pagefind-highlight] {
 }
 
 /* Quickstart callout */
+.quickstart-callout a:hover {
+    text-decoration: underline;
+}
+
 .quickstart-callout a:focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;

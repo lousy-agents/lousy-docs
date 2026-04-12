@@ -14,7 +14,6 @@ const linkStyle: React.CSSProperties = {
     color: "#bdce89",
     fontWeight: 600,
     textDecoration: "none",
-    fontFamily: "'Space Grotesk', sans-serif",
 };
 
 const descriptionStyle: React.CSSProperties = {
