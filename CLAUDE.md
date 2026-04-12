@@ -107,7 +107,7 @@ Before writing CSS or implementing any interactive UI component, cross-reference
 1. **Surface tier**: Identify the component type (base, sectioning, card, floating) and use the correct surface color from §2
 2. **Floating panels**: Must use `surface-container-highest` + `backdrop-filter: blur()` per the Glass & Gradient Rule (§2)
 3. **Borders**: Use ghost borders at 15% opacity per §4 -- never solid 1px borders
-4. **Shadows**: Ambient shadows use `on-surface` at 6% opacity with 40px blur per §4
+4. **Shadows**: Ambient shadows use `on-background` at 6% opacity with 40px blur per §4
 5. **Inputs**: Must use monospace font per §5 "Terminal Input"
 6. **Contrast**: All text and placeholder colors must meet WCAG 2.1 AA 4.5:1 minimum
 7. **Visual verification**: ALL items above must be verified via Playwright MCP screenshot (not just code review). See `.github/instructions/visual-verification.instructions.md` for the full protocol.

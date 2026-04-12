@@ -93,7 +93,7 @@ Use extreme contrast in scale to create the "dense terminal" aesthetic. A large 
 We reject traditional drop shadows in favor of **Tonal Layering** and **Ambient Glows**.
 
 *   **The Layering Principle:** Depth is achieved by stacking surface tiers. Place a `surface` (recessed) element on a `surface-container-low` background to create a "sunken" look. Place a `surface-container-high` element to create a "raised" look. No shadow is required—the tonal shift provides the lift.
-*   **Ambient Shadows:** When an element must truly float (modals, search overlays, popovers), use a shadow tinted with `on-surface` (`#e6ead8`) at 6% opacity with a 40px blur radius. It should feel like a soft glow bleeding from a CRT monitor, not a hard drop shadow.
+*   **Ambient Shadows:** When an element must truly float (modals, search overlays, popovers), use a shadow tinted with `on-background` (`#e6ead8`) at 6% opacity with a 40px blur radius. It should feel like a soft glow bleeding from a CRT monitor, not a hard drop shadow.
 *   **The "Ghost Border":** For decorative or structural separation (card edges, panel boundaries), use `outline-variant` (`#46483e`) at 15% opacity. It should be barely perceptible—a change in texture, not a visible line. **This does not apply to interactive focus indicators**—see the WCAG Compliance section in §2 for `:focus-visible` requirements.
 *   **Stitch Detail:** Inspired by the Lousy Agent brand character's patches, use 2px dashed ghost borders in `secondary` or `outline-variant` colors to denote "beta," "experimental," or "hand-stitched" containers. This patchwork motif is the system's signature decorative element.
 
@@ -102,7 +102,7 @@ We reject traditional drop shadows in favor of **Tonal Layering** and **Ambient 
 ## 5. Component Stylings
 
 ### Buttons
-*   **Primary:** Solid `primary` gradient (from `#bdce89` to `#5f6e34`), `on-primary` text. `md` (0.375rem / 6px) roundedness. Comfortable padding for touch targets.
+*   **Primary:** Solid `primary` gradient (from `#bdce89` to `#5f6e34`), dark text (`#293417`) for legibility on the light primary surface. `md` (0.375rem / 6px) roundedness. Comfortable padding for touch targets.
 *   **Secondary:** Ghost-style. Transparent background, `primary` text, solid `primary` (`#bdce89`) border at 20% opacity. On hover, background fills with a whisper-soft `primary` tint.
 *   **Tertiary:** `surface-container-highest` background, monospace labels. Used for technical actions and "terminal command" style affordances.
 *   **Hover Behavior:** Smooth 150ms transitions. Primary buttons subtly darken; secondary buttons gain a faint background tint.
@@ -130,7 +130,7 @@ The system defines three radius tiers:
 ### Content Prose Elements
 Markdown-rendered content in the docs area has opinionated brand styling:
 *   **Links:** `primary` text with a `primary` underline at 30% opacity. On hover, the underline strengthens to full `primary`. No standard blue—ever.
-*   **Inline code:** `secondary` amber text on a `surface-container` background with `sm` (3px) radius. The amber color signals "data" or "literal value" within body prose.
+*   **Inline code:** `secondary` amber text on a `surface-container` background with 3px radius. The amber color signals "data" or "literal value" within body prose.
 *   **Code blocks (`<pre>`):** `surface-container-low` background with a 1px `outline-variant` border at 20% opacity and `md` (6px) radius. Content text uses `on-background` color.
 *   **Blockquotes:** 3px solid `primary-container` left border with a 10% `primary-container` tinted background. Text is slightly muted (`on-background` at 80%). This is the "terminal sidebar accent" pattern.
 *   **Heading underlines (H2):** `outline-variant` at 25% opacity—a content landmark stronger than structural ghost separators but within the accepted opacity range.
@@ -138,7 +138,7 @@ Markdown-rendered content in the docs area has opinionated brand styling:
 *   **Table cell borders:** `outline-variant` at 15% opacity—standard ghost separator weight.
 
 ### Special Component: "The Patch"
-A custom callout container for "Pro-Tips," "Developer Notes," or "Experimental" features. Uses a subtle `secondary-container` background with a `secondary` dashed border on one side only (asymmetric), optionally incorporating a small 16×16px version of the brand character in the corner. This is the system's signature "hand-stitched" element.
+A custom callout container for "Pro-Tips," "Developer Notes," or "Experimental" features. Uses a subtle muted amber background with a `secondary` (`#eebd8e`) dashed border on one side only (asymmetric), optionally incorporating a small 16×16px version of the brand character in the corner. This is the system's signature "hand-stitched" element.
 
 ### Content Dividers
 Markdown `<hr>` elements are styled as solid 1px `outline-variant` lines at 25% opacity—intentionally stronger than the 15% ghost borders used for structural separation, serving as visible content landmarks.
@@ -216,7 +216,7 @@ When prompting AI tools (Stitch, Copilot, Claude) to generate new screens or com
 
 ### Key Constraints for AI
 *   Never generate components with pill-shaped buttons or `xl`/`full` border-radius
-*   Never use pure black (`#000000`) or pure white (`#ffffff`) backgrounds
+*   Never use pure black (`#000000`) or pure white (`#ffffff`) for opaque surfaces or backgrounds (exception: translucent overlay backdrops per §2 Glass Rule)
 *   Never use high-contrast or opaque borders for layout sectioning—use tonal surface shifts or ghost separators (≤30% opacity) per the No-Line Rule (§2)
 *   All floating panels must use `backdrop-filter: blur(8px–12px)` per the Glass Rule
 *   All text must meet WCAG AA 4.5:1 contrast minimum against its background surface
