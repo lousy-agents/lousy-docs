@@ -377,8 +377,7 @@ export function HeroSection() {
                                 <picture>
                                     <source
                                         type="image/webp"
-                                        srcSet="/mascot-160w.webp 160w, /mascot-320w.webp 320w"
-                                        sizes="160px"
+                                        srcSet="/mascot-160w.webp 1x, /mascot-320w.webp 2x"
                                     />
                                     <img
                                         alt="Lousy Agents mascot"

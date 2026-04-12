@@ -57,8 +57,7 @@ export function DeveloperPatch() {
                 <picture>
                     <source
                         type="image/webp"
-                        srcSet="/mascot-48w.webp 48w, /mascot-96w.webp 96w"
-                        sizes="48px"
+                        srcSet="/mascot-48w.webp 1x, /mascot-96w.webp 2x"
                     />
                     <img
                         alt="Lousy Agent icon"
