@@ -19,6 +19,9 @@ const pagefindIgnore = Astro.props.pagefindIgnore ?? false;
 
 // biome-ignore lint/correctness/noUnusedVariables: used in Astro HTML template
 const cfBeaconToken = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
+// biome-ignore lint/correctness/noUnusedVariables: used in Astro HTML template
+const googleSiteVerificationToken = import.meta.env
+    .PUBLIC_GOOGLE_SITE_VERIFICATION_TOKEN;
 ---
 
 <!doctype html>
@@ -27,7 +30,12 @@ const cfBeaconToken = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content={description} />
-        <meta name="google-site-verification" content="KP3mCCCihyJJ0A6HedGdZSzWExf-13sy5gpDbN-qKiU" />
+        {googleSiteVerificationToken && (
+            <meta
+                name="google-site-verification"
+                content={googleSiteVerificationToken}
+            />
+        )}
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
