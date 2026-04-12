@@ -95,6 +95,7 @@ jobs:
         env:
           DOCS_GITHUB_TOKEN: ${{ secrets.DOCS_GITHUB_TOKEN }}
           PUBLIC_CF_BEACON_TOKEN: ${{ vars.PUBLIC_CF_BEACON_TOKEN }}
+          PUBLIC_GOOGLE_SITE_VERIFICATION_TOKEN: ${{ vars.PUBLIC_GOOGLE_SITE_VERIFICATION_TOKEN }}
 
       - name: Upload dist artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
