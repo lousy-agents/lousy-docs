@@ -381,10 +381,11 @@ export function HeroSection() {
                                     />
                                     <img
                                         alt="Lousy Agents mascot"
-                                        src="/mascot-320w.jpg"
+                                        src="/mascot-160w.jpg"
+                                        srcSet="/mascot-160w.jpg 1x, /mascot-320w.jpg 2x"
                                         width={160}
                                         height={160}
-                                        loading="lazy"
+                                        loading="eager"
                                         decoding="async"
                                         style={mascotImgStyle}
                                     />

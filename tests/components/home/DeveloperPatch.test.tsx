@@ -29,7 +29,7 @@ describe("DeveloperPatch", () => {
 
             expect(
                 screen.getByRole("img", { name: /lousy agent/i }),
-            ).toHaveAttribute("src", "/mascot-320w.jpg");
+            ).toHaveAttribute("src", "/mascot-48w.jpg");
         });
     });
 });

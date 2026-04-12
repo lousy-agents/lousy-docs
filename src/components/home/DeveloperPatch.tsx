@@ -61,7 +61,8 @@ export function DeveloperPatch() {
                     />
                     <img
                         alt="Lousy Agent icon"
-                        src="/mascot-320w.jpg"
+                        src="/mascot-48w.jpg"
+                        srcSet="/mascot-48w.jpg 1x, /mascot-96w.jpg 2x"
                         width={48}
                         height={48}
                         loading="lazy"
