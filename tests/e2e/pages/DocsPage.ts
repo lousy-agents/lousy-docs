@@ -23,6 +23,12 @@ export class DocsPage {
         await this.content.getByRole("link", { name }).click();
     }
 
+    async expectContentLinkToBeVisible(name: string): Promise<void> {
+        await expect(
+            this.content.getByRole("link", { name, exact: false }),
+        ).toBeVisible();
+    }
+
     async clickSidebarLink(name: string): Promise<void> {
         await this.sidebar.getByRole("link", { name }).click();
     }

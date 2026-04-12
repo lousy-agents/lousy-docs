@@ -27,7 +27,7 @@ test.describe("Documentation navigation", () => {
             await docsPage.goto("readme");
 
             // Act
-            await docsPage.expectHeadingToBeVisible(
+            await docsPage.expectContentLinkToBeVisible(
                 "Get up and running in three steps",
             );
             await docsPage.clickContentLink(
@@ -58,7 +58,7 @@ test.describe("Documentation navigation", () => {
             await docsPage.expectHeadingToBeVisible(
                 "Lousy Agents Documentation",
             );
-            await docsPage.expectHeadingToBeVisible(
+            await docsPage.expectContentLinkToBeVisible(
                 "Get up and running in three steps",
             );
             await docsPage.expectSidebarLinkToBeActive("Overview");
