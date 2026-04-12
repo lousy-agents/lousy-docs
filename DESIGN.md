@@ -25,7 +25,7 @@ The palette is rooted in an earthy, organic "Lichen & Slate" foundation—oxidiz
 *   **Secondary — "Cautionary Amber"** (`#eebd8e`): A warm, sun-baked tone. Used for highlights that break the green monochrome—warnings, secondary interactive states, and accent elements.
 *   **Background — "Powered-Down CRT"** (`#121410`): The deep, matte base of the entire canvas. An almost-black with a faint olive undertone that avoids the harshness of pure black.
 *   **On-Background — "Phosphor White"** (`#e6ead8`): The primary text color. A warm off-white with a subtle greenish cast, evoking phosphor screen text.
-*   **Outline Variant — "Ghost Seam"** (`#46483e`): The default token for ghost borders and structural hints, applied at low opacity (15–30%). Full-strength usage is acceptable for small, non-structural UI affordances such as scrollbar thumbs.
+*   **Outline Variant — "Ghost Seam"** (`#46483e`): The default token for ghost borders and structural hints, applied at low opacity. Typical opacity tiers: 15% for minimal structural hints (table cells, card edges), 20–25% for content dividers and landmarks, 30% for stronger visual boundaries (code block frames, table headers). Full-strength usage is acceptable for small, non-structural UI affordances such as scrollbar thumbs.
 *   **Error — "Fault Signal"** (`#ffb4ab`): Reserved for critical failure states and validation errors. A soft coral-red that remains legible without being alarming.
 *   **Primary Highlight** (`rgba(189, 206, 137, 0.25)`): A translucent primary tint used for search result marks and text highlighting. Defined as a CSS custom property (`--color-primary-highlight`).
 
@@ -45,7 +45,7 @@ Treat the UI as a series of physical plates bolted onto the console. Each surfac
 ### The "No-Line" Rule
 High-contrast or opaque borders are prohibited for layout sectioning. Containment is achieved through:
 1.  **Background Shifts (preferred):** Distinguish a sidebar using `surface-container-low` against the main `surface` background. The tonal difference creates the boundary.
-2.  **Ghost Separators:** When a tonal shift alone is insufficient (e.g., sidebar edges, table-of-contents rails), use 1px solid `outline-variant` at 15% opacity. These low-opacity ghost lines provide structural guidance without visible hardness. The accepted range is 10–30% depending on context; never use `outline-variant` at full opacity for layout borders.
+2.  **Ghost Separators:** When a tonal shift alone is insufficient (e.g., sidebar edges, table-of-contents rails), use 1px solid `outline-variant` at 15% opacity. These low-opacity ghost lines provide structural guidance without visible hardness. The accepted range is 15–30% depending on context (see the opacity tiers in the Outline Variant token description above); never use `outline-variant` at full opacity for layout borders.
 3.  **Spacing Voids:** Use the spacing scale to create visual separation between grouped elements within a container.
 4.  **Dashed Patchwork (decorative only):** When a "stitched" seam is needed for brand personality, use 1px or 2px dashed lines with `outline-variant` at 15% opacity. This is a texture, not a structural border.
 
@@ -182,7 +182,7 @@ For sections requiring extra brand personality (e.g., "Experimental" or "Coming 
 
 ### Don't
 *   **Don't** use high-contrast or opaque borders for layout sectioning. Use tonal shifts, ghost separators (≤30% opacity), or spacing instead.
-*   **Don't** use standard blue for links. Use `primary` for standard links; `secondary` is permitted only for accent links on base `surface` backgrounds where AA contrast is verified.
+*   **Don't** use standard blue for links. Use `primary` for standard links; `secondary` is permitted only for accent links on the base `surface` (`#121410`) background where AA contrast is verified.
 *   **Don't** use large, round "pill" buttons. Stick to `md` (6px) roundedness to maintain the machined, hardware feel.
 *   **Don't** use pure black (`#000000`) for surfaces or backgrounds. Use the `surface` palette to preserve the earthy, organic depth. (Exception: translucent overlay backdrops use `rgba(0, 0, 0, 0.6)` for content dimming—see §2 Glass & Gradient Rule.)
 *   **Don't** use traditional black drop shadows. Use tonal layer shifts or the ambient glow system described in §4.
