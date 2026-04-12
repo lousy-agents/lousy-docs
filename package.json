@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "prebuild": "bash scripts/fetch-docs.sh",
-        "build": "npm run prebuild && astro build",
+        "build": "npm run prebuild && astro build && node scripts/minify-pagefind.mjs",
         "dev": "bash scripts/fetch-docs.sh && astro dev --host 0.0.0.0",
         "lint": "biome check .",
         "lint:fix": "biome check --write .",
@@ -44,6 +44,7 @@
         "@vitejs/plugin-react": "6.0.1",
         "@vitest/ui": "4.1.4",
         "chance": "1.1.13",
+        "esbuild": "0.27.4",
         "happy-dom": "20.8.9",
         "jsdom": "29.0.2",
         "msw": "2.13.2",
