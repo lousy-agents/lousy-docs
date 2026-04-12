@@ -19,14 +19,16 @@ export class DocsPage {
         await this.page.goto(DocsPage.buildDocsUrl(slug));
     }
 
+    private contentLink(name: string): Locator {
+        return this.content.getByRole("link", { name, exact: false });
+    }
+
     async clickContentLink(name: string): Promise<void> {
-        await this.content.getByRole("link", { name }).click();
+        await this.contentLink(name).click();
     }
 
     async expectContentLinkToBeVisible(name: string): Promise<void> {
-        await expect(
-            this.content.getByRole("link", { name, exact: false }),
-        ).toBeVisible();
+        await expect(this.contentLink(name)).toBeVisible();
     }
 
     async clickSidebarLink(name: string): Promise<void> {
