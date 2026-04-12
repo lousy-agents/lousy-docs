@@ -105,7 +105,7 @@ Required when the component has `:hover`, `:focus`, `:focus-visible`, or `:activ
      }
      ref: <target element ref>
    ```
-   Compare returned values against the pre-verified reference: `#bdce89` on `#121410` = ~5.3:1 contrast.
+   Compare returned values against the pre-verified reference: `#bdce89` on `#121410` = ~10.9:1 contrast.
 ```
 
 ### Active/pressed state (if applicable)
