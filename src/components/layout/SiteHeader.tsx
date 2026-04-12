@@ -87,6 +87,7 @@ const navLinks = [
     { href: "/terminal", label: "TERMINAL" },
     { href: "/patches", label: "PATCHES" },
     { href: "/docs", label: "DOCS" },
+    { href: "/playground", label: "PLAYGROUND" },
 ] as const;
 
 function isNavLinkActive(href: string, pathname: string): boolean {

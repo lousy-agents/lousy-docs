@@ -74,6 +74,24 @@ describe("SiteHeader", () => {
             ).toBeInTheDocument();
         });
 
+        it("should render the Playground navigation link", () => {
+            render(<SiteHeader isMobile={false} />);
+
+            expect(
+                screen.getByRole("link", { name: /playground/i }),
+            ).toBeInTheDocument();
+        });
+
+        it("should mark the Playground link as active when on the playground page", () => {
+            render(
+                <SiteHeader isMobile={false} currentPathname="/playground" />,
+            );
+
+            expect(
+                screen.getByRole("link", { name: /playground/i }),
+            ).toHaveAttribute("aria-current", "page");
+        });
+
         it("should mark no nav link as active when on the homepage", () => {
             render(<SiteHeader isMobile={false} currentPathname="/" />);
 
