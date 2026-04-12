@@ -197,7 +197,7 @@ When analyzing screenshots, cross-reference these specific DESIGN.md rules:
 | Surface tier | §2 Surface Hierarchy — 5 tiers from `#121410` to `#333531` | Component uses wrong background shade (e.g., card on `surface` instead of `surface-container`) |
 | Borders | §4 Ghost Border — `outline-variant` at 15% opacity | Solid visible border instead of barely perceptible edge |
 | Floating panels | §2 Glass & Gradient — `backdrop-filter: blur(8-12px)` | Modal/overlay looks flat and opaque, no frosted glass effect |
-| Shadows | §4 Ambient Shadows — `on-surface` at 6%, 40px blur | Sharp drop shadow instead of soft ambient glow |
+| Shadows | §4 Ambient Shadows — `on-background` at 6%, 40px blur | Sharp drop shadow instead of soft ambient glow |
 | Buttons | §5 — Primary uses gradient, Secondary is ghost-style | Flat solid buttons without gradient, or outlined buttons with visible border |
 | Inputs | §5 Terminal Input — monospace font, dark background | Sans-serif font in input fields, or input on wrong surface color |
 | Text contrast | §2 WCAG — 4.5:1 body, 4.5:1 placeholder | Dim, hard-to-read text or placeholder text that disappears into background |
