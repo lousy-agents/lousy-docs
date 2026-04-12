@@ -374,11 +374,22 @@ export function HeroSection() {
                                     style={mascotGlowStyle}
                                     aria-hidden="true"
                                 />
-                                <img
-                                    alt="Lousy Agents mascot"
-                                    src="/mascot.jpg"
-                                    style={mascotImgStyle}
-                                />
+                                <picture>
+                                    <source
+                                        type="image/webp"
+                                        srcSet="/mascot-160w.webp 160w, /mascot-320w.webp 320w"
+                                        sizes="160px"
+                                    />
+                                    <img
+                                        alt="Lousy Agents mascot"
+                                        src="/mascot-320w.jpg"
+                                        width={160}
+                                        height={160}
+                                        loading="lazy"
+                                        decoding="async"
+                                        style={mascotImgStyle}
+                                    />
+                                </picture>
                             </div>
                         </div>
                     </div>

@@ -54,11 +54,22 @@ export function DeveloperPatch() {
     return (
         <section style={sectionStyle} aria-label="Developer Patch">
             <div style={patchStyle}>
-                <img
-                    alt="Lousy Agent icon"
-                    src="/mascot.jpg"
-                    style={mascotStyle}
-                />
+                <picture>
+                    <source
+                        type="image/webp"
+                        srcSet="/mascot-48w.webp 48w, /mascot-96w.webp 96w"
+                        sizes="48px"
+                    />
+                    <img
+                        alt="Lousy Agent icon"
+                        src="/mascot-320w.jpg"
+                        width={48}
+                        height={48}
+                        loading="lazy"
+                        decoding="async"
+                        style={mascotStyle}
+                    />
+                </picture>
                 <div>
                     <Text style={headingStyle}>
                         <span

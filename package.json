@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "prebuild": "bash scripts/fetch-docs.sh",
-        "build": "npm run prebuild && astro build",
+        "build": "npm run prebuild && astro build && node scripts/minify-pagefind.mjs",
         "dev": "bash scripts/fetch-docs.sh && astro dev --host 0.0.0.0",
         "lint": "biome check .",
         "lint:fix": "biome check --write .",
