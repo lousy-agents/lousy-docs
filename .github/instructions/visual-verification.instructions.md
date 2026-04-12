@@ -201,7 +201,7 @@ When analyzing screenshots, cross-reference these specific DESIGN.md rules:
 | Buttons | §5 — Primary uses gradient, Secondary is ghost-style | Flat solid buttons without gradient, or outlined buttons with visible border |
 | Inputs | §5 Terminal Input — monospace font, dark background | Sans-serif font in input fields, or input on wrong surface color |
 | Text contrast | §2 WCAG — 4.5:1 body, 4.5:1 placeholder | Dim, hard-to-read text or placeholder text that disappears into background |
-| Focus rings | `DESIGN.md` §2 WCAG Compliance | No visible focus ring, or ring using `outline-variant` (~1.2:1 contrast) |
+| Focus rings | `DESIGN.md` §2 WCAG Compliance | No visible focus ring, or ring using `outline-variant` (~1.6–2.0:1 contrast, fails 3:1 minimum) |
 
 ---
 
