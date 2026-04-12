@@ -25,7 +25,12 @@ const descriptionStyle: React.CSSProperties = {
 
 export function QuickstartCallout() {
     return (
-        <Flex vertical gap={4} style={calloutStyle}>
+        <Flex
+            vertical
+            gap={4}
+            style={calloutStyle}
+            className="quickstart-callout"
+        >
             <Text style={descriptionStyle}>
                 New to Lousy Agents?{" "}
                 <a href="/docs/quickstart" style={linkStyle}>

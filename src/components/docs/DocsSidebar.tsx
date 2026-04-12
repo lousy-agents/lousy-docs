@@ -56,6 +56,7 @@ function formatNavLabel(id: string): string {
     return id.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+// UI sidebar: overview (readme) first as landing page
 const navOrder = [
     "readme",
     "quickstart",

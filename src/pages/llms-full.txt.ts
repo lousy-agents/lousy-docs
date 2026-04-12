@@ -1,6 +1,7 @@
 import { getCollection } from "astro:content";
 import type { APIRoute } from "astro";
 
+// LLM consumption: quickstart first for onboarding context
 const DOC_ORDER = [
     "quickstart",
     "readme",

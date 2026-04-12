@@ -169,6 +169,38 @@ describe("DocsLayoutShell", () => {
 
             expect(screen.getByRole("main")).toBeInTheDocument();
         });
+
+        it("should render the quickstart callout when currentSlug is readme", () => {
+            render(
+                <DocsLayoutShell
+                    docs={[createDocEntry()]}
+                    currentSlug="readme"
+                    headings={[]}
+                >
+                    <p>Content</p>
+                </DocsLayoutShell>,
+            );
+
+            expect(
+                screen.getByRole("link", { name: /get up and running/i }),
+            ).toBeInTheDocument();
+        });
+
+        it("should not render the quickstart callout when currentSlug is not readme", () => {
+            render(
+                <DocsLayoutShell
+                    docs={[createDocEntry()]}
+                    currentSlug="init"
+                    headings={[]}
+                >
+                    <p>Content</p>
+                </DocsLayoutShell>,
+            );
+
+            expect(
+                screen.queryByRole("link", { name: /get up and running/i }),
+            ).not.toBeInTheDocument();
+        });
     });
 
     describe("given a mobile viewport", () => {
