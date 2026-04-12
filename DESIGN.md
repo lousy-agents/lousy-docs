@@ -217,8 +217,8 @@ When prompting AI tools (Stitch, Copilot, Claude) to generate new screens or com
 
 ### Key Constraints for AI
 *   Never generate components with pill-shaped buttons or `xl`/`full` border-radius
-*   Never use pure black (`#000000`) or pure white (`#ffffff`) for opaque surfaces or backgrounds (exception: translucent overlay backdrops per §2 Glass Rule)
+*   Never use pure black (`#000000`) or pure white (`#ffffff`) for opaque surfaces or backgrounds (exception: translucent overlay backdrops per §2 Glass & Gradient Rule)
 *   Never use high-contrast or opaque borders for layout sectioning—use tonal surface shifts or ghost separators (≤30% opacity) per the No-Line Rule (§2)
-*   All floating panels must use `backdrop-filter: blur(8px–12px)` per the Glass Rule
+*   All floating panels must use `backdrop-filter: blur(8px–12px)` per the Glass & Gradient Rule (§2)
 *   All text must meet WCAG AA 4.5:1 contrast minimum against its background surface
 *   Monospace font is mandatory for all input fields and code-adjacent UI
