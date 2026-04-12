@@ -152,6 +152,20 @@ describe("SiteHeader", () => {
                     userAgentSpy.mockRestore();
                 }
             });
+
+            it("should display Ctrl+K hint when navigator is not available (SSR/non-browser)", () => {
+                const savedNavigator = globalThis.navigator;
+                delete (globalThis as unknown as Record<string, unknown>)
+                    .navigator;
+
+                try {
+                    render(<SiteHeader isMobile={false} />);
+
+                    expect(screen.getByText("Ctrl+K")).toBeInTheDocument();
+                } finally {
+                    globalThis.navigator = savedNavigator;
+                }
+            });
         });
     });
 

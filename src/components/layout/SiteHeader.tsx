@@ -102,6 +102,9 @@ function openSearch() {
 }
 
 function getShortcutLabel(): string {
+    if (typeof navigator === "undefined") {
+        return "Ctrl+K";
+    }
     return isMacPlatform(navigator.userAgent) ? "⌘K" : "Ctrl+K";
 }
 
