@@ -68,5 +68,12 @@ describe("MobileNavDrawer", () => {
             const link = screen.getByRole("link", { name: /docs/i });
             expect(link).toHaveAttribute("href", "/docs");
         });
+
+        it("should render the Playground link", () => {
+            render(<MobileNavDrawer open={true} onClose={vi.fn()} />);
+
+            const link = screen.getByRole("link", { name: /playground/i });
+            expect(link).toHaveAttribute("href", "/playground");
+        });
     });
 });

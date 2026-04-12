@@ -34,6 +34,7 @@ const navLinks = [
     { href: "/terminal", label: "Terminal" },
     { href: "/patches", label: "Patches" },
     { href: "/docs", label: "Docs" },
+    { href: "/playground", label: "Playground" },
 ] as const;
 
 export function MobileNavDrawer({ open, onClose }: MobileNavDrawerProps) {
