@@ -1,4 +1,3 @@
-
 # Design System: Lousy Docs — “The Analog Terminal”
 
 ## 1. Visual Theme & Atmosphere
@@ -188,7 +187,7 @@ For sections requiring extra brand personality (e.g., “Experimental” or “C
 
 ## 5b. Interactive Tool Components
 
-This section defines patterns for interactive tool pages such as the LINT_PLAYGROUND—browser-based utilities that accept user input and display structured diagnostic output. These components extend the core system rather than replacing it.
+This section defines patterns for interactive tool pages—browser-based utilities that accept user input and display structured diagnostic output (e.g., a hypothetical lint playground). These components extend the core system rather than replacing it. The patterns below are proposed conventions for future tool pages; implement them when the first interactive tool page is built.
 
 ### Split-Panel Layout
 
@@ -274,12 +273,12 @@ Displayed in the output panel when no input has been provided. Uses the system�
 ### Grid & Structure
 
 - **Max Content Width:** Centered content area with comfortable reading width for documentation prose.
-- **Sidebar + Content:** Two-panel layout with a `surface-container-low` sidebar on the left and `surface` main content area. The tonal shift defines the boundary—no border needed.
+- **Sidebar + Content:** Two-panel layout with a `surface-container-low` sidebar on the left and `surface` main content area. The tonal shift defines the primary boundary, reinforced by a ghost border (`outline-variant` at 15% opacity) on the sidebar's right edge.
 - **Left-Aligned by Default:** Text and content blocks are left-aligned, terminal-style. Center alignment is reserved for hero sections and empty states only.
 
-### Collapsible Sidebar
+### Collapsible Sidebar (Proposed)
 
-For pages that require maximum horizontal space (interactive tool pages, playground layouts), the sidebar supports a collapsed state:
+> **Not yet implemented.** The following pattern is a design target for pages requiring maximum horizontal space (interactive tool pages, playground layouts). Implement when the first such page is built.
 
 - **Collapsed State:** Sidebar reduces to icon-width only (~48px). Navigation labels are hidden; only icons are visible. The active page indicator (e.g., `primary-container` background fill on the active item) remains visible on the icon.
 - **Toggle:** A small icon button at the top of the sidebar toggles between collapsed and expanded states. Uses the ghost button pattern—transparent background, `on-background` icon at 60% opacity. The toggle should use a chevron (« / ») rather than a hamburger to signal “collapse” vs. “expand.”
