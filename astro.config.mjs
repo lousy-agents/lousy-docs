@@ -5,7 +5,7 @@ import pagefind from "astro-pagefind";
 
 export default defineConfig({
     output: "static",
-    site: "https://lousy-docs.lousy-agents.workers.dev",
+    site: "https://docs.modzed.io",
     integrations: [react(), sitemap(), pagefind()],
     redirects: {
         "/docs": "/docs/readme",
