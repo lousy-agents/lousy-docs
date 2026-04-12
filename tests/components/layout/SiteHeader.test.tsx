@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, type MockInstance, vi } from "vitest";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 
 describe("SiteHeader", () => {
@@ -117,6 +117,42 @@ describe("SiteHeader", () => {
                 screen.queryByRole("button", { name: /toggle navigation/i }),
             ).not.toBeInTheDocument();
         });
+
+        describe("keyboard shortcut hint", () => {
+            let userAgentSpy: MockInstance;
+
+            it("should display ⌘K hint on Mac platforms", () => {
+                userAgentSpy = vi
+                    .spyOn(navigator, "userAgent", "get")
+                    .mockReturnValue(
+                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
+                    );
+
+                try {
+                    render(<SiteHeader isMobile={false} />);
+
+                    expect(screen.getByText("⌘K")).toBeInTheDocument();
+                } finally {
+                    userAgentSpy.mockRestore();
+                }
+            });
+
+            it("should display Ctrl+K hint on non-Mac platforms", () => {
+                userAgentSpy = vi
+                    .spyOn(navigator, "userAgent", "get")
+                    .mockReturnValue(
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+                    );
+
+                try {
+                    render(<SiteHeader isMobile={false} />);
+
+                    expect(screen.getByText("Ctrl+K")).toBeInTheDocument();
+                } finally {
+                    userAgentSpy.mockRestore();
+                }
+            });
+        });
     });
 
     describe("given a mobile viewport", () => {
@@ -167,6 +203,13 @@ describe("SiteHeader", () => {
             expect(
                 screen.queryByRole("button", { name: /toggle navigation/i }),
             ).not.toBeInTheDocument();
+        });
+
+        it("should not display a keyboard shortcut hint", () => {
+            render(<SiteHeader isMobile={true} />);
+
+            expect(screen.queryByText("⌘K")).not.toBeInTheDocument();
+            expect(screen.queryByText("Ctrl+K")).not.toBeInTheDocument();
         });
 
         it("should render a mobile menu button when a toggle handler is provided", () => {

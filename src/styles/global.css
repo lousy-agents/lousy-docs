@@ -345,7 +345,7 @@ body {
 .search-overlay__panel {
     position: relative;
     width: 90%;
-    max-width: 640px;
+    max-width: 720px;
     max-height: 70vh;
     overflow-y: auto;
     background-color: rgba(51, 53, 49, 0.9);

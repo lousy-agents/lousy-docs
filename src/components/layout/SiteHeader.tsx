@@ -1,5 +1,6 @@
 import { Flex } from "antd";
 import { HEADER_HEIGHT_PX } from "@/lib/layout-constants";
+import { isMacPlatform } from "@/lib/platform";
 
 const headerStyle: React.CSSProperties = {
     padding: "0 1.5rem",
@@ -63,6 +64,24 @@ const iconButtonStyle: React.CSSProperties = {
     cursor: "pointer",
 };
 
+const searchButtonStyle: React.CSSProperties = {
+    ...iconButtonStyle,
+    display: "flex",
+    alignItems: "center",
+    gap: "4px",
+};
+
+const shortcutBadgeStyle: React.CSSProperties = {
+    fontFamily: "'Courier New', Courier, monospace",
+    fontSize: "0.6875rem",
+    color: "rgba(189, 206, 137, 0.5)",
+    border: "1px solid rgba(70, 72, 62, 0.4)",
+    borderRadius: "4px",
+    padding: "1px 5px",
+    lineHeight: 1.4,
+    pointerEvents: "none",
+};
+
 const navLinks = [
     { href: "/protocol", label: "PROTOCOL" },
     { href: "/terminal", label: "TERMINAL" },
@@ -80,6 +99,10 @@ interface DesktopHeaderProps {
 
 function openSearch() {
     window.dispatchEvent(new CustomEvent("open-search"));
+}
+
+function getShortcutLabel(): string {
+    return isMacPlatform(navigator.userAgent) ? "⌘K" : "Ctrl+K";
 }
 
 function DesktopHeader({ currentPathname }: DesktopHeaderProps) {
@@ -110,7 +133,7 @@ function DesktopHeader({ currentPathname }: DesktopHeaderProps) {
             <Flex align="center" gap={16}>
                 <button
                     type="button"
-                    style={iconButtonStyle}
+                    style={searchButtonStyle}
                     aria-label="Search"
                     onClick={openSearch}
                 >
@@ -120,6 +143,7 @@ function DesktopHeader({ currentPathname }: DesktopHeaderProps) {
                     >
                         search
                     </span>
+                    <kbd style={shortcutBadgeStyle}>{getShortcutLabel()}</kbd>
                 </button>
                 <button
                     type="button"
