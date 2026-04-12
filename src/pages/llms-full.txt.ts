@@ -3,6 +3,7 @@ import type { APIRoute } from "astro";
 
 const DOC_ORDER = [
     "readme",
+    "quickstart",
     "init",
     "new",
     "lint",

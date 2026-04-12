@@ -4,6 +4,7 @@ import { DocsContentToolbar } from "@/components/docs/DocsContentToolbar";
 import { DocsSidebar } from "@/components/docs/DocsSidebar";
 import { DocsTableOfContents } from "@/components/docs/DocsTableOfContents";
 import { MobileDocsDrawer } from "@/components/docs/MobileDocsDrawer";
+import { QuickstartCallout } from "@/components/docs/QuickstartCallout";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { AntDProvider } from "@/components/providers/AntDProvider";
@@ -97,6 +98,7 @@ export function DocsLayoutShell({
                         )}
                         <main style={contentStyle}>
                             <DocsContentToolbar currentSlug={currentSlug} />
+                            {currentSlug === "readme" && <QuickstartCallout />}
                             {children}
                         </main>
                         {!isMobile && (

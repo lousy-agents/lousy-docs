@@ -58,6 +58,7 @@ function formatNavLabel(id: string): string {
 
 const navOrder = [
     "readme",
+    "quickstart",
     "init",
     "new",
     "lint",

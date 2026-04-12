@@ -117,4 +117,19 @@ for file in "$DOCS_DIR"/*.md; do
     rm "${file}.bak"
 done
 
+# Copy local docs (authored in this repo) into the content directory.
+# These already have frontmatter, so no injection is needed.
+LOCAL_DOCS_DIR="src/content/local-docs"
+if [ -d "$LOCAL_DOCS_DIR" ]; then
+    local_files=("$LOCAL_DOCS_DIR/"*.md)
+    if [ "${#local_files[@]}" -gt 0 ]; then
+        for src_file in "${local_files[@]}"; do
+            filename=$(basename "$src_file")
+            lowercase_filename=$(echo "$filename" | tr '[:upper:]' '[:lower:]')
+            cp "$src_file" "$DOCS_DIR/$lowercase_filename"
+        done
+        echo "Copied ${#local_files[@]} local doc(s) into $DOCS_DIR"
+    fi
+fi
+
 echo "Docs fetched and processed successfully into $DOCS_DIR"

@@ -18,6 +18,24 @@ test.describe("Documentation navigation", () => {
             await docsPage.expectHeadingToBeVisible("init Command");
             await docsPage.expectSidebarLinkToBeActive("init Command");
         });
+
+        test("navigates to the quickstart page when clicking the quickstart callout link", async ({
+            page,
+        }) => {
+            // Arrange
+            const docsPage = new DocsPage(page);
+            await docsPage.goto("readme");
+
+            // Act
+            await docsPage.clickContentLink(
+                "Get up and running in three steps",
+            );
+
+            // Assert
+            await docsPage.expectToBeOnPage("quickstart");
+            await docsPage.expectHeadingToBeVisible("Quickstart");
+            await docsPage.expectSidebarLinkToBeActive("Quickstart");
+        });
     });
 
     test.describe("given a user on the homepage", () => {
@@ -58,6 +76,22 @@ test.describe("Documentation navigation", () => {
                 "Lousy Agents Documentation",
             );
             await docsPage.expectSidebarLinkToBeActive("Overview");
+        });
+
+        test("navigates to the quickstart page when clicking Quickstart in the sidebar", async ({
+            page,
+        }) => {
+            // Arrange
+            const docsPage = new DocsPage(page);
+            await docsPage.goto("init");
+
+            // Act
+            await docsPage.clickSidebarLink("Quickstart");
+
+            // Assert
+            await docsPage.expectToBeOnPage("quickstart");
+            await docsPage.expectHeadingToBeVisible("Quickstart");
+            await docsPage.expectSidebarLinkToBeActive("Quickstart");
         });
     });
 });
