@@ -20,7 +20,7 @@ describe("SkillEditor", () => {
                 name: /skill markdown/i,
             });
             expect(textarea).toHaveAttribute("placeholder");
-            expect(textarea.getAttribute("placeholder")).toMatch(/---/);
+            expect(textarea.getAttribute("placeholder")).toMatch(/paste/i);
         });
 
         it("should display a Run Lint button", () => {

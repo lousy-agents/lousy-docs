@@ -1,15 +1,7 @@
 import { Button } from "antd";
 import { TerminalWindow } from "@/components/playground/TerminalWindow";
 
-const PLACEHOLDER = `---
-name: my-skill
-description: Brief description of what this skill does
-allowed-tools: grep, find
----
-
-# my-skill
-
-Instructions for the skill...`;
+const PLACEHOLDER = `> paste your copilot-instructions.md or SKILL.md here...`;
 
 const LINE_COUNT = 12;
 
@@ -39,7 +31,7 @@ const editorBodyStyle: React.CSSProperties = {
     flex: 1,
     overflow: "auto",
     fontFamily: "'Courier New', Courier, monospace",
-    fontSize: "0.875rem",
+    fontSize: "0.8125rem",
     lineHeight: "1.7",
 };
 
@@ -52,8 +44,9 @@ const lineNumbersStyle: React.CSSProperties = {
     borderRight: "1px solid rgba(70, 72, 62, 0.15)",
     flexShrink: 0,
     lineHeight: "1.7",
-    fontSize: "0.875rem",
+    fontSize: "0.8125rem",
     fontFamily: "'Courier New', Courier, monospace",
+    marginLeft: "8px",
 };
 
 const textareaStyle: React.CSSProperties = {
@@ -63,7 +56,7 @@ const textareaStyle: React.CSSProperties = {
     border: "none",
     padding: "16px",
     fontFamily: "'Courier New', Courier, monospace",
-    fontSize: "0.875rem",
+    fontSize: "0.8125rem",
     lineHeight: "1.7",
     resize: "none",
     outline: "none",
@@ -83,7 +76,7 @@ const tabBarStyle: React.CSSProperties = {
 
 const tabButtonBaseStyle: React.CSSProperties = {
     padding: "4px 12px",
-    fontFamily: "'Space Grotesk', sans-serif",
+    fontFamily: "'Space Grotesk', monospace",
     fontSize: "10px",
     fontWeight: 700,
     letterSpacing: "0.05em",
@@ -91,7 +84,7 @@ const tabButtonBaseStyle: React.CSSProperties = {
     cursor: "pointer",
     border: "1px solid rgba(70, 72, 62, 0.3)",
     backgroundColor: "transparent",
-    color: "rgba(189, 206, 137, 0.5)",
+    color: "#9ba08a",
 };
 
 const tabButtonActiveStyle: React.CSSProperties = {
@@ -102,17 +95,53 @@ const tabButtonActiveStyle: React.CSSProperties = {
 };
 
 const runButtonStyle: React.CSSProperties = {
-    background: "linear-gradient(to bottom, #bdce89, #5f6e34)",
-    border: "none",
-    color: "#283501",
-    fontFamily: "'Space Grotesk', sans-serif",
+    border: "1px solid #9ba08a",
+    background: "transparent",
+    color: "#9ba08a",
+    fontFamily: "'Space Grotesk', monospace",
     fontWeight: 700,
-    fontSize: "0.75rem",
+    fontSize: "10px",
     letterSpacing: "0.05em",
     textTransform: "uppercase",
     height: "28px",
-    padding: "0 12px",
+    padding: "0 16px",
     borderRadius: 0,
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+};
+
+const exampleLinksStyle: React.CSSProperties = {
+    display: "flex",
+    gap: "16px",
+    padding: "0 16px",
+    height: "32px",
+    alignItems: "center",
+    borderTop: "1px solid rgba(70, 72, 62, 0.15)",
+    fontFamily: "'Courier New', Courier, monospace",
+    fontSize: "9px",
+    letterSpacing: "0.08em",
+    textTransform: "uppercase",
+    fontWeight: 700,
+    flexShrink: 0,
+};
+
+const exampleLinkActiveStyle: React.CSSProperties = {
+    color: "#bdce89",
+    cursor: "pointer",
+    textDecoration: "none",
+    background: "none",
+    border: "none",
+    padding: 0,
+    font: "inherit",
+    letterSpacing: "inherit",
+    textTransform: "inherit",
+    fontWeight: "inherit",
+};
+
+const exampleLinkStyle: React.CSSProperties = {
+    ...exampleLinkActiveStyle,
+    color: "rgba(118, 118, 108, 0.6)",
 };
 
 interface SkillEditorProps {
@@ -128,17 +157,8 @@ export function SkillEditor({ value, onChange, onRun }: SkillEditorProps) {
         (_, i) => i + 1,
     );
 
-    const runButton = (
-        <Button style={runButtonStyle} onClick={onRun}>
-            RUN_LINT
-        </Button>
-    );
-
     return (
-        <TerminalWindow
-            title="INPUT_TARGET // MODULE_01"
-            rightAction={runButton}
-        >
+        <TerminalWindow title="INPUT_TARGET // MODULE_01">
             <div style={editorWrapperStyle}>
                 <div style={tabBarStyle}>
                     <div style={{ display: "flex", gap: "4px" }}>
@@ -152,9 +172,12 @@ export function SkillEditor({ value, onChange, onRun }: SkillEditorProps) {
                             INSTRUCTIONS
                         </button>
                     </div>
+                    <Button style={runButtonStyle} onClick={onRun}>
+                        ▶ RUN_LINT
+                    </Button>
                 </div>
                 <div style={fileInfoBarStyle}>
-                    <span>SOURCE_FILE: skill.md</span>
+                    <span>SOURCE_FILE: copilot-instructions.md</span>
                     <span>UTF-8 | LF | MD</span>
                 </div>
                 <div style={editorBodyStyle}>
@@ -172,6 +195,17 @@ export function SkillEditor({ value, onChange, onRun }: SkillEditorProps) {
                         placeholder={PLACEHOLDER}
                         spellCheck={false}
                     />
+                </div>
+                <div style={exampleLinksStyle}>
+                    <button type="button" style={exampleLinkActiveStyle}>
+                        LOAD_EXAMPLE: INSTRUCTIONS
+                    </button>
+                    <button type="button" style={exampleLinkStyle}>
+                        LOAD_EXAMPLE: SKILL
+                    </button>
+                    <button type="button" style={exampleLinkStyle}>
+                        LOAD_EXAMPLE: AGENT
+                    </button>
                 </div>
             </div>
         </TerminalWindow>
