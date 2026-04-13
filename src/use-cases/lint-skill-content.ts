@@ -5,15 +5,11 @@
 
 import type {
     ParsedFrontmatter,
+    SkillContentLintGateway,
     SkillLintDiagnostic,
     SkillLintOutput,
 } from "@/entities/skill-lint";
 import { SkillFrontmatterSchema } from "@/gateways/skill-content-lint-gateway";
-
-/** Port interface for the skill content lint gateway */
-export interface SkillContentLintGateway {
-    parseFrontmatter(content: string): ParsedFrontmatter | null;
-}
 
 const RECOMMENDED_FIELDS = ["allowed-tools"] as const;
 

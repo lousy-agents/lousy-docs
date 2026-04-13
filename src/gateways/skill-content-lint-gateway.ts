@@ -5,7 +5,10 @@
 
 import { parse as parseYaml } from "yaml";
 import { z } from "zod";
-import type { ParsedFrontmatter } from "@/entities/skill-lint";
+import type {
+    ParsedFrontmatter,
+    SkillContentLintGateway,
+} from "@/entities/skill-lint";
 
 /** Zod schema for validating skill frontmatter fields */
 export const SkillFrontmatterSchema = z.object({
@@ -83,7 +86,7 @@ function parseFrontmatter(content: string): ParsedFrontmatter | null {
     }
 
     return {
-        data: data ?? {},
+        data,
         fieldLines,
         frontmatterStartLine: 1,
     };
