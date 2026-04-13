@@ -1,6 +1,9 @@
 import Chance from "chance";
 import { describe, expect, it } from "vitest";
-import { createSkillContentLintGateway } from "@/gateways/skill-content-lint-gateway";
+import {
+    createSkillContentLintGateway,
+    SkillFrontmatterSchema,
+} from "@/gateways/skill-content-lint-gateway";
 
 const chance = new Chance();
 
@@ -84,6 +87,177 @@ describe("SkillContentLintGateway", () => {
                 expect(result).not.toBeNull();
                 expect(result?.data).toEqual({});
             });
+        });
+    });
+
+    describe("validateFrontmatter", () => {
+        describe("given valid frontmatter data", () => {
+            it("should return success with parsed name and description", () => {
+                const data = {
+                    name: "my-skill",
+                    description: chance.sentence(),
+                };
+
+                const result = gateway.validateFrontmatter(data);
+
+                expect(result.success).toBe(true);
+                expect(result.data?.name).toBe("my-skill");
+                expect(result.data?.description).toBe(data.description);
+                expect(result.issues).toHaveLength(0);
+            });
+        });
+
+        describe("given missing required fields", () => {
+            it("should return failure with issues for missing name", () => {
+                const data = {
+                    description: chance.sentence(),
+                };
+
+                const result = gateway.validateFrontmatter(data);
+
+                expect(result.success).toBe(false);
+                expect(result.issues.length).toBeGreaterThan(0);
+                expect(
+                    result.issues.some(
+                        (i) =>
+                            i.path.includes("name") ||
+                            i.message.toLowerCase().includes("required"),
+                    ),
+                ).toBe(true);
+            });
+
+            it("should return failure with issues for missing description", () => {
+                const data = {
+                    name: "my-skill",
+                };
+
+                const result = gateway.validateFrontmatter(data);
+
+                expect(result.success).toBe(false);
+                expect(result.issues.length).toBeGreaterThan(0);
+            });
+        });
+
+        describe("given invalid field values", () => {
+            it("should return failure for invalid name format", () => {
+                const data = {
+                    name: "Invalid Name",
+                    description: chance.sentence(),
+                };
+
+                const result = gateway.validateFrontmatter(data);
+
+                expect(result.success).toBe(false);
+                expect(result.issues.length).toBeGreaterThan(0);
+            });
+        });
+    });
+});
+
+describe("SkillFrontmatterSchema", () => {
+    describe("given valid frontmatter data", () => {
+        it("should accept a valid name and description", () => {
+            const data = {
+                name: "my-skill",
+                description: "A brief description of the skill",
+            };
+
+            const result = SkillFrontmatterSchema.safeParse(data);
+
+            expect(result.success).toBe(true);
+        });
+
+        it("should accept optional allowed-tools field", () => {
+            const data = {
+                name: "my-skill",
+                description: "A brief description",
+                "allowed-tools": "grep, find",
+            };
+
+            const result = SkillFrontmatterSchema.safeParse(data);
+
+            expect(result.success).toBe(true);
+        });
+    });
+
+    describe("given missing required fields", () => {
+        it("should reject when name is missing", () => {
+            const data = {
+                description: "A brief description",
+            };
+
+            const result = SkillFrontmatterSchema.safeParse(data);
+
+            expect(result.success).toBe(false);
+        });
+
+        it("should reject when description is missing", () => {
+            const data = {
+                name: "my-skill",
+            };
+
+            const result = SkillFrontmatterSchema.safeParse(data);
+
+            expect(result.success).toBe(false);
+        });
+    });
+
+    describe("given invalid name format", () => {
+        it("should reject names with uppercase letters", () => {
+            const data = {
+                name: "MySkill",
+                description: "A brief description",
+            };
+
+            const result = SkillFrontmatterSchema.safeParse(data);
+
+            expect(result.success).toBe(false);
+        });
+
+        it("should reject names with spaces", () => {
+            const data = {
+                name: "my skill",
+                description: "A brief description",
+            };
+
+            const result = SkillFrontmatterSchema.safeParse(data);
+
+            expect(result.success).toBe(false);
+        });
+
+        it("should reject empty names", () => {
+            const data = {
+                name: "",
+                description: "A brief description",
+            };
+
+            const result = SkillFrontmatterSchema.safeParse(data);
+
+            expect(result.success).toBe(false);
+        });
+    });
+
+    describe("given invalid description", () => {
+        it("should reject empty descriptions", () => {
+            const data = {
+                name: "my-skill",
+                description: "",
+            };
+
+            const result = SkillFrontmatterSchema.safeParse(data);
+
+            expect(result.success).toBe(false);
+        });
+
+        it("should reject whitespace-only descriptions", () => {
+            const data = {
+                name: "my-skill",
+                description: "   ",
+            };
+
+            const result = SkillFrontmatterSchema.safeParse(data);
+
+            expect(result.success).toBe(false);
         });
     });
 });

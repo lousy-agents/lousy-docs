@@ -21,7 +21,7 @@ const subHeaderStyle: React.CSSProperties = {
     padding: "0 16px",
     height: "48px",
     backgroundColor: "#0e0e0c",
-    borderBottom: "1px solid rgba(72, 72, 64, 0.25)",
+    borderBottom: "1px solid rgba(70, 72, 62, 0.25)",
     flexShrink: 0,
 };
 
@@ -45,7 +45,7 @@ const badgeStyle: React.CSSProperties = {
     display: "inline-block",
     padding: "2px 8px",
     backgroundColor: "rgba(57, 61, 44, 0.5)",
-    border: "1px solid rgba(72, 72, 64, 0.4)",
+    border: "1px solid rgba(70, 72, 62, 0.25)",
     color: "#9ba08a",
     fontFamily: "'Space Grotesk', monospace",
     fontSize: "10px",
@@ -101,7 +101,7 @@ const subNavLinkStyle: React.CSSProperties = {
 const subHeaderDividerStyle: React.CSSProperties = {
     width: "1px",
     height: "24px",
-    backgroundColor: "rgba(72, 72, 64, 0.4)",
+    backgroundColor: "rgba(70, 72, 62, 0.4)",
 };
 
 const bodyLayoutStyle: React.CSSProperties = {
@@ -115,7 +115,7 @@ const sidebarStyle: React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
     backgroundColor: "#131410",
-    borderRight: "1px solid rgba(72, 72, 64, 0.25)",
+    borderRight: "1px solid rgba(70, 72, 62, 0.25)",
     flexShrink: 0,
     fontFamily: "'Space Grotesk', monospace",
     fontSize: "11px",
@@ -126,7 +126,7 @@ const sidebarStyle: React.CSSProperties = {
 
 const sidebarHeaderStyle: React.CSSProperties = {
     padding: "16px",
-    borderBottom: "1px solid rgba(72, 72, 64, 0.25)",
+    borderBottom: "1px solid rgba(70, 72, 62, 0.25)",
 };
 
 const sidebarTitleStyle: React.CSSProperties = {
@@ -163,7 +163,7 @@ const sidebarNavItemStyle: React.CSSProperties = {
 
 const sidebarFooterStyle: React.CSSProperties = {
     padding: "16px",
-    borderTop: "1px solid rgba(72, 72, 64, 0.25)",
+    borderTop: "1px solid rgba(70, 72, 62, 0.25)",
     marginTop: "auto",
     backgroundColor: "#131410",
 };
@@ -232,7 +232,7 @@ function Sidebar() {
                         letterSpacing: "0.12em",
                     }}
                 >
-                    INTERFACE_READY
+                    LINT_ENGINE V1.0
                 </div>
             </div>
         </aside>

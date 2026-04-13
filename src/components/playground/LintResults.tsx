@@ -151,15 +151,16 @@ function getDiagnosticBorderColor(severity: string): string {
 function SystemMetrics({ hasResult }: { hasResult: boolean }) {
     return (
         <div style={metricsBarStyle}>
-            <span>{hasResult ? "OUTPUT_READY" : "STANDBY"}</span>
+            <span>{hasResult ? "LINT_COMPLETE" : "NO_RESULTS"}</span>
             <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                 <span
                     style={{
                         ...statusDotStyle,
                         backgroundColor: hasResult ? "#bdce89" : "#9ba08a",
                     }}
+                    aria-hidden="true"
                 />
-                {hasResult ? "SYSTEM_READY" : "SYSTEM_IDLE"}
+                {hasResult ? "READY" : "IDLE"}
             </div>
         </div>
     );
@@ -169,7 +170,7 @@ export function LintResults({ result }: LintResultsProps) {
     if (!result) {
         return (
             <TerminalWindow title="DIAGNOSTIC_LOG // STREAM">
-                <div style={panelStyle}>
+                <div style={panelStyle} aria-live="polite" role="status">
                     <div style={emptyStateContainerStyle}>
                         <div style={emptyStateBoxStyle}>
                             <div style={awaitingHeadingStyle}>
@@ -194,7 +195,7 @@ export function LintResults({ result }: LintResultsProps) {
 
     return (
         <TerminalWindow title="DIAGNOSTIC_LOG // STREAM">
-            <div style={panelStyle}>
+            <div style={panelStyle} aria-live="polite" role="status">
                 <div style={outputContentStyle}>
                     <Flex vertical gap={10}>
                         <div
@@ -261,7 +262,7 @@ export function LintResults({ result }: LintResultsProps) {
                                             style={{
                                                 color: "#e6ead8",
                                                 fontFamily:
-                                                    "'Courier New', Courier, monospace",
+                                                    "'Manrope', sans-serif",
                                                 fontSize: "0.8125rem",
                                             }}
                                         >
