@@ -1,0 +1,10 @@
+---
+// biome-ignore lint/correctness/noUnusedImports: used in Astro HTML template
+import { PlaygroundPage } from "../components/playground/PlaygroundPage";
+// biome-ignore lint/correctness/noUnusedImports: used in Astro HTML template
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Lint Playground — Lousy Agents" pagefindIgnore={true}>
+    <PlaygroundPage client:only="react" />
+</BaseLayout>

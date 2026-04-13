@@ -4,10 +4,10 @@
  */
 
 import {
-    type SkillLintDiagnostic,
-    type SkillLintOutput,
     type ParsedFrontmatter,
     SkillFrontmatterSchema,
+    type SkillLintDiagnostic,
+    type SkillLintOutput,
 } from "@/entities/skill-lint";
 import type { SkillContentLintGateway } from "@/gateways/skill-content-lint-gateway";
 

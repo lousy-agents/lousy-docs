@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+    SkillFrontmatterSchema,
     type SkillLintDiagnostic,
     type SkillLintSeverity,
-    SkillFrontmatterSchema,
 } from "@/entities/skill-lint";
 
 describe("SkillFrontmatterSchema", () => {
