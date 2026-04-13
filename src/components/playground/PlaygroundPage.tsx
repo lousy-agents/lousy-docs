@@ -289,11 +289,33 @@ export function PlaygroundPage() {
     }, []);
 
     const handleRunLint = useCallback(async () => {
-        const output = await lintUseCase.execute({
-            content,
-            skillName: DEFAULT_SKILL_NAME,
-        });
-        setResult(output);
+        try {
+            const output = await lintUseCase.execute({
+                content,
+                skillName: DEFAULT_SKILL_NAME,
+            });
+            setResult(output);
+        } catch (error: unknown) {
+            const message =
+                error instanceof Error
+                    ? error.message
+                    : "Unknown lint error";
+            setResult({
+                diagnostics: [
+                    {
+                        line: 1,
+                        severity: "error",
+                        message: `Lint execution failed: ${message}`,
+                        ruleId: "skill/internal-error",
+                    },
+                ],
+                summary: {
+                    totalFiles: 1,
+                    totalErrors: 1,
+                    totalWarnings: 0,
+                },
+            });
+        }
     }, [content]);
 
     return (
