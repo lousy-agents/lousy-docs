@@ -4,12 +4,12 @@
  */
 
 import type {
+    FrontmatterValidationResult,
     ParsedFrontmatter,
     SkillContentLintGateway,
     SkillLintDiagnostic,
     SkillLintOutput,
 } from "@/entities/skill-lint";
-import { SkillFrontmatterSchema } from "@/gateways/skill-content-lint-gateway";
 
 const RECOMMENDED_FIELDS = ["allowed-tools"] as const;
 
@@ -85,10 +85,10 @@ export class LintSkillContentUseCase {
     ): SkillLintDiagnostic[] {
         const diagnostics: SkillLintDiagnostic[] = [];
 
-        const result = SkillFrontmatterSchema.safeParse(parsed.data);
+        const result = this.gateway.validateFrontmatter(parsed.data);
 
         if (!result.success) {
-            for (const issue of result.error.issues) {
+            for (const issue of result.issues) {
                 const fieldName = issue.path[0]?.toString();
                 const line = fieldName
                     ? (parsed.fieldLines.get(fieldName) ??
@@ -111,7 +111,7 @@ export class LintSkillContentUseCase {
             }
         }
 
-        if (result.success && result.data.name !== skillName) {
+        if (result.success && result.data && result.data.name !== skillName) {
             const nameLine =
                 parsed.fieldLines.get("name") ?? parsed.frontmatterStartLine;
             diagnostics.push({
@@ -122,8 +122,6 @@ export class LintSkillContentUseCase {
                 ruleId: "skill/name-mismatch",
             });
         }
-
-        for (const field of RECOMMENDED_FIELDS) {
             if (parsed.data[field] === undefined) {
                 diagnostics.push({
                     line: parsed.frontmatterStartLine,
