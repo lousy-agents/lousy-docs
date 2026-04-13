@@ -6,6 +6,7 @@
 import { parse as parseYaml } from "yaml";
 import { z } from "zod";
 import type {
+    FrontmatterValidationResult,
     ParsedFrontmatter,
     SkillContentLintGateway,
 } from "@/entities/skill-lint";
@@ -73,7 +74,10 @@ function parseFrontmatter(content: string): ParsedFrontmatter | null {
         } else {
             data = {};
         }
-    } catch {
+    } catch (error: unknown) {
+        const message =
+            error instanceof Error ? error.message : "Unknown parse error";
+        console.error("Failed to parse YAML frontmatter:", message);
         return null;
     }
 
@@ -92,7 +96,28 @@ function parseFrontmatter(content: string): ParsedFrontmatter | null {
     };
 }
 
+function validateFrontmatter(
+    data: Record<string, unknown>,
+): FrontmatterValidationResult {
+    const result = SkillFrontmatterSchema.safeParse(data);
+    if (result.success) {
+        return {
+            success: true,
+            data: { name: result.data.name, description: result.data.description },
+            issues: [],
+        };
+    }
+    return {
+        success: false,
+        issues: result.error.issues.map((issue) => ({
+            path: issue.path,
+            code: issue.code,
+            message: issue.message,
+        })),
+    };
+}
+
 /** Creates a browser-compatible skill content lint gateway */
 export function createSkillContentLintGateway(): SkillContentLintGateway {
-    return { parseFrontmatter };
+    return { parseFrontmatter, validateFrontmatter };
 }
