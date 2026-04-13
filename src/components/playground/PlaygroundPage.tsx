@@ -1,18 +1,18 @@
 import { Flex } from "antd";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { MobileNavDrawer } from "@/components/layout/MobileNavDrawer";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { LintResults } from "@/components/playground/LintResults";
 import { SkillEditor } from "@/components/playground/SkillEditor";
 import { AntDProvider } from "@/components/providers/AntDProvider";
-import type { SkillLintOutput } from "@/entities/skill-lint";
+import type {
+    SkillContentLintGateway,
+    SkillLintOutput,
+} from "@/entities/skill-lint";
 import { createSkillContentLintGateway } from "@/gateways/skill-content-lint-gateway";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { HEADER_HEIGHT_PX } from "@/lib/layout-constants";
 import { LintSkillContentUseCase } from "@/use-cases/lint-skill-content";
-
-const gateway = createSkillContentLintGateway();
-const lintUseCase = new LintSkillContentUseCase(gateway);
 
 const subHeaderStyle: React.CSSProperties = {
     display: "flex",
@@ -74,15 +74,12 @@ const subNavLinkActiveStyle: React.CSSProperties = {
     fontFamily: "'Space Grotesk', monospace",
     fontSize: "11px",
     color: "#e6ead8",
-    borderBottom: "1px solid #e6ead8",
     textDecoration: "none",
     letterSpacing: "0.05em",
     textTransform: "uppercase",
     background: "none",
     border: "none",
-    borderBottomWidth: "1px",
-    borderBottomStyle: "solid",
-    borderBottomColor: "#e6ead8",
+    borderBottom: "1px solid #e6ead8",
     cursor: "default",
 };
 
@@ -105,17 +102,6 @@ const subHeaderDividerStyle: React.CSSProperties = {
     width: "1px",
     height: "24px",
     backgroundColor: "rgba(72, 72, 64, 0.4)",
-};
-
-const uplinkStyle: React.CSSProperties = {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    fontFamily: "'Courier New', Courier, monospace",
-    fontSize: "11px",
-    color: "rgba(155, 160, 138, 0.6)",
-    letterSpacing: "0.05em",
-    textTransform: "uppercase",
 };
 
 const bodyLayoutStyle: React.CSSProperties = {
@@ -182,19 +168,6 @@ const sidebarFooterStyle: React.CSSProperties = {
     backgroundColor: "#131410",
 };
 
-const cpuBarTrackStyle: React.CSSProperties = {
-    width: "100%",
-    height: "4px",
-    backgroundColor: "rgba(72, 72, 64, 0.4)",
-    marginTop: "8px",
-};
-
-const cpuBarFillStyle: React.CSSProperties = {
-    height: "100%",
-    backgroundColor: "#9ba08a",
-    width: "0%",
-};
-
 const splitLayoutStyle: React.CSSProperties = {
     display: "flex",
     flex: 1,
@@ -228,12 +201,12 @@ const mobilePanelStyle: React.CSSProperties = {
 
 function Sidebar() {
     return (
-        <aside style={sidebarStyle} aria-label="Playground navigation">
+        <aside style={sidebarStyle} aria-label="Playground sidebar">
             <div style={sidebarHeaderStyle}>
                 <div style={sidebarTitleStyle}>OPERATIONAL_COMMAND</div>
                 <div style={sidebarSubtitleStyle}>SECTOR_07</div>
             </div>
-            <nav style={{ flex: 1, paddingTop: "4px" }}>
+            <div style={{ flex: 1, paddingTop: "4px" }}>
                 <div style={sidebarNavItemActiveStyle}>
                     <span aria-hidden="true">⌘</span>
                     <span>TERMINAL_STREAMS</span>
@@ -250,22 +223,16 @@ function Sidebar() {
                     <span aria-hidden="true">⌁</span>
                     <span>NETWORK_TELEMETRY</span>
                 </div>
-            </nav>
+            </div>
             <div style={sidebarFooterStyle}>
                 <div
                     style={{
-                        display: "flex",
-                        justifyContent: "space-between",
                         fontSize: "10px",
+                        color: "rgba(155, 160, 138, 0.5)",
+                        letterSpacing: "0.12em",
                     }}
                 >
-                    <span style={{ color: "rgba(155, 160, 138, 0.5)" }}>
-                        CPU_LOAD
-                    </span>
-                    <span style={{ color: "#9ba08a" }}>0%</span>
-                </div>
-                <div style={cpuBarTrackStyle}>
-                    <div style={cpuBarFillStyle} />
+                    INTERFACE_READY
                 </div>
             </div>
         </aside>
@@ -274,11 +241,22 @@ function Sidebar() {
 
 const DEFAULT_SKILL_NAME = "my-skill";
 
-export function PlaygroundPage() {
+interface PlaygroundPageProps {
+    gateway?: SkillContentLintGateway;
+}
+
+export function PlaygroundPage({
+    gateway: injectedGateway,
+}: PlaygroundPageProps = {}) {
     const isMobile = useIsMobile();
     const [navDrawerOpen, setNavDrawerOpen] = useState(false);
     const [content, setContent] = useState("");
     const [result, setResult] = useState<SkillLintOutput | null>(null);
+
+    const lintUseCase = useMemo(() => {
+        const gw = injectedGateway ?? createSkillContentLintGateway();
+        return new LintSkillContentUseCase(gw);
+    }, [injectedGateway]);
 
     const handleMenuToggle = useCallback(() => {
         setNavDrawerOpen((prev) => !prev);
@@ -314,7 +292,7 @@ export function PlaygroundPage() {
                 },
             });
         }
-    }, [content]);
+    }, [content, lintUseCase]);
 
     return (
         <AntDProvider>
@@ -356,18 +334,6 @@ export function PlaygroundPage() {
                                 <span style={subNavLinkStyle}>LINT_RULES</span>
                             </div>
                             <div style={subHeaderDividerStyle} />
-                            <div style={uplinkStyle}>
-                                <span
-                                    style={{
-                                        width: "6px",
-                                        height: "6px",
-                                        borderRadius: "50%",
-                                        backgroundColor: "#bdce89",
-                                        display: "inline-block",
-                                    }}
-                                />
-                                UP_LINK: STABLE
-                            </div>
                         </div>
                     </header>
                     {isMobile ? (

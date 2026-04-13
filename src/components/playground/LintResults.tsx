@@ -151,10 +151,7 @@ function getDiagnosticBorderColor(severity: string): string {
 function SystemMetrics({ hasResult }: { hasResult: boolean }) {
     return (
         <div style={metricsBarStyle}>
-            <div style={{ display: "flex", gap: "16px" }}>
-                <span>LATENCY: {hasResult ? "12ms" : "0ms"}</span>
-                <span>BUF: {hasResult ? "1024KB" : "0KB"}</span>
-            </div>
+            <span>{hasResult ? "OUTPUT_READY" : "STANDBY"}</span>
             <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                 <span
                     style={{

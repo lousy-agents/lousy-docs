@@ -74,10 +74,7 @@ function parseFrontmatter(content: string): ParsedFrontmatter | null {
         } else {
             data = {};
         }
-    } catch (error: unknown) {
-        const message =
-            error instanceof Error ? error.message : "Unknown parse error";
-        console.error("Failed to parse YAML frontmatter:", message);
+    } catch {
         return null;
     }
 

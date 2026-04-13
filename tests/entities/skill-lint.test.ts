@@ -1,8 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type {
-    SkillLintDiagnostic,
-    SkillLintSeverity,
-} from "@/entities/skill-lint";
+import type { SkillLintDiagnostic } from "@/entities/skill-lint";
 import { SkillFrontmatterSchema } from "@/gateways/skill-content-lint-gateway";
 
 describe("SkillFrontmatterSchema", () => {
@@ -117,7 +114,7 @@ describe("SkillLintDiagnostic", () => {
     it("should represent a diagnostic with all required fields", () => {
         const diagnostic: SkillLintDiagnostic = {
             line: 2,
-            severity: "error" as SkillLintSeverity,
+            severity: "error",
             message: "Name is required",
             ruleId: "skill/missing-name",
         };

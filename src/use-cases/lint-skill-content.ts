@@ -10,6 +10,9 @@ import type {
     SkillLintOutput,
 } from "@/entities/skill-lint";
 
+/** Maximum input size (500KB) to prevent YAML parser from freezing the browser */
+const MAX_CONTENT_LENGTH = 512_000;
+
 const RECOMMENDED_FIELDS = ["allowed-tools"] as const;
 
 const RECOMMENDED_FIELD_RULE_IDS: Record<
@@ -29,6 +32,25 @@ export class LintSkillContentUseCase {
 
     async execute(input: LintSkillContentInput): Promise<SkillLintOutput> {
         const { content, skillName } = input;
+
+        if (content.length > MAX_CONTENT_LENGTH) {
+            return {
+                diagnostics: [
+                    {
+                        line: 1,
+                        severity: "error",
+                        message: `Input exceeds maximum size of ${MAX_CONTENT_LENGTH} characters. Please reduce the content size.`,
+                        ruleId: "skill/input-too-large",
+                    },
+                ],
+                summary: {
+                    totalFiles: 1,
+                    totalErrors: 1,
+                    totalWarnings: 0,
+                },
+            };
+        }
+
         let diagnostics: SkillLintDiagnostic[] = [];
 
         const parsed = this.gateway.parseFrontmatter(content);

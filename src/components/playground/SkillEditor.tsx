@@ -60,7 +60,6 @@ const textareaStyle: React.CSSProperties = {
     fontSize: "0.8125rem",
     lineHeight: "1.7",
     resize: "none",
-    outline: "none",
     display: "block",
     minHeight: 0,
 };
@@ -163,10 +162,20 @@ export function SkillEditor({ value, onChange, onRun }: SkillEditorProps) {
             <div style={editorWrapperStyle}>
                 <div style={tabBarStyle}>
                     <div style={{ display: "flex", gap: "4px" }}>
-                        <button type="button" style={tabButtonBaseStyle}>
+                        <button
+                            type="button"
+                            style={tabButtonBaseStyle}
+                            disabled
+                            aria-disabled="true"
+                        >
                             SKILLS
                         </button>
-                        <button type="button" style={tabButtonBaseStyle}>
+                        <button
+                            type="button"
+                            style={tabButtonBaseStyle}
+                            disabled
+                            aria-disabled="true"
+                        >
                             AGENTS
                         </button>
                         <button type="button" style={tabButtonActiveStyle}>
@@ -198,13 +207,28 @@ export function SkillEditor({ value, onChange, onRun }: SkillEditorProps) {
                     />
                 </div>
                 <div style={exampleLinksStyle}>
-                    <button type="button" style={exampleLinkActiveStyle}>
+                    <button
+                        type="button"
+                        style={exampleLinkActiveStyle}
+                        disabled
+                        aria-disabled="true"
+                    >
                         LOAD_EXAMPLE: INSTRUCTIONS
                     </button>
-                    <button type="button" style={exampleLinkStyle}>
+                    <button
+                        type="button"
+                        style={exampleLinkStyle}
+                        disabled
+                        aria-disabled="true"
+                    >
                         LOAD_EXAMPLE: SKILL
                     </button>
-                    <button type="button" style={exampleLinkStyle}>
+                    <button
+                        type="button"
+                        style={exampleLinkStyle}
+                        disabled
+                        aria-disabled="true"
+                    >
                         LOAD_EXAMPLE: AGENT
                     </button>
                 </div>
