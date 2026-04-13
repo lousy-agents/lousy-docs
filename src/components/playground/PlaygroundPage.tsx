@@ -20,7 +20,7 @@ const subHeaderStyle: React.CSSProperties = {
     alignItems: "center",
     padding: "0 16px",
     height: "48px",
-    backgroundColor: "#0e0e0c",
+    backgroundColor: "#121410",
     borderBottom: "1px solid rgba(70, 72, 62, 0.25)",
     flexShrink: 0,
 };
@@ -114,7 +114,7 @@ const sidebarStyle: React.CSSProperties = {
     width: "240px",
     display: "flex",
     flexDirection: "column",
-    backgroundColor: "#131410",
+    backgroundColor: "#1a1c18",
     borderRight: "1px solid rgba(70, 72, 62, 0.25)",
     flexShrink: 0,
     fontFamily: "'Space Grotesk', monospace",
@@ -146,7 +146,7 @@ const sidebarNavItemActiveStyle: React.CSSProperties = {
     alignItems: "center",
     gap: "12px",
     padding: "12px 16px",
-    backgroundColor: "#1f201a",
+    backgroundColor: "#1e201c",
     borderLeft: "4px solid #e6ead8",
     fontWeight: 700,
     cursor: "default",
@@ -164,8 +164,8 @@ const sidebarNavItemStyle: React.CSSProperties = {
 const sidebarFooterStyle: React.CSSProperties = {
     padding: "16px",
     borderTop: "1px solid rgba(70, 72, 62, 0.25)",
+    backgroundColor: "#1a1c18",
     marginTop: "auto",
-    backgroundColor: "#131410",
 };
 
 const splitLayoutStyle: React.CSSProperties = {
@@ -187,7 +187,7 @@ const rightPanelStyle: React.CSSProperties = {
     width: "45%",
     display: "flex",
     flexDirection: "column",
-    backgroundColor: "#131410",
+    backgroundColor: "#1a1c18",
     overflow: "hidden",
     minHeight: 0,
 };
