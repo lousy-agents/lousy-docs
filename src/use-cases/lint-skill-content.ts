@@ -3,10 +3,10 @@
  * Validates frontmatter against the skill schema and produces diagnostics.
  */
 
-import {
-    type ParsedFrontmatter,
-    type SkillLintDiagnostic,
-    type SkillLintOutput,
+import type {
+    ParsedFrontmatter,
+    SkillLintDiagnostic,
+    SkillLintOutput,
 } from "@/entities/skill-lint";
 import { SkillFrontmatterSchema } from "@/gateways/skill-content-lint-gateway";
 

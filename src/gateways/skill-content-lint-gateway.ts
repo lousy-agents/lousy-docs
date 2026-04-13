@@ -3,8 +3,8 @@
  * No Node.js filesystem dependencies — works entirely with text strings.
  */
 
-import { z } from "zod";
 import { parse as parseYaml } from "yaml";
+import { z } from "zod";
 import type { ParsedFrontmatter } from "@/entities/skill-lint";
 
 /** Zod schema for validating skill frontmatter fields */

@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import {
-    SkillFrontmatterSchema,
-    type SkillLintDiagnostic,
-    type SkillLintSeverity,
+import type {
+    SkillLintDiagnostic,
+    SkillLintSeverity,
 } from "@/entities/skill-lint";
+import { SkillFrontmatterSchema } from "@/gateways/skill-content-lint-gateway";
 
 describe("SkillFrontmatterSchema", () => {
     describe("given valid frontmatter data", () => {
