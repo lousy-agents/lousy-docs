@@ -6,6 +6,8 @@ const wrapperStyle: React.CSSProperties = {
     flexDirection: "column",
     overflow: "hidden",
     border: "1px solid rgba(70, 72, 62, 0.15)",
+    flex: 1,
+    minHeight: 0,
 };
 
 const headerStyle: React.CSSProperties = {
@@ -53,6 +55,8 @@ const contentStyle: React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
     backgroundColor: "#0d0f0b",
+    minHeight: 0,
+    overflow: "hidden",
 };
 
 const crtOverlayStyle: React.CSSProperties = {

@@ -16,6 +16,8 @@ const outputContentStyle: React.CSSProperties = {
     fontSize: "0.875rem",
     lineHeight: 1.7,
     flex: 1,
+    overflow: "auto",
+    minHeight: 0,
 };
 
 const emptyStateContainerStyle: React.CSSProperties = {

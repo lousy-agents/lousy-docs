@@ -206,6 +206,8 @@ const leftPanelStyle: React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
     borderRight: "1px solid rgba(70, 72, 62, 0.15)",
+    overflow: "hidden",
+    minHeight: 0,
 };
 
 const rightPanelStyle: React.CSSProperties = {
@@ -213,6 +215,8 @@ const rightPanelStyle: React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
     backgroundColor: "#131410",
+    overflow: "hidden",
+    minHeight: 0,
 };
 
 const mobilePanelStyle: React.CSSProperties = {

@@ -9,6 +9,7 @@ const editorWrapperStyle: React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
     flex: 1,
+    minHeight: 0,
 };
 
 const fileInfoBarStyle: React.CSSProperties = {
