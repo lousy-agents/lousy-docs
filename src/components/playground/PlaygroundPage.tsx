@@ -297,9 +297,7 @@ export function PlaygroundPage() {
             setResult(output);
         } catch (error: unknown) {
             const message =
-                error instanceof Error
-                    ? error.message
-                    : "Unknown lint error";
+                error instanceof Error ? error.message : "Unknown lint error";
             setResult({
                 diagnostics: [
                     {
