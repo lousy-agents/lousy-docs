@@ -4,7 +4,6 @@
  */
 
 import type {
-    FrontmatterValidationResult,
     ParsedFrontmatter,
     SkillContentLintGateway,
     SkillLintDiagnostic,
@@ -122,6 +121,8 @@ export class LintSkillContentUseCase {
                 ruleId: "skill/name-mismatch",
             });
         }
+
+        for (const field of RECOMMENDED_FIELDS) {
             if (parsed.data[field] === undefined) {
                 diagnostics.push({
                     line: parsed.frontmatterStartLine,
