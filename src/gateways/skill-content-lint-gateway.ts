@@ -39,12 +39,15 @@ function parseFrontmatter(content: string): ParsedFrontmatter | null {
     let data: Record<string, unknown>;
     try {
         const parsed: unknown = parseYaml(yamlContent);
-        data =
+        if (
             parsed !== null &&
             typeof parsed === "object" &&
             !Array.isArray(parsed)
-                ? (parsed as Record<string, unknown>)
-                : {};
+        ) {
+            data = Object.fromEntries(Object.entries(parsed));
+        } else {
+            data = {};
+        }
     } catch {
         return null;
     }

@@ -107,50 +107,50 @@ export function LintResults({ result }: LintResultsProps) {
                         {getSummaryText(result)}
                     </Text>
                 </div>
-                {result.diagnostics.map((diagnostic) => (
-                    <div
-                        key={`${diagnostic.ruleId}-${diagnostic.line}-${diagnostic.severity}`}
-                        style={diagnosticStyle}
-                    >
-                        <Flex gap={8} align="baseline">
-                            <Text
-                                style={{
-                                    color: getSeverityColor(
-                                        diagnostic.severity,
-                                    ),
-                                    fontWeight: 700,
-                                    fontFamily:
-                                        "'Courier New', Courier, monospace",
-                                    fontSize: "0.75rem",
-                                    flexShrink: 0,
-                                }}
-                            >
-                                {getSeverityLabel(diagnostic.severity)}
-                            </Text>
-                            <Text
-                                style={{
-                                    color: "rgba(230, 234, 216, 0.5)",
-                                    fontFamily:
-                                        "'Courier New', Courier, monospace",
-                                    fontSize: "0.75rem",
-                                    flexShrink: 0,
-                                }}
-                            >
-                                Line {diagnostic.line}
-                            </Text>
-                            <Text
-                                style={{
-                                    color: "#e6ead8",
-                                    fontFamily:
-                                        "'Courier New', Courier, monospace",
-                                    fontSize: "0.8125rem",
-                                }}
-                            >
-                                {diagnostic.message}
-                            </Text>
-                        </Flex>
-                    </div>
-                ))}
+                {result.diagnostics.map((diagnostic) => {
+                    const key = `${diagnostic.ruleId}-${diagnostic.line}-${diagnostic.message}`;
+                    return (
+                        <div key={key} style={diagnosticStyle}>
+                            <Flex gap={8} align="baseline">
+                                <Text
+                                    style={{
+                                        color: getSeverityColor(
+                                            diagnostic.severity,
+                                        ),
+                                        fontWeight: 700,
+                                        fontFamily:
+                                            "'Courier New', Courier, monospace",
+                                        fontSize: "0.75rem",
+                                        flexShrink: 0,
+                                    }}
+                                >
+                                    {getSeverityLabel(diagnostic.severity)}
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: "rgba(230, 234, 216, 0.5)",
+                                        fontFamily:
+                                            "'Courier New', Courier, monospace",
+                                        fontSize: "0.75rem",
+                                        flexShrink: 0,
+                                    }}
+                                >
+                                    Line {diagnostic.line}
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: "#e6ead8",
+                                        fontFamily:
+                                            "'Courier New', Courier, monospace",
+                                        fontSize: "0.8125rem",
+                                    }}
+                                >
+                                    {diagnostic.message}
+                                </Text>
+                            </Flex>
+                        </div>
+                    );
+                })}
             </Flex>
         </div>
     );
