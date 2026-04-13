@@ -268,11 +268,12 @@ function Sidebar() {
     );
 }
 
+const DEFAULT_SKILL_NAME = "my-skill";
+
 export function PlaygroundPage() {
     const isMobile = useIsMobile();
     const [navDrawerOpen, setNavDrawerOpen] = useState(false);
     const [content, setContent] = useState("");
-    const [skillName] = useState("my-skill");
     const [result, setResult] = useState<SkillLintOutput | null>(null);
 
     const handleMenuToggle = useCallback(() => {
@@ -286,10 +287,10 @@ export function PlaygroundPage() {
     const handleRunLint = useCallback(async () => {
         const output = await lintUseCase.execute({
             content,
-            skillName,
+            skillName: DEFAULT_SKILL_NAME,
         });
         setResult(output);
-    }, [content, skillName]);
+    }, [content]);
 
     return (
         <AntDProvider>
