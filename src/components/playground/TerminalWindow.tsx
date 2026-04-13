@@ -2,25 +2,27 @@ import type { ReactNode } from "react";
 
 const wrapperStyle: React.CSSProperties = {
     position: "relative",
-    backgroundColor: "#292b26",
-    borderRadius: "8px",
-    padding: "1px",
-    border: "1px solid rgba(70, 72, 62, 0.15)",
-};
-
-const bodyStyle: React.CSSProperties = {
-    backgroundColor: "#0d0f0b",
-    borderRadius: "7px",
+    display: "flex",
+    flexDirection: "column",
     overflow: "hidden",
-    position: "relative",
+    border: "1px solid rgba(70, 72, 62, 0.15)",
 };
 
 const headerStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
-    gap: "8px",
-    padding: "10px 16px",
+    justifyContent: "space-between",
+    padding: "0 16px",
+    height: "40px",
     backgroundColor: "#1a1c18",
+    borderBottom: "1px solid rgba(70, 72, 62, 0.15)",
+    flexShrink: 0,
+};
+
+const headerLeftStyle: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
 };
 
 const dotColors = [
@@ -30,23 +32,27 @@ const dotColors = [
 ];
 
 const dotStyle = (color: string): React.CSSProperties => ({
-    width: "10px",
-    height: "10px",
-    borderRadius: "50%",
+    width: "8px",
+    height: "8px",
     backgroundColor: color,
 });
 
 const titleStyle: React.CSSProperties = {
-    marginLeft: "12px",
+    marginLeft: "10px",
     fontFamily: "'Space Grotesk', sans-serif",
-    fontSize: "11px",
-    color: "rgba(199, 199, 186, 0.5)",
-    letterSpacing: "0.1em",
+    fontSize: "10px",
+    color: "rgba(189, 206, 137, 0.5)",
+    letterSpacing: "0.15em",
     textTransform: "uppercase",
+    fontWeight: 700,
 };
 
 const contentStyle: React.CSSProperties = {
     position: "relative",
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    backgroundColor: "#0d0f0b",
 };
 
 const crtOverlayStyle: React.CSSProperties = {
@@ -74,8 +80,8 @@ export function TerminalWindow({
 }: TerminalWindowProps) {
     return (
         <div style={wrapperStyle}>
-            <div style={bodyStyle}>
-                <div style={headerStyle}>
+            <div style={headerStyle}>
+                <div style={headerLeftStyle}>
                     {dotColors.map((color) => (
                         <div
                             key={color}
@@ -84,14 +90,12 @@ export function TerminalWindow({
                         />
                     ))}
                     <span style={titleStyle}>{title}</span>
-                    {rightAction && (
-                        <div style={{ marginLeft: "auto" }}>{rightAction}</div>
-                    )}
                 </div>
-                <div style={contentStyle}>
-                    {children}
-                    <div style={crtOverlayStyle} aria-hidden="true" />
-                </div>
+                {rightAction && <div>{rightAction}</div>}
+            </div>
+            <div style={contentStyle}>
+                {children}
+                <div style={crtOverlayStyle} aria-hidden="true" />
             </div>
         </div>
     );

@@ -19,7 +19,7 @@ describe("LintResults", () => {
             render(<LintResults result={null} />);
 
             expect(
-                screen.getByText(/paste a skill.*and click/i),
+                screen.getByText(/paste a file.*and execute/i),
             ).toBeInTheDocument();
 
             expect(screen.getByText(/AWAITING_INPUT/)).toBeInTheDocument();

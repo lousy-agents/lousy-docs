@@ -26,7 +26,7 @@ describe("PlaygroundPage", () => {
             render(<PlaygroundPage />);
 
             expect(
-                screen.getByRole("heading", { name: /validate your skills/i }),
+                screen.getByRole("heading", { name: /lint_playground/i }),
             ).toBeInTheDocument();
         });
 
@@ -50,7 +50,7 @@ describe("PlaygroundPage", () => {
             render(<PlaygroundPage />);
 
             expect(
-                screen.getByText(/paste a skill.*and click/i),
+                screen.getByText(/paste a file.*and execute/i),
             ).toBeInTheDocument();
         });
     });
