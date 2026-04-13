@@ -76,9 +76,9 @@ export function TerminalWindow({
         <div style={wrapperStyle}>
             <div style={bodyStyle}>
                 <div style={headerStyle}>
-                    {dotColors.map((color) => (
+                    {dotColors.map((color, index) => (
                         <div
-                            key={color}
+                            key={index}
                             style={dotStyle(color)}
                             aria-hidden="true"
                         />
