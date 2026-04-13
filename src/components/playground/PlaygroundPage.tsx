@@ -18,43 +18,67 @@ const gateway = createSkillContentLintGateway();
 const lintUseCase = new LintSkillContentUseCase(gateway);
 
 const pageStyle: React.CSSProperties = {
-    maxWidth: "900px",
+    maxWidth: "1100px",
     margin: "0 auto",
-    padding: "2rem 1.5rem",
+    padding: "3rem 1.5rem",
     width: "100%",
 };
 
 const headingStyle: React.CSSProperties = {
     fontFamily: "'Space Grotesk', sans-serif",
+    fontWeight: 900,
+    fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
+    letterSpacing: "-0.02em",
+    color: "#e6ead8",
+    marginBottom: "0.25rem",
+};
+
+const glowSpanStyle: React.CSSProperties = {
     color: "#bdce89",
-    marginBottom: "0.5rem",
+    textShadow: "0 0 8px rgba(189, 206, 137, 0.4)",
 };
 
 const subheadingStyle: React.CSSProperties = {
     fontFamily: "'Manrope', sans-serif",
-    color: "rgba(230, 234, 216, 0.6)",
+    color: "rgba(230, 234, 216, 0.5)",
     fontSize: "0.9375rem",
-    marginBottom: "2rem",
+    lineHeight: 1.7,
+    maxWidth: "36rem",
+};
+
+const badgeStyle: React.CSSProperties = {
+    display: "inline-block",
+    padding: "3px 10px",
+    backgroundColor: "#5f6e34",
+    color: "#def0a8",
+    fontFamily: "'Space Grotesk', sans-serif",
+    fontSize: "0.6875rem",
+    fontWeight: 500,
+    letterSpacing: "0.1em",
+    textTransform: "uppercase",
+    borderRadius: "2px",
+    marginBottom: "1rem",
 };
 
 const skillNameInputStyle: React.CSSProperties = {
-    backgroundColor: "#1a1c18",
+    backgroundColor: "#0d0f0b",
     color: "#e6ead8",
-    border: "1px solid rgba(70, 72, 62, 0.15)",
-    borderRadius: "6px",
+    border: "none",
+    borderBottom: "2px solid rgba(70, 72, 62, 0.3)",
     padding: "0.5rem 0.75rem",
     fontFamily: "'Courier New', Courier, monospace",
     fontSize: "0.875rem",
     outline: "none",
     width: "100%",
-    maxWidth: "300px",
+    maxWidth: "260px",
+    transition: "border-color 0.2s",
 };
 
 const labelStyle: React.CSSProperties = {
     fontFamily: "'Space Grotesk', sans-serif",
     fontWeight: 700,
-    fontSize: "0.75rem",
-    color: "rgba(189, 206, 137, 0.6)",
+    fontSize: "0.6875rem",
+    color: "rgba(189, 206, 137, 0.5)",
     letterSpacing: "0.1em",
     textTransform: "uppercase",
 };
@@ -96,16 +120,21 @@ export function PlaygroundPage() {
                 />
                 <main style={{ flex: 1, paddingTop: `${HEADER_HEIGHT_PX}px` }}>
                     <div style={pageStyle}>
+                        <Text style={badgeStyle}>LINT_PLAYGROUND V1.0</Text>
+
                         <Title level={2} style={headingStyle}>
-                            Lint Playground
+                            VALIDATE YOUR{" "}
+                            <span style={glowSpanStyle}>SKILLS.</span>
                         </Title>
+
                         <Text style={subheadingStyle}>
                             Paste your SKILL.md content below and run the linter
-                            to validate frontmatter.
+                            to validate frontmatter structure. No CLI
+                            installation required.
                         </Text>
 
-                        <Flex vertical gap={24} style={{ marginTop: "1rem" }}>
-                            <Flex vertical gap={8}>
+                        <Flex vertical gap={24} style={{ marginTop: "2.5rem" }}>
+                            <Flex vertical gap={6}>
                                 <label
                                     htmlFor="skill-name-input"
                                     style={labelStyle}
@@ -130,10 +159,7 @@ export function PlaygroundPage() {
                                 onRun={handleRunLint}
                             />
 
-                            <Flex vertical gap={8}>
-                                <Text style={labelStyle}>Diagnostics</Text>
-                                <LintResults result={result} />
-                            </Flex>
+                            <LintResults result={result} />
                         </Flex>
                     </div>
                 </main>

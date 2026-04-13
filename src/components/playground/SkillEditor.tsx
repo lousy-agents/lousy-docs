@@ -1,4 +1,5 @@
-import { Button, Flex } from "antd";
+import { Button } from "antd";
+import { TerminalWindow } from "@/components/playground/TerminalWindow";
 
 const PLACEHOLDER = `---
 name: my-skill
@@ -12,26 +13,31 @@ Instructions for the skill...`;
 
 const textareaStyle: React.CSSProperties = {
     width: "100%",
-    minHeight: "300px",
-    backgroundColor: "#1a1c18",
+    minHeight: "320px",
+    backgroundColor: "transparent",
     color: "#e6ead8",
-    border: "1px solid rgba(70, 72, 62, 0.15)",
-    borderRadius: "8px",
-    padding: "1rem",
+    border: "none",
+    padding: "1rem 1.25rem",
     fontFamily: "'Courier New', Courier, monospace",
     fontSize: "0.875rem",
-    lineHeight: 1.6,
+    lineHeight: 1.7,
     resize: "vertical",
     outline: "none",
+    display: "block",
 };
 
-const labelStyle: React.CSSProperties = {
+const runButtonStyle: React.CSSProperties = {
+    background: "linear-gradient(to bottom, #bdce89, #5f6e34)",
+    border: "none",
+    color: "#283501",
     fontFamily: "'Space Grotesk', sans-serif",
     fontWeight: 700,
     fontSize: "0.75rem",
-    color: "rgba(189, 206, 137, 0.6)",
-    letterSpacing: "0.1em",
+    letterSpacing: "0.05em",
     textTransform: "uppercase",
+    borderRadius: "4px",
+    height: "32px",
+    padding: "0 1rem",
 };
 
 interface SkillEditorProps {
@@ -41,16 +47,14 @@ interface SkillEditorProps {
 }
 
 export function SkillEditor({ value, onChange, onRun }: SkillEditorProps) {
+    const runButton = (
+        <Button style={runButtonStyle} onClick={onRun}>
+            RUN_LINT
+        </Button>
+    );
+
     return (
-        <Flex vertical gap={12}>
-            <Flex justify="space-between" align="center">
-                <label htmlFor="skill-editor" style={labelStyle}>
-                    Skill Markdown
-                </label>
-                <Button type="primary" onClick={onRun}>
-                    Run Lint
-                </Button>
-            </Flex>
+        <TerminalWindow title="skill.md — editor_v1.0" rightAction={runButton}>
             <textarea
                 id="skill-editor"
                 aria-label="Skill Markdown"
@@ -60,6 +64,6 @@ export function SkillEditor({ value, onChange, onRun }: SkillEditorProps) {
                 placeholder={PLACEHOLDER}
                 spellCheck={false}
             />
-        </Flex>
+        </TerminalWindow>
     );
 }

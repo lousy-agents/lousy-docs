@@ -27,7 +27,7 @@ describe("SkillEditor", () => {
             render(<SkillEditor value="" onChange={vi.fn()} onRun={vi.fn()} />);
 
             expect(
-                screen.getByRole("button", { name: /run lint/i }),
+                screen.getByRole("button", { name: /run.lint/i }),
             ).toBeInTheDocument();
         });
     });
@@ -65,7 +65,7 @@ describe("SkillEditor", () => {
                 />,
             );
 
-            await user.click(screen.getByRole("button", { name: /run lint/i }));
+            await user.click(screen.getByRole("button", { name: /run.lint/i }));
 
             expect(handleRun).toHaveBeenCalledTimes(1);
         });

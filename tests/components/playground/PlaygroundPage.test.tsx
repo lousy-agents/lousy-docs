@@ -26,7 +26,7 @@ describe("PlaygroundPage", () => {
             render(<PlaygroundPage />);
 
             expect(
-                screen.getByRole("heading", { name: /lint playground/i }),
+                screen.getByRole("heading", { name: /validate your skills/i }),
             ).toBeInTheDocument();
         });
 
@@ -42,7 +42,7 @@ describe("PlaygroundPage", () => {
             render(<PlaygroundPage />);
 
             expect(
-                screen.getByRole("button", { name: /run lint/i }),
+                screen.getByRole("button", { name: /run.lint/i }),
             ).toBeInTheDocument();
         });
 
@@ -69,7 +69,7 @@ describe("PlaygroundPage", () => {
                 "---\nname: my-skill\ndescription: A valid skill\nallowed-tools: grep\n---\n",
             );
 
-            await user.click(screen.getByRole("button", { name: /run lint/i }));
+            await user.click(screen.getByRole("button", { name: /run.lint/i }));
 
             expect(screen.getByText(/0 errors/i)).toBeInTheDocument();
         });
@@ -86,7 +86,7 @@ describe("PlaygroundPage", () => {
             await user.clear(textarea);
             await user.type(textarea, "---\ndescription: Missing name\n---\n");
 
-            await user.click(screen.getByRole("button", { name: /run lint/i }));
+            await user.click(screen.getByRole("button", { name: /run.lint/i }));
 
             expect(screen.getByText(/1 error/i)).toBeInTheDocument();
         });
@@ -103,7 +103,7 @@ describe("PlaygroundPage", () => {
             await user.clear(textarea);
             await user.type(textarea, "# Just a heading");
 
-            await user.click(screen.getByRole("button", { name: /run lint/i }));
+            await user.click(screen.getByRole("button", { name: /run.lint/i }));
 
             expect(
                 screen.getByText(/missing yaml frontmatter/i),

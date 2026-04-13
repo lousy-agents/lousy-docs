@@ -21,6 +21,8 @@ describe("LintResults", () => {
             expect(
                 screen.getByText(/paste a skill.*and click/i),
             ).toBeInTheDocument();
+
+            expect(screen.getByText(/AWAITING_INPUT/)).toBeInTheDocument();
         });
     });
 
@@ -137,7 +139,7 @@ describe("LintResults", () => {
 
             render(<LintResults result={result} />);
 
-            expect(screen.getByText(/line 3/i)).toBeInTheDocument();
+            expect(screen.getByText(/L3/)).toBeInTheDocument();
         });
     });
 });
