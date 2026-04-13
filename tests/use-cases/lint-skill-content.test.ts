@@ -131,6 +131,22 @@ describe("LintSkillContentUseCase", () => {
         });
     });
 
+    describe("given content exceeding maximum size", () => {
+        it("should return an input-too-large error without parsing", async () => {
+            const useCase = createUseCase();
+            const oversizedContent = "a".repeat(512_001);
+
+            const result = await useCase.execute({
+                content: oversizedContent,
+                skillName: "my-skill",
+            });
+
+            expect(result.summary.totalErrors).toBe(1);
+            expect(result.diagnostics[0]?.ruleId).toBe("skill/input-too-large");
+            expect(result.diagnostics[0]?.message).toContain("512000");
+        });
+    });
+
     describe("result structure", () => {
         it("should include a summary with file, error, and warning counts", async () => {
             const useCase = createUseCase();
