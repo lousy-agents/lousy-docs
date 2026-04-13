@@ -1,10 +1,8 @@
 /**
  * Browser-compatible skill lint entities.
- * Provides types and a Zod schema for validating skill frontmatter
- * without Node.js filesystem dependencies.
+ * Provides pure TypeScript types for skill frontmatter validation
+ * without framework dependencies.
  */
-
-import { z } from "zod";
 
 /** Severity levels for skill lint diagnostics */
 export type SkillLintSeverity = "error" | "warning";
@@ -38,28 +36,7 @@ export interface SkillLintOutput {
     readonly summary: SkillLintSummary;
 }
 
-/** Zod schema for validating skill frontmatter fields */
-export const SkillFrontmatterSchema = z.object({
-    name: z
-        .string()
-        .min(1, "Name is required")
-        .max(64, "Name must be 64 characters or fewer")
-        .regex(
-            /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-            "Name must contain only lowercase letters, numbers, and hyphens. It cannot start/end with a hyphen or contain consecutive hyphens.",
-        ),
-    description: z
-        .string()
-        .min(1, "Description is required")
-        .max(1024, "Description must be 1024 characters or fewer")
-        .refine((s) => s.trim().length > 0, {
-            message: "Description cannot be empty or whitespace-only",
-        }),
-    license: z.string().optional(),
-    compatibility: z
-        .string()
-        .max(500, "Compatibility must be 500 characters or fewer")
-        .optional(),
-    metadata: z.record(z.string(), z.string()).optional(),
-    "allowed-tools": z.string().optional(),
-});
+/** Port interface for the skill content lint gateway */
+export interface SkillContentLintGateway {
+    parseFrontmatter(content: string): ParsedFrontmatter | null;
+}
