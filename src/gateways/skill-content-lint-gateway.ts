@@ -103,7 +103,10 @@ function validateFrontmatter(
     if (result.success) {
         return {
             success: true,
-            data: { name: result.data.name, description: result.data.description },
+            data: {
+                name: result.data.name,
+                description: result.data.description,
+            },
             issues: [],
         };
     }
