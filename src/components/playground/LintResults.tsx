@@ -1,6 +1,6 @@
 import { Flex, Typography } from "antd";
 import { TerminalWindow } from "@/components/playground/TerminalWindow";
-import type { SkillLintOutput } from "@/entities/skill-lint";
+import type { SkillLintOutput, SkillLintSeverity } from "@/entities/skill-lint";
 
 const { Text } = Typography;
 
@@ -134,15 +134,15 @@ function getSummaryColor(result: SkillLintOutput): string {
     return "#bdce89";
 }
 
-function getSeverityColor(severity: string): string {
+function getSeverityColor(severity: SkillLintSeverity): string {
     return severity === "error" ? "#ffb4ab" : "#eebd8e";
 }
 
-function getSeverityLabel(severity: string): string {
+function getSeverityLabel(severity: SkillLintSeverity): string {
     return severity === "error" ? "ERR" : "WARN";
 }
 
-function getDiagnosticBorderColor(severity: string): string {
+function getDiagnosticBorderColor(severity: SkillLintSeverity): string {
     return severity === "error"
         ? "rgba(255, 180, 171, 0.4)"
         : "rgba(238, 189, 142, 0.3)";
@@ -182,7 +182,7 @@ export function LintResults({ result }: LintResultsProps) {
                             <div style={supportedFilesStyle}>
                                 <div>· copilot-instructions.md</div>
                                 <div>· CLAUDE.md / AGENTS.md</div>
-                                <div>· .github/skills/SKILL.md</div>
+                                <div>· .github/skills/*/SKILL.md</div>
                                 <div>· .github/agents/*.md</div>
                             </div>
                         </div>

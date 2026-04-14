@@ -134,6 +134,20 @@ describe("LintSkillContentUseCase", () => {
             );
             expect(mismatchError).toBeDefined();
         });
+
+        it("should skip name-mismatch check when skillName is not provided", async () => {
+            const useCase = createUseCase();
+            const content = `---\nname: any-valid-name\ndescription: A valid description\n---\n`;
+
+            const result = await useCase.execute({
+                content,
+            });
+
+            const mismatchError = result.diagnostics.find(
+                (d) => d.ruleId === "skill/name-mismatch",
+            );
+            expect(mismatchError).toBeUndefined();
+        });
     });
 
     describe("given empty content", () => {

@@ -51,14 +51,14 @@ const RECOMMENDED_FIELD_RULE_IDS: Record<
 
 export interface LintSkillContentInput {
     readonly content: string;
-    readonly skillName: string;
+    readonly skillName?: string;
 }
 
 export class LintSkillContentUseCase {
     constructor(private readonly gateway: SkillContentLintGateway) {}
 
     async execute(input: LintSkillContentInput): Promise<SkillLintOutput> {
-        const { content, skillName } = input;
+        const { content } = input;
 
         if (content.length > MAX_CONTENT_LENGTH) {
             return {
@@ -108,7 +108,7 @@ export class LintSkillContentUseCase {
             };
         }
 
-        diagnostics = this.validateFrontmatter(parsed, skillName);
+        diagnostics = this.validateFrontmatter(parsed, input.skillName);
 
         const totalErrors = diagnostics.filter(
             (d) => d.severity === "error",
@@ -129,7 +129,7 @@ export class LintSkillContentUseCase {
 
     private validateFrontmatter(
         parsed: ParsedFrontmatter,
-        skillName: string,
+        skillName: string | undefined,
     ): SkillLintDiagnostic[] {
         const diagnostics: SkillLintDiagnostic[] = [];
 
@@ -159,7 +159,12 @@ export class LintSkillContentUseCase {
             }
         }
 
-        if (result.success && result.data && result.data.name !== skillName) {
+        if (
+            result.success &&
+            result.data &&
+            skillName !== undefined &&
+            result.data.name !== skillName
+        ) {
             const nameLine =
                 parsed.fieldLines.get("name") ?? parsed.frontmatterStartLine;
             diagnostics.push({

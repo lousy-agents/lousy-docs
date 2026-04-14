@@ -211,15 +211,15 @@ function Sidebar() {
                     <span aria-hidden="true">⌘</span>
                     <span>TERMINAL_STREAMS</span>
                 </div>
-                <div style={sidebarNavItemStyle} aria-disabled="true">
+                <div style={sidebarNavItemStyle}>
                     <span aria-hidden="true">⚑</span>
                     <span>LINT_RULES</span>
                 </div>
-                <div style={sidebarNavItemStyle} aria-disabled="true">
+                <div style={sidebarNavItemStyle}>
                     <span aria-hidden="true">☰</span>
                     <span>SYSTEM_LOGS</span>
                 </div>
-                <div style={sidebarNavItemStyle} aria-disabled="true">
+                <div style={sidebarNavItemStyle}>
                     <span aria-hidden="true">⌁</span>
                     <span>NETWORK_TELEMETRY</span>
                 </div>
@@ -238,8 +238,6 @@ function Sidebar() {
         </aside>
     );
 }
-
-const DEFAULT_SKILL_NAME = "my-skill";
 
 interface PlaygroundPageProps {
     gateway?: SkillContentLintGateway;
@@ -270,7 +268,6 @@ export function PlaygroundPage({
         try {
             const output = await lintUseCase.execute({
                 content,
-                skillName: DEFAULT_SKILL_NAME,
             });
             setResult(output);
         } catch (error: unknown) {
