@@ -89,15 +89,15 @@ const tabButtonBaseStyle: React.CSSProperties = {
 
 const tabButtonActiveStyle: React.CSSProperties = {
     ...tabButtonBaseStyle,
-    border: "1px solid #bdce89",
+    border: "1px solid rgba(189, 206, 137, 0.3)",
     backgroundColor: "#5f6e34",
     color: "#e6ead8",
 };
 
 const runButtonStyle: React.CSSProperties = {
-    border: "1px solid #9ba08a",
-    background: "transparent",
-    color: "#9ba08a",
+    border: "none",
+    background: "linear-gradient(135deg, #bdce89, #5f6e34)",
+    color: "#121410",
     fontFamily: "'Space Grotesk', monospace",
     fontWeight: 700,
     fontSize: "10px",
