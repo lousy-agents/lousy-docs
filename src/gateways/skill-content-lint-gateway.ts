@@ -74,7 +74,9 @@ function parseFrontmatter(content: string): ParsedFrontmatter | null {
         } else {
             data = {};
         }
-    } catch {
+    } catch (_error: unknown) {
+        // Invalid YAML is expected user input in the playground — return null
+        // to let the use case produce a user-facing diagnostic message
         return null;
     }
 

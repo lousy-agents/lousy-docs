@@ -85,6 +85,26 @@ describe("SkillContentLintGateway", () => {
                 expect(result?.data).toEqual({});
             });
         });
+
+        describe("given YAML that parses to a non-object", () => {
+            it("should return empty data for array YAML", () => {
+                const content = "---\n- item1\n- item2\n---\n";
+
+                const result = gateway.parseFrontmatter(content);
+
+                expect(result).not.toBeNull();
+                expect(result?.data).toEqual({});
+            });
+
+            it("should return empty data for scalar YAML", () => {
+                const content = "---\njust a string\n---\n";
+
+                const result = gateway.parseFrontmatter(content);
+
+                expect(result).not.toBeNull();
+                expect(result?.data).toEqual({});
+            });
+        });
     });
 
     describe("validateFrontmatter", () => {
