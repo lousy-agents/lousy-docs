@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { PlaygroundPage } from "@/components/playground/PlaygroundPage";
+import type { SkillContentLintGateway } from "@/entities/skill-lint";
 
 describe("PlaygroundPage", () => {
     let originalMatchMedia: typeof window.matchMedia;
@@ -107,6 +108,34 @@ describe("PlaygroundPage", () => {
 
             expect(
                 screen.getByText(/missing yaml frontmatter/i),
+            ).toBeInTheDocument();
+        });
+    });
+
+    describe("given the gateway throws an unexpected error", () => {
+        it("should display an internal error diagnostic", async () => {
+            const failingGateway: SkillContentLintGateway = {
+                parseFrontmatter: () => {
+                    throw new Error("Unexpected parse failure");
+                },
+                validateFrontmatter: () => ({
+                    success: false,
+                    issues: [],
+                }),
+            };
+            const user = userEvent.setup();
+            render(<PlaygroundPage gateway={failingGateway} />);
+
+            const textarea = screen.getByRole("textbox", {
+                name: /skill markdown/i,
+            });
+            await user.clear(textarea);
+            await user.type(textarea, "---\nname: test\n---\n");
+
+            await user.click(screen.getByRole("button", { name: /run.lint/i }));
+
+            expect(
+                screen.getByText(/lint execution failed/i),
             ).toBeInTheDocument();
         });
     });

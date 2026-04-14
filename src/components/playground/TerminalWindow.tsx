@@ -54,7 +54,7 @@ const contentStyle: React.CSSProperties = {
     flex: 1,
     display: "flex",
     flexDirection: "column",
-    backgroundColor: "#0d0f0b",
+    backgroundColor: "#121410",
     minHeight: 0,
     overflow: "hidden",
 };
