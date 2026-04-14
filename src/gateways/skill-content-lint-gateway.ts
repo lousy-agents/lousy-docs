@@ -9,10 +9,10 @@ import type {
     FrontmatterValidationResult,
     ParsedFrontmatter,
     SkillContentLintGateway,
-} from "@/entities/skill-lint";
+} from "@/use-cases/lint-skill-content";
 
 /** Zod schema for validating skill frontmatter fields */
-export const SkillFrontmatterSchema = z.object({
+const SkillFrontmatterSchema = z.object({
     name: z
         .string()
         .min(1, "Name is required")

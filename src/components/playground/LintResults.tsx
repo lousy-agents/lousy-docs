@@ -45,7 +45,7 @@ const awaitingHeadingStyle: React.CSSProperties = {
     fontSize: "1.125rem",
     fontWeight: 700,
     letterSpacing: "0.3em",
-    color: "#bdce89",
+    color: "rgba(230, 234, 216, 0.7)",
 };
 
 const emptyInstructionStyle: React.CSSProperties = {
