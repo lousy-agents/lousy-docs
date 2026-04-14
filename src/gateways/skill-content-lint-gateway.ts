@@ -128,8 +128,8 @@ function validateFrontmatter(
     return {
         success: false,
         issues: result.error.issues.map((issue) => ({
-            path: issue.path,
-            code: issue.code,
+            path: issue.path as readonly (string | number)[],
+            code: issue.code as string,
             message: issue.message,
         })),
         unknownFields,

@@ -121,6 +121,7 @@ describe("PlaygroundPage", () => {
                 validateFrontmatter: () => ({
                     success: false,
                     issues: [],
+                    unknownFields: [],
                 }),
             };
             const user = userEvent.setup();
