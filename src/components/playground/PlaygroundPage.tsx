@@ -5,14 +5,14 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { LintResults } from "@/components/playground/LintResults";
 import { SkillEditor } from "@/components/playground/SkillEditor";
 import { AntDProvider } from "@/components/providers/AntDProvider";
-import type {
-    SkillContentLintGateway,
-    SkillLintOutput,
-} from "@/entities/skill-lint";
+import type { SkillLintOutput } from "@/entities/skill-lint";
 import { createSkillContentLintGateway } from "@/gateways/skill-content-lint-gateway";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { HEADER_HEIGHT_PX } from "@/lib/layout-constants";
-import { LintSkillContentUseCase } from "@/use-cases/lint-skill-content";
+import {
+    LintSkillContentUseCase,
+    type SkillContentLintGateway,
+} from "@/use-cases/lint-skill-content";
 
 const subHeaderStyle: React.CSSProperties = {
     display: "flex",
@@ -115,7 +115,7 @@ const sidebarStyle: React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
     backgroundColor: "#1a1c18",
-    borderRight: "1px solid rgba(70, 72, 62, 0.25)",
+    borderRight: "1px solid rgba(70, 72, 62, 0.15)",
     flexShrink: 0,
     fontFamily: "'Space Grotesk', monospace",
     fontSize: "11px",

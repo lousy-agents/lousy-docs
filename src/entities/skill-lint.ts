@@ -16,13 +16,6 @@ export interface SkillLintDiagnostic {
     readonly ruleId: string;
 }
 
-/** Parsed frontmatter data with line number mapping */
-export interface ParsedFrontmatter {
-    readonly data: Record<string, unknown>;
-    readonly fieldLines: ReadonlyMap<string, number>;
-    readonly frontmatterStartLine: number;
-}
-
 /** Aggregated lint result summary */
 export interface SkillLintSummary {
     readonly totalFiles: number;
@@ -34,26 +27,4 @@ export interface SkillLintSummary {
 export interface SkillLintOutput {
     readonly diagnostics: readonly SkillLintDiagnostic[];
     readonly summary: SkillLintSummary;
-}
-
-/** A single validation issue from schema validation */
-export interface FrontmatterValidationIssue {
-    readonly path: readonly (string | number)[];
-    readonly code: string;
-    readonly message: string;
-}
-
-/** Result of frontmatter schema validation */
-export interface FrontmatterValidationResult {
-    readonly success: boolean;
-    readonly data?: { readonly name: string; readonly description: string };
-    readonly issues: readonly FrontmatterValidationIssue[];
-}
-
-/** Port interface for the skill content lint gateway */
-export interface SkillContentLintGateway {
-    parseFrontmatter(content: string): ParsedFrontmatter | null;
-    validateFrontmatter(
-        data: Record<string, unknown>,
-    ): FrontmatterValidationResult;
 }

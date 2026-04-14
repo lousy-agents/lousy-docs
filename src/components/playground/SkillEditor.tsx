@@ -40,9 +40,9 @@ const lineNumbersStyle: React.CSSProperties = {
     width: "40px",
     padding: "16px 8px 16px 0",
     textAlign: "right",
-    color: "rgba(70, 72, 62, 0.6)",
+    color: "rgba(230, 234, 216, 0.4)",
     userSelect: "none",
-    borderRight: "1px solid rgba(70, 72, 62, 0.15)",
+    backgroundColor: "#1a1c18",
     flexShrink: 0,
     lineHeight: "1.7",
     fontSize: "0.8125rem",
@@ -83,15 +83,15 @@ const tabButtonBaseStyle: React.CSSProperties = {
     textTransform: "uppercase",
     cursor: "pointer",
     border: "1px solid rgba(70, 72, 62, 0.3)",
-    backgroundColor: "transparent",
+    backgroundColor: "#333531",
     color: "#9ba08a",
 };
 
 const tabButtonActiveStyle: React.CSSProperties = {
     ...tabButtonBaseStyle,
     border: "1px solid #bdce89",
-    backgroundColor: "rgba(189, 206, 137, 0.1)",
-    color: "#bdce89",
+    backgroundColor: "#5f6e34",
+    color: "#e6ead8",
 };
 
 const runButtonStyle: React.CSSProperties = {

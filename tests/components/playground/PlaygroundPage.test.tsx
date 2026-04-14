@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { PlaygroundPage } from "@/components/playground/PlaygroundPage";
-import type { SkillContentLintGateway } from "@/entities/skill-lint";
+import type { SkillContentLintGateway } from "@/use-cases/lint-skill-content";
 
 describe("PlaygroundPage", () => {
     let originalMatchMedia: typeof window.matchMedia;

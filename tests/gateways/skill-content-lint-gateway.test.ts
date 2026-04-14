@@ -1,9 +1,6 @@
 import Chance from "chance";
 import { describe, expect, it } from "vitest";
-import {
-    createSkillContentLintGateway,
-    SkillFrontmatterSchema,
-} from "@/gateways/skill-content-lint-gateway";
+import { createSkillContentLintGateway } from "@/gateways/skill-content-lint-gateway";
 
 const chance = new Chance();
 
@@ -154,7 +151,9 @@ describe("SkillContentLintGateway", () => {
     });
 });
 
-describe("SkillFrontmatterSchema", () => {
+describe("SkillFrontmatterSchema validation via gateway", () => {
+    const gateway = createSkillContentLintGateway();
+
     describe("given valid frontmatter data", () => {
         it("should accept a valid name and description", () => {
             const data = {
@@ -162,7 +161,7 @@ describe("SkillFrontmatterSchema", () => {
                 description: "A brief description of the skill",
             };
 
-            const result = SkillFrontmatterSchema.safeParse(data);
+            const result = gateway.validateFrontmatter(data);
 
             expect(result.success).toBe(true);
         });
@@ -174,7 +173,7 @@ describe("SkillFrontmatterSchema", () => {
                 "allowed-tools": "grep, find",
             };
 
-            const result = SkillFrontmatterSchema.safeParse(data);
+            const result = gateway.validateFrontmatter(data);
 
             expect(result.success).toBe(true);
         });
@@ -186,7 +185,7 @@ describe("SkillFrontmatterSchema", () => {
                 description: "A brief description",
             };
 
-            const result = SkillFrontmatterSchema.safeParse(data);
+            const result = gateway.validateFrontmatter(data);
 
             expect(result.success).toBe(false);
         });
@@ -196,7 +195,7 @@ describe("SkillFrontmatterSchema", () => {
                 name: "my-skill",
             };
 
-            const result = SkillFrontmatterSchema.safeParse(data);
+            const result = gateway.validateFrontmatter(data);
 
             expect(result.success).toBe(false);
         });
@@ -209,7 +208,7 @@ describe("SkillFrontmatterSchema", () => {
                 description: "A brief description",
             };
 
-            const result = SkillFrontmatterSchema.safeParse(data);
+            const result = gateway.validateFrontmatter(data);
 
             expect(result.success).toBe(false);
         });
@@ -220,7 +219,7 @@ describe("SkillFrontmatterSchema", () => {
                 description: "A brief description",
             };
 
-            const result = SkillFrontmatterSchema.safeParse(data);
+            const result = gateway.validateFrontmatter(data);
 
             expect(result.success).toBe(false);
         });
@@ -231,7 +230,7 @@ describe("SkillFrontmatterSchema", () => {
                 description: "A brief description",
             };
 
-            const result = SkillFrontmatterSchema.safeParse(data);
+            const result = gateway.validateFrontmatter(data);
 
             expect(result.success).toBe(false);
         });
@@ -244,7 +243,7 @@ describe("SkillFrontmatterSchema", () => {
                 description: "",
             };
 
-            const result = SkillFrontmatterSchema.safeParse(data);
+            const result = gateway.validateFrontmatter(data);
 
             expect(result.success).toBe(false);
         });
@@ -255,7 +254,7 @@ describe("SkillFrontmatterSchema", () => {
                 description: "   ",
             };
 
-            const result = SkillFrontmatterSchema.safeParse(data);
+            const result = gateway.validateFrontmatter(data);
 
             expect(result.success).toBe(false);
         });
