@@ -150,7 +150,7 @@ describe("LintSkillContentUseCase", () => {
     describe("result structure", () => {
         it("should include a summary with file, error, and warning counts", async () => {
             const useCase = createUseCase();
-            const skillName = chance.word({ length: 8 });
+            const skillName = `skill-${chance.string({ length: 6, pool: "abcdefghijklmnopqrstuvwxyz0123456789" })}`;
             const content = `---\nname: ${skillName}\ndescription: ${chance.sentence()}\n---\n`;
 
             const result = await useCase.execute({ content, skillName });

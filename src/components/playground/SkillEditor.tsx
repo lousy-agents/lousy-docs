@@ -182,7 +182,11 @@ export function SkillEditor({ value, onChange, onRun }: SkillEditorProps) {
                             INSTRUCTIONS
                         </button>
                     </div>
-                    <Button style={runButtonStyle} onClick={onRun}>
+                    <Button
+                        className="playground-btn"
+                        style={runButtonStyle}
+                        onClick={onRun}
+                    >
                         ▶ RUN_LINT
                     </Button>
                 </div>
@@ -198,6 +202,7 @@ export function SkillEditor({ value, onChange, onRun }: SkillEditorProps) {
                     </div>
                     <textarea
                         id="skill-editor"
+                        className="playground-editor"
                         aria-label="Skill Markdown"
                         style={textareaStyle}
                         value={value}

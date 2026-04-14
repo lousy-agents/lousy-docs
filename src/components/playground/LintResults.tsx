@@ -29,7 +29,7 @@ const emptyStateContainerStyle: React.CSSProperties = {
 };
 
 const emptyStateBoxStyle: React.CSSProperties = {
-    border: "1px dashed rgba(189, 206, 137, 0.25)",
+    border: "1px dashed rgba(70, 72, 62, 0.15)",
     padding: "3rem 2rem",
     display: "flex",
     flexDirection: "column",

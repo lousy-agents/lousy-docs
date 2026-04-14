@@ -436,3 +436,14 @@ mark[data-pagefind-highlight] {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
 }
+
+/* Playground focus indicators */
+.playground-editor:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
+}
+
+.playground-btn:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
