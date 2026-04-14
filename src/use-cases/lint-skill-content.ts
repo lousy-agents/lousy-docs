@@ -84,13 +84,17 @@ export class LintSkillContentUseCase {
         const parsed = this.gateway.parseFrontmatter(content);
 
         if (!parsed) {
-            const hasDelimiters = this.hasFrontmatterDelimiters(content);
-            const message = hasDelimiters
-                ? "Invalid YAML frontmatter. The content between --- delimiters could not be parsed as valid YAML."
-                : "Missing YAML frontmatter. Skill files must begin with --- delimited YAML frontmatter.";
-            const ruleId = hasDelimiters
-                ? "skill/invalid-frontmatter"
-                : "skill/missing-frontmatter";
+            const delimiterState = this.detectFrontmatterDelimiters(content);
+            const message =
+                delimiterState === "none"
+                    ? "Missing YAML frontmatter. Skill files must begin with --- delimited YAML frontmatter."
+                    : delimiterState === "unclosed"
+                      ? "Unclosed YAML frontmatter. Opening --- found but no closing --- delimiter."
+                      : "Invalid YAML frontmatter. The content between --- delimiters could not be parsed as valid YAML.";
+            const ruleId =
+                delimiterState === "none"
+                    ? "skill/missing-frontmatter"
+                    : "skill/invalid-frontmatter";
 
             diagnostics.push({
                 line: 1,
@@ -226,16 +230,18 @@ export class LintSkillContentUseCase {
         return "skill/invalid-frontmatter";
     }
 
-    private hasFrontmatterDelimiters(content: string): boolean {
+    private detectFrontmatterDelimiters(
+        content: string,
+    ): "none" | "unclosed" | "complete" {
         const lines = content.split("\n");
         if (lines[0]?.trim() !== "---") {
-            return false;
+            return "none";
         }
         for (let i = 1; i < lines.length; i++) {
             if (lines[i]?.trim() === "---") {
-                return true;
+                return "complete";
             }
         }
-        return false;
+        return "unclosed";
     }
 }

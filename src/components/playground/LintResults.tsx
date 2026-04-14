@@ -215,8 +215,8 @@ export function LintResults({ result }: LintResultsProps) {
                                 {getSummaryText(result)}
                             </Text>
                         </div>
-                        {result.diagnostics.map((diagnostic) => {
-                            const key = `${diagnostic.ruleId}-${diagnostic.line}-${diagnostic.message}`;
+                        {result.diagnostics.map((diagnostic, index) => {
+                            const key = `${diagnostic.ruleId}-${diagnostic.line}-${index}`;
                             return (
                                 <div
                                     key={key}
