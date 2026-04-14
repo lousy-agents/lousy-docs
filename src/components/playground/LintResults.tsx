@@ -175,14 +175,18 @@ export function LintResults({ result }: LintResultsProps) {
     if (!result) {
         return (
             <TerminalWindow title="DIAGNOSTIC_LOG // STREAM">
-                <div style={panelStyle} aria-live="polite" role="status">
+                <div style={panelStyle}>
                     <div style={emptyStateContainerStyle}>
                         <div style={emptyStateBoxStyle}>
-                            <div style={awaitingHeadingStyle}>
+                            <div
+                                style={awaitingHeadingStyle}
+                                aria-live="polite"
+                                role="status"
+                            >
                                 AWAITING_INPUT
                             </div>
                             <div style={emptyInstructionStyle}>
-                                Paste a file on the left and execute RUN_LINT
+                                Paste a file in the editor and execute RUN_LINT
                             </div>
                             <div style={supportedFilesStyle}>
                                 <div>· copilot-instructions.md</div>
@@ -200,14 +204,16 @@ export function LintResults({ result }: LintResultsProps) {
 
     return (
         <TerminalWindow title="DIAGNOSTIC_LOG // STREAM">
-            <div style={panelStyle} aria-live="polite" role="status">
+            <div style={panelStyle}>
                 <div style={outputContentStyle}>
-                    <Flex vertical gap={10}>
+                    <Flex vertical gap={16}>
                         <div
                             style={{
                                 ...summaryStyle,
                                 backgroundColor: getSummaryBackground(result),
                             }}
+                            aria-live="polite"
+                            role="status"
                         >
                             <Text
                                 style={{
