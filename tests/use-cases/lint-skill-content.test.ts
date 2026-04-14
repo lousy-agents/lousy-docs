@@ -74,6 +74,24 @@ describe("LintSkillContentUseCase", () => {
                 (d) => d.severity === "error",
             );
             expect(error?.message).toContain("frontmatter");
+            expect(error?.ruleId).toBe("skill/missing-frontmatter");
+        });
+    });
+
+    describe("given frontmatter delimiters with unparseable YAML", () => {
+        it("should return an invalid-frontmatter error", async () => {
+            const useCase = createUseCase();
+            const content = "---\n: :\n---\n";
+
+            const result = await useCase.execute({
+                content,
+                skillName: "my-skill",
+            });
+
+            expect(result.summary.totalErrors).toBe(1);
+            const error = result.diagnostics[0];
+            expect(error?.ruleId).toBe("skill/invalid-frontmatter");
+            expect(error?.message).toContain("Invalid YAML");
         });
     });
 

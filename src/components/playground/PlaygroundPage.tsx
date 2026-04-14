@@ -147,7 +147,7 @@ const sidebarNavItemActiveStyle: React.CSSProperties = {
     gap: "12px",
     padding: "12px 16px",
     backgroundColor: "#1e201c",
-    borderLeft: "4px solid #e6ead8",
+    borderLeft: "2px solid #bdce89",
     fontWeight: 700,
     cursor: "default",
 };
@@ -206,20 +206,20 @@ function Sidebar() {
                 <div style={sidebarTitleStyle}>OPERATIONAL_COMMAND</div>
                 <div style={sidebarSubtitleStyle}>SECTOR_07</div>
             </div>
-            <div style={{ flex: 1, paddingTop: "4px" }}>
+            <div style={{ flex: 1, paddingTop: "4px" }} role="presentation">
                 <div style={sidebarNavItemActiveStyle}>
                     <span aria-hidden="true">⌘</span>
                     <span>TERMINAL_STREAMS</span>
                 </div>
-                <div style={sidebarNavItemStyle}>
+                <div style={sidebarNavItemStyle} aria-disabled="true">
                     <span aria-hidden="true">⚑</span>
                     <span>LINT_RULES</span>
                 </div>
-                <div style={sidebarNavItemStyle}>
+                <div style={sidebarNavItemStyle} aria-disabled="true">
                     <span aria-hidden="true">☰</span>
                     <span>SYSTEM_LOGS</span>
                 </div>
-                <div style={sidebarNavItemStyle}>
+                <div style={sidebarNavItemStyle} aria-disabled="true">
                     <span aria-hidden="true">⌁</span>
                     <span>NETWORK_TELEMETRY</span>
                 </div>
