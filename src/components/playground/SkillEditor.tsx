@@ -77,6 +77,7 @@ const tabBarStyle: React.CSSProperties = {
 
 const tabButtonBaseStyle: React.CSSProperties = {
     padding: "4px 12px",
+    minHeight: "44px",
     fontFamily: "'Space Grotesk', monospace",
     fontSize: "10px",
     fontWeight: 700,
@@ -180,7 +181,11 @@ export function SkillEditor({ value, onChange, onRun }: SkillEditorProps) {
                         >
                             AGENTS
                         </button>
-                        <button type="button" style={tabButtonActiveStyle}>
+                        <button
+                            type="button"
+                            className="playground-tab"
+                            style={tabButtonActiveStyle}
+                        >
                             INSTRUCTIONS
                         </button>
                     </div>
