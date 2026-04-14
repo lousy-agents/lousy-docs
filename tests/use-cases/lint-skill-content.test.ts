@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { createSkillContentLintGateway } from "@/gateways/skill-content-lint-gateway";
 import { LintSkillContentUseCase } from "@/use-cases/lint-skill-content";
 
-const chance = new Chance();
+const chance = new Chance(42);
 
 function createUseCase() {
     const gateway = createSkillContentLintGateway();
@@ -75,6 +75,22 @@ describe("LintSkillContentUseCase", () => {
             );
             expect(error?.message).toContain("frontmatter");
             expect(error?.ruleId).toBe("skill/missing-frontmatter");
+        });
+    });
+
+    describe("given unclosed frontmatter delimiters", () => {
+        it("should return an invalid-frontmatter error with unclosed message", async () => {
+            const useCase = createUseCase();
+            const content = "---\nname: my-skill\n";
+
+            const result = await useCase.execute({
+                content,
+            });
+
+            expect(result.summary.totalErrors).toBe(1);
+            const error = result.diagnostics[0];
+            expect(error?.ruleId).toBe("skill/invalid-frontmatter");
+            expect(error?.message).toContain("Unclosed");
         });
     });
 

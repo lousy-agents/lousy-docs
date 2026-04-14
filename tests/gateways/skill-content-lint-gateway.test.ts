@@ -2,7 +2,7 @@ import Chance from "chance";
 import { describe, expect, it } from "vitest";
 import { createSkillContentLintGateway } from "@/gateways/skill-content-lint-gateway";
 
-const chance = new Chance();
+const chance = new Chance(42);
 
 describe("SkillContentLintGateway", () => {
     const gateway = createSkillContentLintGateway();

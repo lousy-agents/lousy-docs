@@ -103,7 +103,7 @@ const runButtonStyle: React.CSSProperties = {
     fontSize: "10px",
     letterSpacing: "0.05em",
     textTransform: "uppercase",
-    height: "36px",
+    minHeight: "44px",
     padding: "0 16px",
     borderRadius: 6,
     display: "flex",

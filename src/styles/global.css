@@ -440,7 +440,7 @@ mark[data-pagefind-highlight] {
 /* Playground focus indicators */
 .playground-editor:focus-visible {
     outline: 2px solid var(--color-primary);
-    outline-offset: -2px;
+    outline-offset: 2px;
 }
 
 .playground-btn:focus-visible {

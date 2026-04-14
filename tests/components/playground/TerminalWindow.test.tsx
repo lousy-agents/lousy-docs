@@ -3,7 +3,7 @@ import Chance from "chance";
 import { describe, expect, it } from "vitest";
 import { TerminalWindow } from "@/components/playground/TerminalWindow";
 
-const chance = new Chance();
+const chance = new Chance(42);
 
 describe("TerminalWindow", () => {
     describe("given a title and children", () => {

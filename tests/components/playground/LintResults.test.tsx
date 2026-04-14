@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { LintResults } from "@/components/playground/LintResults";
 import type { SkillLintOutput } from "@/entities/skill-lint";
 
-const chance = new Chance();
+const chance = new Chance(42);
 
 function createEmptyOutput(): SkillLintOutput {
     return {
