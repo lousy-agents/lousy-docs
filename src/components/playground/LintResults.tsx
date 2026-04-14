@@ -271,6 +271,17 @@ export function LintResults({ result }: LintResultsProps) {
                                         </Text>
                                         <Text
                                             style={{
+                                                color: "rgba(230, 234, 216, 0.7)",
+                                                fontFamily:
+                                                    "'Courier New', Courier, monospace",
+                                                fontSize: "0.75rem",
+                                                flexShrink: 0,
+                                            }}
+                                        >
+                                            [{diagnostic.ruleId}]
+                                        </Text>
+                                        <Text
+                                            style={{
                                                 color: "#e6ead8",
                                                 fontFamily:
                                                     "'Manrope', sans-serif",

@@ -70,7 +70,7 @@ const tabBarStyle: React.CSSProperties = {
     alignItems: "center",
     justifyContent: "space-between",
     padding: "0 16px",
-    height: "40px",
+    height: "48px",
     borderBottom: "1px solid rgba(70, 72, 62, 0.15)",
     flexShrink: 0,
 };
