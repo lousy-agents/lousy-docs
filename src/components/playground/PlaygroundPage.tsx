@@ -79,7 +79,7 @@ const subNavLinkActiveStyle: React.CSSProperties = {
     textTransform: "uppercase",
     background: "none",
     border: "none",
-    borderBottom: "1px solid #e6ead8",
+    borderBottom: "1px solid rgba(189, 206, 137, 0.6)",
     cursor: "default",
 };
 
@@ -152,15 +152,6 @@ const sidebarNavItemActiveStyle: React.CSSProperties = {
     cursor: "default",
 };
 
-const sidebarNavItemStyle: React.CSSProperties = {
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
-    padding: "12px 16px 12px 20px",
-    color: "rgba(155, 160, 138, 0.8)",
-    cursor: "default",
-};
-
 const sidebarFooterStyle: React.CSSProperties = {
     padding: "16px",
     borderTop: "1px solid rgba(70, 72, 62, 0.25)",
@@ -210,10 +201,6 @@ function Sidebar({ linterState }: { linterState: string }) {
                 <div style={sidebarNavItemActiveStyle}>
                     <span aria-hidden="true">⌘</span>
                     <span>TERMINAL_STREAMS</span>
-                </div>
-                <div style={sidebarNavItemStyle}>
-                    <span aria-hidden="true">⚑</span>
-                    <span>LINT_RULES</span>
                 </div>
             </div>
             <div style={sidebarFooterStyle}>

@@ -62,6 +62,7 @@ const textareaStyle: React.CSSProperties = {
     resize: "none",
     display: "block",
     minHeight: 0,
+    caretColor: "#bdce89",
 };
 
 const tabBarStyle: React.CSSProperties = {
@@ -85,6 +86,7 @@ const tabButtonBaseStyle: React.CSSProperties = {
     border: "1px solid rgba(70, 72, 62, 0.3)",
     backgroundColor: "#333531",
     color: "#9ba08a",
+    borderRadius: 6,
 };
 
 const tabButtonActiveStyle: React.CSSProperties = {

@@ -30,6 +30,7 @@ const emptyStateContainerStyle: React.CSSProperties = {
 
 const emptyStateBoxStyle: React.CSSProperties = {
     border: "1px dashed rgba(70, 72, 62, 0.15)",
+    borderRadius: "6px",
     padding: "3rem 2rem",
     display: "flex",
     flexDirection: "column",
@@ -49,17 +50,15 @@ const awaitingHeadingStyle: React.CSSProperties = {
 };
 
 const emptyInstructionStyle: React.CSSProperties = {
-    fontFamily: "'Courier New', Courier, monospace",
-    fontSize: "0.6875rem",
-    color: "rgba(118, 118, 108, 0.8)",
-    letterSpacing: "0.1em",
-    textTransform: "uppercase",
+    fontFamily: "'Manrope', sans-serif",
+    fontSize: "0.875rem",
+    color: "rgba(230, 234, 216, 0.5)",
 };
 
 const supportedFilesStyle: React.CSSProperties = {
     fontFamily: "'Courier New', Courier, monospace",
-    fontSize: "0.625rem",
-    color: "rgba(118, 118, 108, 0.5)",
+    fontSize: "0.875rem",
+    color: "rgba(230, 234, 216, 0.4)",
     letterSpacing: "0.05em",
     textTransform: "uppercase",
     lineHeight: 2,
@@ -146,6 +145,12 @@ function getDiagnosticBorderColor(severity: SkillLintSeverity): string {
     return severity === "error"
         ? "rgba(255, 180, 171, 0.4)"
         : "rgba(238, 189, 142, 0.3)";
+}
+
+function getSeverityBadgeBackground(severity: SkillLintSeverity): string {
+    return severity === "error"
+        ? "rgba(255, 180, 171, 0.2)"
+        : "rgba(238, 189, 142, 0.2)";
 }
 
 function SystemMetrics({ hasResult }: { hasResult: boolean }) {
@@ -239,6 +244,12 @@ export function LintResults({ result }: LintResultsProps) {
                                                     "'Courier New', Courier, monospace",
                                                 fontSize: "0.75rem",
                                                 flexShrink: 0,
+                                                backgroundColor:
+                                                    getSeverityBadgeBackground(
+                                                        diagnostic.severity,
+                                                    ),
+                                                borderRadius: "4px",
+                                                padding: "1px 6px",
                                             }}
                                         >
                                             [
