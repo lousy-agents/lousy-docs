@@ -148,6 +148,23 @@ describe("LintSkillContentUseCase", () => {
             );
             expect(mismatchError).toBeUndefined();
         });
+
+        it("should warn about unknown frontmatter fields", async () => {
+            const useCase = createUseCase();
+            const content = `---\nname: my-skill\ndescription: A valid description\nunknown-field: some value\n---\n`;
+
+            const result = await useCase.execute({
+                content,
+                skillName: "my-skill",
+            });
+
+            const unknownWarning = result.diagnostics.find(
+                (d) => d.ruleId === "skill/unknown-field",
+            );
+            expect(unknownWarning).toBeDefined();
+            expect(unknownWarning?.severity).toBe("warning");
+            expect(unknownWarning?.message).toContain("unknown-field");
+        });
     });
 
     describe("given empty content", () => {

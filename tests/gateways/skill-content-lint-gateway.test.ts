@@ -279,4 +279,30 @@ describe("SkillFrontmatterSchema validation via gateway", () => {
             expect(result.success).toBe(false);
         });
     });
+
+    describe("given unknown frontmatter fields", () => {
+        it("should return unknown fields in the result", () => {
+            const data = {
+                name: "my-skill",
+                description: "A brief description",
+                "unknown-key": "some value",
+            };
+
+            const result = gateway.validateFrontmatter(data);
+
+            expect(result.success).toBe(true);
+            expect(result.unknownFields).toContain("unknown-key");
+        });
+
+        it("should return empty unknownFields when all fields are known", () => {
+            const data = {
+                name: "my-skill",
+                description: "A brief description",
+            };
+
+            const result = gateway.validateFrontmatter(data);
+
+            expect(result.unknownFields).toHaveLength(0);
+        });
+    });
 });

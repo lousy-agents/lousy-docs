@@ -27,6 +27,7 @@ export interface FrontmatterValidationResult {
     readonly success: boolean;
     readonly data?: { readonly name: string; readonly description: string };
     readonly issues: readonly FrontmatterValidationIssue[];
+    readonly unknownFields: readonly string[];
 }
 
 /** Port interface for the skill content lint gateway */
@@ -186,6 +187,18 @@ export class LintSkillContentUseCase {
                     ruleId: RECOMMENDED_FIELD_RULE_IDS[field],
                 });
             }
+        }
+
+        for (const field of result.unknownFields) {
+            const line =
+                parsed.fieldLines.get(field) ?? parsed.frontmatterStartLine;
+            diagnostics.push({
+                line,
+                severity: "warning",
+                message: `Unknown frontmatter field '${field}'`,
+                field,
+                ruleId: "skill/unknown-field",
+            });
         }
 
         return diagnostics;
