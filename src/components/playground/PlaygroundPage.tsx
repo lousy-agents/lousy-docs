@@ -101,7 +101,7 @@ const subNavLinkStyle: React.CSSProperties = {
 const subHeaderDividerStyle: React.CSSProperties = {
     width: "1px",
     height: "24px",
-    backgroundColor: "rgba(70, 72, 62, 0.4)",
+    backgroundColor: "rgba(70, 72, 62, 0.25)",
 };
 
 const bodyLayoutStyle: React.CSSProperties = {
@@ -199,12 +199,12 @@ const mobilePanelStyle: React.CSSProperties = {
     gap: "0",
 };
 
-function Sidebar() {
+function Sidebar({ linterState }: { linterState: string }) {
     return (
         <aside style={sidebarStyle} aria-label="Playground sidebar">
             <div style={sidebarHeaderStyle}>
-                <div style={sidebarTitleStyle}>OPERATIONAL_COMMAND</div>
-                <div style={sidebarSubtitleStyle}>SECTOR_07</div>
+                <div style={sidebarTitleStyle}>LINT_PLAYGROUND</div>
+                <div style={sidebarSubtitleStyle}>SKILL VALIDATOR</div>
             </div>
             <div style={{ flex: 1, paddingTop: "4px" }} role="presentation">
                 <div style={sidebarNavItemActiveStyle}>
@@ -215,14 +215,6 @@ function Sidebar() {
                     <span aria-hidden="true">⚑</span>
                     <span>LINT_RULES</span>
                 </div>
-                <div style={sidebarNavItemStyle}>
-                    <span aria-hidden="true">☰</span>
-                    <span>SYSTEM_LOGS</span>
-                </div>
-                <div style={sidebarNavItemStyle}>
-                    <span aria-hidden="true">⌁</span>
-                    <span>NETWORK_TELEMETRY</span>
-                </div>
             </div>
             <div style={sidebarFooterStyle}>
                 <div
@@ -232,7 +224,7 @@ function Sidebar() {
                         letterSpacing: "0.12em",
                     }}
                 >
-                    LINT_ENGINE V1.0
+                    {linterState}
                 </div>
             </div>
         </aside>
@@ -353,7 +345,11 @@ export function PlaygroundPage({
                         </div>
                     ) : (
                         <div style={bodyLayoutStyle}>
-                            <Sidebar />
+                            <Sidebar
+                                linterState={
+                                    result ? "LINT_COMPLETE" : "AWAITING_INPUT"
+                                }
+                            />
                             <div style={splitLayoutStyle}>
                                 <div style={leftPanelStyle}>
                                     <SkillEditor
