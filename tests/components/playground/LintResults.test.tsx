@@ -166,6 +166,37 @@ describe("LintResults", () => {
         });
     });
 
+    describe("given a lint result with info diagnostics", () => {
+        it("should display each info diagnostic with INFO badge", () => {
+            const infoMessage = chance.sentence();
+            const result: LintOutput = {
+                diagnostics: [
+                    {
+                        filePath: "playground-input",
+                        line: 1,
+                        severity: "info",
+                        message: infoMessage,
+                        ruleId: "skill/suggestion",
+                        target: "skill",
+                    },
+                ],
+                target: "skill",
+                filesAnalyzed: ["playground-input"],
+                summary: {
+                    totalFiles: 1,
+                    totalErrors: 0,
+                    totalWarnings: 0,
+                    totalInfos: 1,
+                },
+            };
+
+            render(<LintResults result={result} />);
+
+            expect(screen.getByText(infoMessage)).toBeInTheDocument();
+            expect(screen.getByText(/INFO/)).toBeInTheDocument();
+        });
+    });
+
     describe("given a lint result with the line number", () => {
         it("should display the line number for each diagnostic", () => {
             const result: LintOutput = {

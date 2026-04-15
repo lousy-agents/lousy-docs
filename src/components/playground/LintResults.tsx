@@ -136,7 +136,7 @@ function getSummaryColor(result: LintOutput): string {
 function getSeverityColor(severity: LintSeverity): string {
     if (severity === "error") return "#ffb4ab";
     if (severity === "warning") return "#eebd8e";
-    return "#93d4e0";
+    return "#bdce89";
 }
 
 function getSeverityLabel(severity: LintSeverity): string {
@@ -148,13 +148,13 @@ function getSeverityLabel(severity: LintSeverity): string {
 function getDiagnosticBorderColor(severity: LintSeverity): string {
     if (severity === "error") return "rgba(255, 180, 171, 0.4)";
     if (severity === "warning") return "rgba(238, 189, 142, 0.3)";
-    return "rgba(147, 212, 224, 0.3)";
+    return "rgba(189, 206, 137, 0.3)";
 }
 
 function getSeverityBadgeBackground(severity: LintSeverity): string {
     if (severity === "error") return "rgba(255, 180, 171, 0.2)";
     if (severity === "warning") return "rgba(238, 189, 142, 0.2)";
-    return "rgba(147, 212, 224, 0.2)";
+    return "rgba(189, 206, 137, 0.2)";
 }
 
 function SystemMetrics({ hasResult }: { hasResult: boolean }) {
