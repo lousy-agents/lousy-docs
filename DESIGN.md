@@ -210,11 +210,11 @@ The primary input for tool pages where users paste file contents. This is an ext
 
 ### Target Selector
 
-A row of selectable options above the input area that controls what type of content is being analyzed. Uses the existing tertiary button pattern from §5.
+A row of selectable options above the input area that controls what type of content is being analyzed.
 
-- **Inactive Tabs:** Tertiary button styling—`surface-container-highest` background, monospace label, `md` radius.
-- **Active Tab:** `primary-container` background fill with `on-background` text. This matches the active state pattern used in the sidebar navigation.
-- **Spacing:** Compact row with 8px gaps between tabs. The action button (e.g., “RUN_LINT”) sits at the far right of the row, using primary button styling.
+- **Inactive Tabs:** Transparent background with `outline-variant` border at 30% opacity, `secondary-dim` text (`#9ba08a`), `md` radius. The transparent fill allows the parent surface to show through, visually subordinating inactive options.
+- **Active Tab:** Solid `primary` (`#bdce89`) background fill with dark text (`#121410`) for high contrast on the light surface. Border uses `primary` at 50% opacity—lower than the background fill so the `:focus-visible` ring (full-strength `primary`) remains distinguishable. `md` radius.
+- **Spacing:** Compact row with 4px gaps between tabs. The action button (e.g., “RUN_LINT”) sits at the far right of the row, using primary button styling.
 
 ### Score Display
 
