@@ -225,5 +225,32 @@ describe("LintSkillContentUseCase", () => {
             expect(result.summary).toHaveProperty("totalWarnings");
             expect(result.summary.totalFiles).toBe(1);
         });
+
+        it("should conform to @lousy-agents/lint LintOutput shape", async () => {
+            const useCase = createUseCase();
+            const skillName = `skill-${chance.string({ length: 6, pool: "abcdefghijklmnopqrstuvwxyz0123456789" })}`;
+            const content = `---\nname: ${skillName}\ndescription: ${chance.sentence()}\n---\n`;
+
+            const result = await useCase.execute({ content, skillName });
+
+            expect(result.target).toBe("skill");
+            expect(result.filesAnalyzed).toEqual(["playground-input"]);
+            expect(result.summary).toHaveProperty("totalInfos");
+        });
+
+        it("should include filePath and target on each diagnostic", async () => {
+            const useCase = createUseCase();
+            const content = "---\ndescription: Missing name\n---\n";
+
+            const result = await useCase.execute({
+                content,
+                skillName: "my-skill",
+            });
+
+            for (const diagnostic of result.diagnostics) {
+                expect(diagnostic.filePath).toBe("playground-input");
+                expect(diagnostic.target).toBe("skill");
+            }
+        });
     });
 });

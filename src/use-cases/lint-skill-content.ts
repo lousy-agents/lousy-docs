@@ -1,12 +1,10 @@
 /**
  * Use case for linting skill markdown content in the browser.
- * Validates frontmatter against the skill schema and produces diagnostics.
+ * Validates frontmatter against the skill schema and produces diagnostics
+ * in the @lousy-agents/lint LintOutput format.
  */
 
-import type {
-    SkillLintDiagnostic,
-    SkillLintOutput,
-} from "@/entities/skill-lint";
+import type { LintDiagnostic, LintOutput } from "@/entities/skill-lint";
 
 /** Parsed frontmatter data with line number mapping */
 export interface ParsedFrontmatter {
@@ -41,6 +39,9 @@ export interface SkillContentLintGateway {
 /** Maximum input size (500KB) to prevent YAML parser from freezing the browser */
 const MAX_CONTENT_LENGTH = 512_000;
 
+/** Placeholder file path used for playground input (not a real file) */
+const PLAYGROUND_FILE_PATH = "playground-input";
+
 const RECOMMENDED_FIELDS = ["allowed-tools"] as const;
 
 const RECOMMENDED_FIELD_RULE_IDS: Record<
@@ -58,28 +59,33 @@ export interface LintSkillContentInput {
 export class LintSkillContentUseCase {
     constructor(private readonly gateway: SkillContentLintGateway) {}
 
-    async execute(input: LintSkillContentInput): Promise<SkillLintOutput> {
+    async execute(input: LintSkillContentInput): Promise<LintOutput> {
         const { content } = input;
 
         if (content.length > MAX_CONTENT_LENGTH) {
             return {
                 diagnostics: [
                     {
+                        filePath: PLAYGROUND_FILE_PATH,
                         line: 1,
                         severity: "error",
                         message: `Input exceeds maximum size of ${MAX_CONTENT_LENGTH} characters. Please reduce the content size.`,
                         ruleId: "skill/input-too-large",
+                        target: "skill",
                     },
                 ],
+                target: "skill",
+                filesAnalyzed: [PLAYGROUND_FILE_PATH],
                 summary: {
                     totalFiles: 1,
                     totalErrors: 1,
                     totalWarnings: 0,
+                    totalInfos: 0,
                 },
             };
         }
 
-        let diagnostics: SkillLintDiagnostic[] = [];
+        let diagnostics: LintDiagnostic[] = [];
 
         const parsed = this.gateway.parseFrontmatter(content);
 
@@ -97,18 +103,23 @@ export class LintSkillContentUseCase {
                     : "skill/invalid-frontmatter";
 
             diagnostics.push({
+                filePath: PLAYGROUND_FILE_PATH,
                 line: 1,
                 severity: "error",
                 message,
                 ruleId,
+                target: "skill",
             });
 
             return {
                 diagnostics,
+                target: "skill",
+                filesAnalyzed: [PLAYGROUND_FILE_PATH],
                 summary: {
                     totalFiles: 1,
                     totalErrors: 1,
                     totalWarnings: 0,
+                    totalInfos: 0,
                 },
             };
         }
@@ -124,10 +135,13 @@ export class LintSkillContentUseCase {
 
         return {
             diagnostics,
+            target: "skill",
+            filesAnalyzed: [PLAYGROUND_FILE_PATH],
             summary: {
                 totalFiles: 1,
                 totalErrors,
                 totalWarnings,
+                totalInfos: 0,
             },
         };
     }
@@ -135,8 +149,8 @@ export class LintSkillContentUseCase {
     private validateFrontmatter(
         parsed: ParsedFrontmatter,
         skillName: string | undefined,
-    ): SkillLintDiagnostic[] {
-        const diagnostics: SkillLintDiagnostic[] = [];
+    ): LintDiagnostic[] {
+        const diagnostics: LintDiagnostic[] = [];
 
         const result = this.gateway.validateFrontmatter(parsed.data);
 
@@ -155,11 +169,13 @@ export class LintSkillContentUseCase {
                 );
 
                 diagnostics.push({
+                    filePath: PLAYGROUND_FILE_PATH,
                     line,
                     severity: "error",
                     message: issue.message,
                     field: fieldName,
                     ruleId,
+                    target: "skill",
                 });
             }
         }
@@ -173,22 +189,26 @@ export class LintSkillContentUseCase {
             const nameLine =
                 parsed.fieldLines.get("name") ?? parsed.frontmatterStartLine;
             diagnostics.push({
+                filePath: PLAYGROUND_FILE_PATH,
                 line: nameLine,
                 severity: "error",
                 message: `Frontmatter name '${result.data.name}' must match skill name '${skillName}'`,
                 field: "name",
                 ruleId: "skill/name-mismatch",
+                target: "skill",
             });
         }
 
         for (const field of RECOMMENDED_FIELDS) {
             if (parsed.data[field] === undefined) {
                 diagnostics.push({
+                    filePath: PLAYGROUND_FILE_PATH,
                     line: parsed.frontmatterStartLine,
                     severity: "warning",
                     message: `Recommended field '${field}' is missing`,
                     field,
                     ruleId: RECOMMENDED_FIELD_RULE_IDS[field],
+                    target: "skill",
                 });
             }
         }
@@ -197,11 +217,13 @@ export class LintSkillContentUseCase {
             const line =
                 parsed.fieldLines.get(field) ?? parsed.frontmatterStartLine;
             diagnostics.push({
+                filePath: PLAYGROUND_FILE_PATH,
                 line,
                 severity: "warning",
                 message: `Unknown frontmatter field '${field}'`,
                 field,
                 ruleId: "skill/unknown-field",
+                target: "skill",
             });
         }
 
