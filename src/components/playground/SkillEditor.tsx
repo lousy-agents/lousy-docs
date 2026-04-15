@@ -95,7 +95,6 @@ const tabButtonActiveStyle: React.CSSProperties = {
     border: "1px solid rgba(189, 206, 137, 0.5)",
     backgroundColor: "#bdce89",
     color: "#121410",
-    cursor: "pointer",
 };
 
 const runButtonStyle: React.CSSProperties = {
