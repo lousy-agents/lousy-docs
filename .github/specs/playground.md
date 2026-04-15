@@ -59,6 +59,19 @@ so that I can **validate my skill frontmatter without installing the CLI**.
 - [x] When lint encounters invalid YAML frontmatter, the system shall display an appropriate error diagnostic.
 - [x] The lint results shall display a summary with total files, errors, and warnings counts.
 
+### Story 4: Use @lousy-agents/lint types for lint output
+
+As a **developer**,
+I want **the lint playground to produce output using the same types as the `@lousy-agents/lint` package**,
+so that I can **trust the playground results are consistent with the CLI tool's output format**.
+
+#### Acceptance Criteria
+
+- [x] When the playground runs lint, the output shall conform to the `LintOutput` type from `@lousy-agents/lint`.
+- [x] When the playground produces a diagnostic, it shall conform to the `LintDiagnostic` type from `@lousy-agents/lint`.
+- [x] The playground shall set `target: "skill"` on all skill lint output.
+- [x] The playground summary shall include `totalInfos` alongside `totalErrors` and `totalWarnings`.
+
 ---
 
 ## Design
@@ -67,7 +80,7 @@ so that I can **validate my skill frontmatter without installing the CLI**.
 
 - `src/components/layout/SiteHeader.tsx` — Add "Playground" to navLinks
 - `src/components/layout/MobileNavDrawer.tsx` — Add "Playground" to navLinks
-- `src/entities/skill-lint.ts` — Browser-compatible skill lint entities (frontmatter schema, validation)
+- `src/entities/skill-lint.ts` — Re-exports lint types from `@lousy-agents/lint` (`LintDiagnostic`, `LintOutput`, `LintSeverity`, `LintTarget`)
 - `src/use-cases/lint-skill-content.ts` — Use case for linting skill markdown content from text
 - `src/gateways/skill-content-lint-gateway.ts` — Browser-compatible gateway for parsing frontmatter from text
 - `src/components/playground/PlaygroundPage.tsx` — Main playground page component
@@ -79,6 +92,7 @@ so that I can **validate my skill frontmatter without installing the CLI**.
 
 - `zod` — Already in project, used for frontmatter schema validation
 - `yaml` — Needed for YAML frontmatter parsing in browser (new dependency)
+- `@lousy-agents/lint` — Source of truth for lint output types (`LintDiagnostic`, `LintOutput`, `LintSeverity`, `LintTarget`); used via `import type` only since runtime code requires Node.js filesystem APIs
 
 ### Data Flow
 
@@ -98,7 +112,10 @@ Gateway parses YAML frontmatter from text
 Use case validates frontmatter against Zod schema
         │
         ▼
-Diagnostics returned to PlaygroundPage
+Diagnostics mapped to @lousy-agents/lint LintDiagnostic shape
+        │
+        ▼
+LintOutput (from @lousy-agents/lint) returned to PlaygroundPage
         │
         ▼
 LintResults renders diagnostics with severity icons
@@ -123,11 +140,20 @@ LintResults renders diagnostics with severity icons
      │                   │                     │   ParsedFrontmatter  │
      │                   │                     │<─────────────────────│
      │                   │                     │                      │
-     │                   │                     │  validate w/ Zod     │
+     │                   │                     │ validateFrontmatter()│
+     │                   │                     │─────────────────────>│
+     │                   │                     │   ValidationResult   │
+     │                   │                     │<─────────────────────│
+     │                   │                     │                      │
+     │                   │                     │  map to LintDiag-    │
+     │                   │                     │  nostic (from        │
+     │                   │                     │  @lousy-agents/lint) │
      │                   │                     │──────┐               │
      │                   │                     │      │               │
      │                   │                     │<─────┘               │
      │                   │   LintOutput        │                      │
+     │                   │   (from @lousy-     │                      │
+     │                   │    agents/lint)     │                      │
      │                   │<────────────────────│                      │
      │  render results   │                     │                      │
      │<──────────────────│                     │                      │
@@ -235,6 +261,44 @@ LintResults renders diagnostics with severity icons
 **Done when**:
 - [x] All verification steps pass
 - [x] No new errors in affected files
+
+---
+
+### Task 4: Replace custom lint types with @lousy-agents/lint
+
+**Depends on**: Task 2, Task 3
+
+**Objective**: Replace the custom `SkillLintDiagnostic`, `SkillLintOutput`, and `SkillLintSeverity` types with `LintDiagnostic`, `LintOutput`, and `LintSeverity` from the `@lousy-agents/lint` npm package.
+
+**Context**: The playground originally defined its own lint types. This task aligns the playground output with the canonical types from `@lousy-agents/lint`, ensuring consistency with the CLI tool. Since `@lousy-agents/lint` runtime code requires Node.js filesystem APIs, only types are imported (`import type`). The browser-compatible gateway continues to handle YAML parsing and Zod validation.
+
+**Affected files**:
+- `package.json` — Add `@lousy-agents/lint` dependency
+- `src/entities/skill-lint.ts` — Replace custom types with re-exports from `@lousy-agents/lint`
+- `src/use-cases/lint-skill-content.ts` — Produce `LintOutput` and `LintDiagnostic` from the package
+- `src/components/playground/LintResults.tsx` — Update to consume `LintOutput` and `LintSeverity`
+- `src/components/playground/PlaygroundPage.tsx` — Update state type to `LintOutput`
+- `tests/entities/skill-lint.test.ts` — Update for new type shape
+- `tests/use-cases/lint-skill-content.test.ts` — Add tests for LintOutput conformance
+- `tests/components/playground/LintResults.test.tsx` — Update test data to LintOutput shape
+
+**Requirements**:
+- When the playground runs lint, the output shall conform to the `LintOutput` type from `@lousy-agents/lint`.
+- When the playground produces a diagnostic, it shall conform to the `LintDiagnostic` type from `@lousy-agents/lint`.
+- The playground shall set `target: "skill"` on all skill lint output.
+- The playground summary shall include `totalInfos` alongside `totalErrors` and `totalWarnings`.
+
+**Verification**:
+- [x] `npx biome check` passes
+- [x] `npm test` passes
+- [x] `npm run build` succeeds
+- [x] All diagnostics include `filePath`, `target`, and `severity` fields from `LintDiagnostic`
+- [x] `LintOutput` includes `target`, `filesAnalyzed`, and `summary.totalInfos`
+
+**Done when**:
+- [x] All verification steps pass
+- [x] No custom lint types remain in `src/entities/skill-lint.ts`
+- [x] `@lousy-agents/lint` is listed as a dependency in `package.json`
 
 ---
 

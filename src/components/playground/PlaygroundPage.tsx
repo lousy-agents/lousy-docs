@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { LintResults } from "@/components/playground/LintResults";
 import { SkillEditor } from "@/components/playground/SkillEditor";
 import { AntDProvider } from "@/components/providers/AntDProvider";
-import type { SkillLintOutput } from "@/entities/skill-lint";
+import type { LintOutput } from "@/entities/skill-lint";
 import { createSkillContentLintGateway } from "@/gateways/skill-content-lint-gateway";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { HEADER_HEIGHT_PX } from "@/lib/layout-constants";
@@ -228,7 +228,7 @@ export function PlaygroundPage({
     const isMobile = useIsMobile();
     const [navDrawerOpen, setNavDrawerOpen] = useState(false);
     const [content, setContent] = useState("");
-    const [result, setResult] = useState<SkillLintOutput | null>(null);
+    const [result, setResult] = useState<LintOutput | null>(null);
 
     const lintUseCase = useMemo(() => {
         const gw = injectedGateway ?? createSkillContentLintGateway();
@@ -255,16 +255,21 @@ export function PlaygroundPage({
             setResult({
                 diagnostics: [
                     {
+                        filePath: "playground-input",
                         line: 1,
                         severity: "error",
                         message: `Lint execution failed: ${message}`,
                         ruleId: "skill/internal-error",
+                        target: "skill",
                     },
                 ],
+                target: "skill",
+                filesAnalyzed: ["playground-input"],
                 summary: {
                     totalFiles: 1,
                     totalErrors: 1,
                     totalWarnings: 0,
+                    totalInfos: 0,
                 },
             });
         }

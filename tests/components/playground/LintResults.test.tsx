@@ -2,14 +2,21 @@ import { render, screen } from "@testing-library/react";
 import Chance from "chance";
 import { describe, expect, it } from "vitest";
 import { LintResults } from "@/components/playground/LintResults";
-import type { SkillLintOutput } from "@/entities/skill-lint";
+import type { LintOutput } from "@/entities/skill-lint";
 
 const chance = new Chance(42);
 
-function createEmptyOutput(): SkillLintOutput {
+function createEmptyOutput(): LintOutput {
     return {
         diagnostics: [],
-        summary: { totalFiles: 1, totalErrors: 0, totalWarnings: 0 },
+        target: "skill",
+        filesAnalyzed: ["playground-input"],
+        summary: {
+            totalFiles: 1,
+            totalErrors: 0,
+            totalWarnings: 0,
+            totalInfos: 0,
+        },
     };
 }
 
@@ -48,16 +55,25 @@ describe("LintResults", () => {
     describe("given a lint result with errors", () => {
         it("should display each error diagnostic", () => {
             const errorMessage = chance.sentence();
-            const result: SkillLintOutput = {
+            const result: LintOutput = {
                 diagnostics: [
                     {
+                        filePath: "playground-input",
                         line: 2,
                         severity: "error",
                         message: errorMessage,
                         ruleId: "skill/missing-name",
+                        target: "skill",
                     },
                 ],
-                summary: { totalFiles: 1, totalErrors: 1, totalWarnings: 0 },
+                target: "skill",
+                filesAnalyzed: ["playground-input"],
+                summary: {
+                    totalFiles: 1,
+                    totalErrors: 1,
+                    totalWarnings: 0,
+                    totalInfos: 0,
+                },
             };
 
             render(<LintResults result={result} />);
@@ -66,16 +82,25 @@ describe("LintResults", () => {
         });
 
         it("should display the error count in the summary", () => {
-            const result: SkillLintOutput = {
+            const result: LintOutput = {
                 diagnostics: [
                     {
+                        filePath: "playground-input",
                         line: 2,
                         severity: "error",
                         message: "Name is required",
                         ruleId: "skill/missing-name",
+                        target: "skill",
                     },
                 ],
-                summary: { totalFiles: 1, totalErrors: 1, totalWarnings: 0 },
+                target: "skill",
+                filesAnalyzed: ["playground-input"],
+                summary: {
+                    totalFiles: 1,
+                    totalErrors: 1,
+                    totalWarnings: 0,
+                    totalInfos: 0,
+                },
             };
 
             render(<LintResults result={result} />);
@@ -87,16 +112,25 @@ describe("LintResults", () => {
     describe("given a lint result with warnings", () => {
         it("should display each warning diagnostic", () => {
             const warningMessage = chance.sentence();
-            const result: SkillLintOutput = {
+            const result: LintOutput = {
                 diagnostics: [
                     {
+                        filePath: "playground-input",
                         line: 1,
                         severity: "warning",
                         message: warningMessage,
                         ruleId: "skill/missing-allowed-tools",
+                        target: "skill",
                     },
                 ],
-                summary: { totalFiles: 1, totalErrors: 0, totalWarnings: 1 },
+                target: "skill",
+                filesAnalyzed: ["playground-input"],
+                summary: {
+                    totalFiles: 1,
+                    totalErrors: 0,
+                    totalWarnings: 1,
+                    totalInfos: 0,
+                },
             };
 
             render(<LintResults result={result} />);
@@ -105,16 +139,25 @@ describe("LintResults", () => {
         });
 
         it("should display the warning count in the summary", () => {
-            const result: SkillLintOutput = {
+            const result: LintOutput = {
                 diagnostics: [
                     {
+                        filePath: "playground-input",
                         line: 1,
                         severity: "warning",
                         message: "Recommended field is missing",
                         ruleId: "skill/missing-allowed-tools",
+                        target: "skill",
                     },
                 ],
-                summary: { totalFiles: 1, totalErrors: 0, totalWarnings: 1 },
+                target: "skill",
+                filesAnalyzed: ["playground-input"],
+                summary: {
+                    totalFiles: 1,
+                    totalErrors: 0,
+                    totalWarnings: 1,
+                    totalInfos: 0,
+                },
             };
 
             render(<LintResults result={result} />);
@@ -125,16 +168,25 @@ describe("LintResults", () => {
 
     describe("given a lint result with the line number", () => {
         it("should display the line number for each diagnostic", () => {
-            const result: SkillLintOutput = {
+            const result: LintOutput = {
                 diagnostics: [
                     {
+                        filePath: "playground-input",
                         line: 3,
                         severity: "error",
                         message: "Name is required",
                         ruleId: "skill/missing-name",
+                        target: "skill",
                     },
                 ],
-                summary: { totalFiles: 1, totalErrors: 1, totalWarnings: 0 },
+                target: "skill",
+                filesAnalyzed: ["playground-input"],
+                summary: {
+                    totalFiles: 1,
+                    totalErrors: 1,
+                    totalWarnings: 0,
+                    totalInfos: 0,
+                },
             };
 
             render(<LintResults result={result} />);

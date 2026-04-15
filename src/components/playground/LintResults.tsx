@@ -1,6 +1,6 @@
 import { Flex, Typography } from "antd";
 import { TerminalWindow } from "@/components/playground/TerminalWindow";
-import type { SkillLintOutput, SkillLintSeverity } from "@/entities/skill-lint";
+import type { LintOutput, LintSeverity } from "@/entities/skill-lint";
 
 const { Text } = Typography;
 
@@ -100,10 +100,10 @@ const diagnosticStyle: React.CSSProperties = {
 };
 
 interface LintResultsProps {
-    result: SkillLintOutput | null;
+    result: LintOutput | null;
 }
 
-function getSummaryBackground(result: SkillLintOutput): string {
+function getSummaryBackground(result: LintOutput): string {
     if (result.summary.totalErrors > 0) {
         return "rgba(255, 180, 171, 0.1)";
     }
@@ -113,7 +113,7 @@ function getSummaryBackground(result: SkillLintOutput): string {
     return "rgba(189, 206, 137, 0.1)";
 }
 
-function getSummaryText(result: SkillLintOutput): string {
+function getSummaryText(result: LintOutput): string {
     if (result.summary.totalErrors > 0) {
         return `Lint failed — ${result.summary.totalErrors} error${result.summary.totalErrors !== 1 ? "s" : ""}, ${result.summary.totalWarnings} warning${result.summary.totalWarnings !== 1 ? "s" : ""}`;
     }
@@ -123,7 +123,7 @@ function getSummaryText(result: SkillLintOutput): string {
     return "Lint passed — 0 errors, 0 warnings";
 }
 
-function getSummaryColor(result: SkillLintOutput): string {
+function getSummaryColor(result: LintOutput): string {
     if (result.summary.totalErrors > 0) {
         return "#ffb4ab";
     }
@@ -133,24 +133,28 @@ function getSummaryColor(result: SkillLintOutput): string {
     return "#bdce89";
 }
 
-function getSeverityColor(severity: SkillLintSeverity): string {
-    return severity === "error" ? "#ffb4ab" : "#eebd8e";
+function getSeverityColor(severity: LintSeverity): string {
+    if (severity === "error") return "#ffb4ab";
+    if (severity === "warning") return "#eebd8e";
+    return "#93d4e0";
 }
 
-function getSeverityLabel(severity: SkillLintSeverity): string {
-    return severity === "error" ? "ERR" : "WARN";
+function getSeverityLabel(severity: LintSeverity): string {
+    if (severity === "error") return "ERR";
+    if (severity === "warning") return "WARN";
+    return "INFO";
 }
 
-function getDiagnosticBorderColor(severity: SkillLintSeverity): string {
-    return severity === "error"
-        ? "rgba(255, 180, 171, 0.4)"
-        : "rgba(238, 189, 142, 0.3)";
+function getDiagnosticBorderColor(severity: LintSeverity): string {
+    if (severity === "error") return "rgba(255, 180, 171, 0.4)";
+    if (severity === "warning") return "rgba(238, 189, 142, 0.3)";
+    return "rgba(147, 212, 224, 0.3)";
 }
 
-function getSeverityBadgeBackground(severity: SkillLintSeverity): string {
-    return severity === "error"
-        ? "rgba(255, 180, 171, 0.2)"
-        : "rgba(238, 189, 142, 0.2)";
+function getSeverityBadgeBackground(severity: LintSeverity): string {
+    if (severity === "error") return "rgba(255, 180, 171, 0.2)";
+    if (severity === "warning") return "rgba(238, 189, 142, 0.2)";
+    return "rgba(147, 212, 224, 0.2)";
 }
 
 function SystemMetrics({ hasResult }: { hasResult: boolean }) {
