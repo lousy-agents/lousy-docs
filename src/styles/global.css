@@ -452,6 +452,7 @@ mark[data-pagefind-highlight] {
     outline-offset: 2px;
 }
 
+/* §5b override: on-background ring for contrast against primary fill */
 .playground-tab:focus-visible {
     outline: 2px solid var(--color-on-background);
     outline-offset: 2px;

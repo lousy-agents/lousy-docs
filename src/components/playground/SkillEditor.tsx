@@ -86,7 +86,7 @@ const tabButtonBaseStyle: React.CSSProperties = {
     cursor: "default",
     border: "1px solid rgba(70, 72, 62, 0.3)",
     backgroundColor: "transparent",
-    color: "#9ba08a",
+    color: "rgba(230, 234, 216, 0.6)",
     borderRadius: 6,
 };
 
