@@ -135,7 +135,7 @@ const exampleLinksStyle: React.CSSProperties = {
 
 const exampleLinkActiveStyle: React.CSSProperties = {
     color: "#bdce89",
-    cursor: "pointer",
+    cursor: "default",
     textDecoration: "none",
     background: "none",
     border: "none",
