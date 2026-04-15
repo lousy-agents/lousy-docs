@@ -212,8 +212,8 @@ The primary input for tool pages where users paste file contents. This is an ext
 
 A row of selectable options above the input area that controls what type of content is being analyzed.
 
-- **Inactive Tabs:** Transparent background with `outline-variant` border at 30% opacity, `secondary-dim` text (`#9ba08a`), `md` radius. The transparent fill allows the parent surface to show through, visually subordinating inactive options.
-- **Active Tab:** Solid `primary` (`#bdce89`) background fill with dark text (`#121410`) for high contrast on the light surface. Border uses `primary` at 50% opacity—lower than the background fill so the `:focus-visible` ring (full-strength `primary`) remains distinguishable. `md` radius.
+- **Inactive Tabs:** Transparent background with `outline-variant` border at 30% opacity, muted `on-background` text at 60% opacity, `md` radius. The transparent fill allows the parent surface to show through, visually subordinating inactive options.
+- **Active Tab:** Solid `primary` (`#bdce89`) background fill with dark text (`#121410`) for high contrast on the light surface. Border uses `primary` at 50% opacity. The `:focus-visible` ring uses `on-background` (`#e6ead8`) to contrast clearly against the bright primary fill. `md` radius.
 - **Spacing:** Compact row with 4px gaps between tabs. The action button (e.g., “RUN_LINT”) sits at the far right of the row, using primary button styling.
 
 ### Score Display
