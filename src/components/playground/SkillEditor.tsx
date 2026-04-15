@@ -88,6 +88,8 @@ const tabButtonBaseStyle: React.CSSProperties = {
     backgroundColor: "transparent",
     color: "rgba(230, 234, 216, 0.6)",
     borderRadius: 6,
+    position: "relative",
+    zIndex: 2,
 };
 
 const tabButtonActiveStyle: React.CSSProperties = {
@@ -112,6 +114,8 @@ const runButtonStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
     gap: "6px",
+    position: "relative",
+    zIndex: 2,
 };
 
 const exampleLinksStyle: React.CSSProperties = {
