@@ -84,17 +84,17 @@ const tabButtonBaseStyle: React.CSSProperties = {
     letterSpacing: "0.05em",
     textTransform: "uppercase",
     cursor: "pointer",
-    border: "1px solid rgba(70, 72, 62, 0.3)",
-    backgroundColor: "#333531",
+    border: "1px solid #46483e",
+    backgroundColor: "transparent",
     color: "#9ba08a",
-    borderRadius: 6,
+    borderRadius: 0,
 };
 
 const tabButtonActiveStyle: React.CSSProperties = {
     ...tabButtonBaseStyle,
-    border: "1px solid rgba(189, 206, 137, 0.3)",
-    backgroundColor: "#5f6e34",
-    color: "#e6ead8",
+    border: "1px solid #bdce89",
+    backgroundColor: "#bdce89",
+    color: "#121410",
 };
 
 const runButtonStyle: React.CSSProperties = {
