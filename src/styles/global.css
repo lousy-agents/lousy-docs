@@ -453,6 +453,6 @@ mark[data-pagefind-highlight] {
 }
 
 .playground-tab:focus-visible {
-    outline: 2px solid var(--color-primary);
+    outline: 2px solid var(--color-on-background);
     outline-offset: 2px;
 }
