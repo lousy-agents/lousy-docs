@@ -1,4 +1,5 @@
 import { Button } from "antd";
+import { useCallback, useRef } from "react";
 import { TerminalWindow } from "@/components/playground/TerminalWindow";
 
 const PLACEHOLDER = `> paste your copilot-instructions.md or SKILL.md here...`;
@@ -30,7 +31,7 @@ const fileInfoBarStyle: React.CSSProperties = {
 const editorBodyStyle: React.CSSProperties = {
     display: "flex",
     flex: 1,
-    overflow: "auto",
+    overflow: "hidden",
     fontFamily: "'Courier New', Courier, monospace",
     fontSize: "0.8125rem",
     lineHeight: "1.7",
@@ -48,6 +49,7 @@ const lineNumbersStyle: React.CSSProperties = {
     fontSize: "0.8125rem",
     fontFamily: "'Courier New', Courier, monospace",
     marginLeft: "8px",
+    overflow: "hidden",
 };
 
 const textareaStyle: React.CSSProperties = {
@@ -154,6 +156,17 @@ interface SkillEditorProps {
 }
 
 export function SkillEditor({ value, onChange, onRun }: SkillEditorProps) {
+    const lineNumbersRef = useRef<HTMLDivElement>(null);
+
+    const handleEditorScroll = useCallback(
+        (e: React.UIEvent<HTMLTextAreaElement>) => {
+            if (lineNumbersRef.current) {
+                lineNumbersRef.current.scrollTop = e.currentTarget.scrollTop;
+            }
+        },
+        [],
+    );
+
     const lines = value ? value.split("\n").length : LINE_COUNT;
     const lineNumbers = Array.from(
         { length: Math.max(lines, LINE_COUNT) },
@@ -204,7 +217,11 @@ export function SkillEditor({ value, onChange, onRun }: SkillEditorProps) {
                     <span>UTF-8 | LF | MD</span>
                 </div>
                 <div style={editorBodyStyle}>
-                    <div style={lineNumbersStyle} aria-hidden="true">
+                    <div
+                        ref={lineNumbersRef}
+                        style={lineNumbersStyle}
+                        aria-hidden="true"
+                    >
                         {lineNumbers.map((n) => (
                             <div key={n}>{n}</div>
                         ))}
@@ -216,6 +233,7 @@ export function SkillEditor({ value, onChange, onRun }: SkillEditorProps) {
                         style={textareaStyle}
                         value={value}
                         onChange={(e) => onChange(e.target.value)}
+                        onScroll={handleEditorScroll}
                         placeholder={PLACEHOLDER}
                         spellCheck={false}
                     />
