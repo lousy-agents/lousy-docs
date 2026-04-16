@@ -88,7 +88,7 @@ describe("LintResults", () => {
                         filePath: "playground-input",
                         line: 2,
                         severity: "error",
-                        message: "Name is required",
+                        message: chance.sentence(),
                         ruleId: "skill/missing-name",
                         target: "skill",
                     },
@@ -145,7 +145,7 @@ describe("LintResults", () => {
                         filePath: "playground-input",
                         line: 1,
                         severity: "warning",
-                        message: "Recommended field is missing",
+                        message: chance.sentence(),
                         ruleId: "skill/missing-allowed-tools",
                         target: "skill",
                     },
@@ -257,7 +257,9 @@ describe("LintResults", () => {
 
             render(<LintResults result={result} />);
 
-            expect(screen.getByText(/1 info/i)).toBeInTheDocument();
+            expect(
+                screen.getByText(/failed.*1 error.*1 info/i),
+            ).toBeInTheDocument();
         });
     });
 
@@ -294,7 +296,64 @@ describe("LintResults", () => {
 
             render(<LintResults result={result} />);
 
-            expect(screen.getByText(/1 info/i)).toBeInTheDocument();
+            expect(
+                screen.getByText(/passed.*1 warning.*1 info/i),
+            ).toBeInTheDocument();
+        });
+    });
+
+    describe("given a lint result with all three severities", () => {
+        it("should include errors, warnings, and info count in the summary text", () => {
+            const result: LintOutput = {
+                diagnostics: [
+                    {
+                        filePath: "playground-input",
+                        line: 1,
+                        severity: "error",
+                        message: chance.sentence(),
+                        ruleId: "skill/missing-name",
+                        target: "skill",
+                    },
+                    {
+                        filePath: "playground-input",
+                        line: 2,
+                        severity: "warning",
+                        message: chance.sentence(),
+                        ruleId: "skill/missing-allowed-tools",
+                        target: "skill",
+                    },
+                    {
+                        filePath: "playground-input",
+                        line: 3,
+                        severity: "warning",
+                        message: chance.sentence(),
+                        ruleId: "skill/missing-allowed-tools",
+                        target: "skill",
+                    },
+                    {
+                        filePath: "playground-input",
+                        line: 4,
+                        severity: "info",
+                        message: chance.sentence(),
+                        ruleId: "skill/suggestion",
+                        target: "skill",
+                    },
+                ],
+                target: "skill",
+                filesAnalyzed: ["playground-input"],
+                summary: {
+                    totalFiles: 1,
+                    totalErrors: 1,
+                    totalWarnings: 2,
+                    totalInfos: 1,
+                },
+            };
+
+            render(<LintResults result={result} />);
+
+            expect(
+                screen.getByText(/failed.*1 error.*2 warnings.*1 info/i),
+            ).toBeInTheDocument();
         });
     });
 
@@ -306,7 +365,7 @@ describe("LintResults", () => {
                         filePath: "playground-input",
                         line: 3,
                         severity: "error",
-                        message: "Name is required",
+                        message: chance.sentence(),
                         ruleId: "skill/missing-name",
                         target: "skill",
                     },
