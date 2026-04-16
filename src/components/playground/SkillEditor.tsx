@@ -157,11 +157,23 @@ interface SkillEditorProps {
 
 export function SkillEditor({ value, onChange, onRun }: SkillEditorProps) {
     const lineNumbersRef = useRef<HTMLDivElement>(null);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     const handleEditorScroll = useCallback(
         (e: React.UIEvent<HTMLTextAreaElement>) => {
             if (lineNumbersRef.current) {
                 lineNumbersRef.current.scrollTop = e.currentTarget.scrollTop;
+            }
+        },
+        [],
+    );
+
+    const handleGutterWheel = useCallback(
+        (e: React.WheelEvent<HTMLDivElement>) => {
+            if (textareaRef.current) {
+                e.preventDefault();
+                textareaRef.current.scrollTop += e.deltaY;
+                textareaRef.current.scrollLeft += e.deltaX;
             }
         },
         [],
@@ -219,14 +231,17 @@ export function SkillEditor({ value, onChange, onRun }: SkillEditorProps) {
                 <div style={editorBodyStyle}>
                     <div
                         ref={lineNumbersRef}
+                        data-testid="line-numbers"
                         style={lineNumbersStyle}
                         aria-hidden="true"
+                        onWheel={handleGutterWheel}
                     >
                         {lineNumbers.map((n) => (
                             <div key={n}>{n}</div>
                         ))}
                     </div>
                     <textarea
+                        ref={textareaRef}
                         id="skill-editor"
                         className="playground-editor"
                         aria-label="Skill Markdown"

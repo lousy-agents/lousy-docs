@@ -1,7 +1,12 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { SkillEditor } from "@/components/playground/SkillEditor";
+
+const MULTI_LINE_CONTENT = Array.from(
+    { length: 50 },
+    (_, i) => `Line ${i + 1}: content`,
+).join("\n");
 
 describe("SkillEditor", () => {
     describe("given the editor is rendered", () => {
@@ -86,6 +91,45 @@ describe("SkillEditor", () => {
             expect(
                 screen.getByRole("textbox", { name: /skill markdown/i }),
             ).toHaveValue(content);
+        });
+    });
+
+    describe("given the editor is scrolled", () => {
+        it("should sync the line numbers scrollTop when the textarea is scrolled", () => {
+            render(
+                <SkillEditor
+                    value={MULTI_LINE_CONTENT}
+                    onChange={vi.fn()}
+                    onRun={vi.fn()}
+                />,
+            );
+            const textarea = screen.getByRole("textbox", {
+                name: /skill markdown/i,
+            });
+            const lineNumbers = screen.getByTestId("line-numbers");
+
+            textarea.scrollTop = 200;
+            fireEvent.scroll(textarea);
+
+            expect(lineNumbers.scrollTop).toBe(200);
+        });
+
+        it("should scroll the editor when the mouse wheel is used over the line numbers gutter", () => {
+            render(
+                <SkillEditor
+                    value={MULTI_LINE_CONTENT}
+                    onChange={vi.fn()}
+                    onRun={vi.fn()}
+                />,
+            );
+            const textarea = screen.getByRole("textbox", {
+                name: /skill markdown/i,
+            });
+            const lineNumbers = screen.getByTestId("line-numbers");
+
+            fireEvent.wheel(lineNumbers, { deltaY: 80 });
+
+            expect(textarea.scrollTop).toBe(80);
         });
     });
 });
