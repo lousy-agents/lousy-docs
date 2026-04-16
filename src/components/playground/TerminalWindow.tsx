@@ -59,6 +59,17 @@ const contentStyle: React.CSSProperties = {
     overflow: "hidden",
 };
 
+/* Renders above the crtOverlay (zIndex: 1) so all children are unobscured by the scanline overlay */
+const childrenWrapperStyle: React.CSSProperties = {
+    position: "relative",
+    zIndex: 2,
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    minHeight: 0,
+    overflow: "hidden",
+};
+
 const crtOverlayStyle: React.CSSProperties = {
     position: "absolute",
     inset: 0,
@@ -98,7 +109,7 @@ export function TerminalWindow({
                 {rightAction && <div>{rightAction}</div>}
             </div>
             <div style={contentStyle}>
-                {children}
+                <div style={childrenWrapperStyle}>{children}</div>
                 <div style={crtOverlayStyle} aria-hidden="true" />
             </div>
         </div>
