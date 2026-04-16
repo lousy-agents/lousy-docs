@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { createEvent, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { SkillEditor } from "@/components/playground/SkillEditor";
@@ -130,6 +130,47 @@ describe("SkillEditor", () => {
             fireEvent.wheel(lineNumbers, { deltaY: 80 });
 
             expect(textarea.scrollTop).toBe(80);
+        });
+
+        it("should not scroll the editor when ctrl is held during a wheel event over the gutter", () => {
+            render(
+                <SkillEditor
+                    value={MULTI_LINE_CONTENT}
+                    onChange={vi.fn()}
+                    onRun={vi.fn()}
+                />,
+            );
+            const textarea = screen.getByRole("textbox", {
+                name: /skill markdown/i,
+            });
+            const lineNumbers = screen.getByTestId("line-numbers");
+
+            // happy-dom does not forward ctrlKey through WheelEvent's init
+            // dictionary, so patch the event object directly before dispatching.
+            const wheelEvent = createEvent.wheel(lineNumbers, { deltaY: 80 });
+            Object.defineProperty(wheelEvent, "ctrlKey", { get: () => true });
+            fireEvent(lineNumbers, wheelEvent);
+
+            expect(textarea.scrollTop).toBe(0);
+        });
+
+        it("should normalize line-mode wheel deltas to pixels when scrolling via the gutter", () => {
+            render(
+                <SkillEditor
+                    value={MULTI_LINE_CONTENT}
+                    onChange={vi.fn()}
+                    onRun={vi.fn()}
+                />,
+            );
+            const textarea = screen.getByRole("textbox", {
+                name: /skill markdown/i,
+            });
+            const lineNumbers = screen.getByTestId("line-numbers");
+
+            // deltaMode 1 = DOM_DELTA_LINE; 3 lines × 22px per line = 66px
+            fireEvent.wheel(lineNumbers, { deltaY: 3, deltaMode: 1 });
+
+            expect(textarea.scrollTop).toBe(66);
         });
     });
 });

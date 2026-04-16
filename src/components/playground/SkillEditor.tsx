@@ -6,6 +6,11 @@ const PLACEHOLDER = `> paste your copilot-instructions.md or SKILL.md here...`;
 
 const LINE_COUNT = 12;
 
+// Approximate rendered line height (font-size: 0.8125rem × line-height: 1.7 ≈ 22px).
+// Used to convert DOM_DELTA_LINE wheel events to pixels so gutter scrolling
+// matches native textarea scrolling on line-mode mice (common on Linux/Firefox).
+const LINE_HEIGHT_PX = 22;
+
 const editorWrapperStyle: React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
@@ -170,11 +175,28 @@ export function SkillEditor({ value, onChange, onRun }: SkillEditorProps) {
 
     const handleGutterWheel = useCallback(
         (e: React.WheelEvent<HTMLDivElement>) => {
-            if (textareaRef.current) {
-                e.preventDefault();
-                textareaRef.current.scrollTop += e.deltaY;
-                textareaRef.current.scrollLeft += e.deltaX;
+            // Let the browser handle zoom gestures (ctrl+wheel / pinch-to-zoom).
+            if (e.ctrlKey || !textareaRef.current) {
+                return;
             }
+
+            // Normalize deltaY/deltaX to pixels.
+            // deltaMode 0 = DOM_DELTA_PIXEL (most browsers)
+            // deltaMode 1 = DOM_DELTA_LINE (some mice on Linux/Firefox)
+            // deltaMode 2 = DOM_DELTA_PAGE
+            let deltaY = e.deltaY;
+            let deltaX = e.deltaX;
+            if (e.deltaMode === 1) {
+                deltaY *= LINE_HEIGHT_PX;
+                deltaX *= LINE_HEIGHT_PX;
+            } else if (e.deltaMode === 2) {
+                deltaY *= textareaRef.current.clientHeight;
+                deltaX *= textareaRef.current.clientWidth;
+            }
+
+            e.preventDefault();
+            textareaRef.current.scrollTop += deltaY;
+            textareaRef.current.scrollLeft += deltaX;
         },
         [],
     );
