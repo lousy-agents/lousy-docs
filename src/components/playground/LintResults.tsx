@@ -110,21 +110,23 @@ function getSummaryBackground(result: LintOutput): string {
     if (result.summary.totalWarnings > 0) {
         return "rgba(238, 189, 142, 0.1)";
     }
-    if (result.summary.totalInfos > 0) {
-        return "rgba(189, 206, 137, 0.1)";
-    }
     return "rgba(189, 206, 137, 0.1)";
 }
 
 function getSummaryText(result: LintOutput): string {
-    if (result.summary.totalErrors > 0) {
-        return `Lint failed — ${result.summary.totalErrors} error${result.summary.totalErrors !== 1 ? "s" : ""}, ${result.summary.totalWarnings} warning${result.summary.totalWarnings !== 1 ? "s" : ""}`;
+    const { totalErrors, totalWarnings, totalInfos } = result.summary;
+    const infoSuffix =
+        totalInfos > 0
+            ? `, ${totalInfos} info${totalInfos !== 1 ? "s" : ""}`
+            : "";
+    if (totalErrors > 0) {
+        return `Lint failed — ${totalErrors} error${totalErrors !== 1 ? "s" : ""}, ${totalWarnings} warning${totalWarnings !== 1 ? "s" : ""}${infoSuffix}`;
     }
-    if (result.summary.totalWarnings > 0) {
-        return `Lint passed with ${result.summary.totalWarnings} warning${result.summary.totalWarnings !== 1 ? "s" : ""} — 0 errors, ${result.summary.totalWarnings} warning${result.summary.totalWarnings !== 1 ? "s" : ""}`;
+    if (totalWarnings > 0) {
+        return `Lint passed — 0 errors, ${totalWarnings} warning${totalWarnings !== 1 ? "s" : ""}${infoSuffix}`;
     }
-    if (result.summary.totalInfos > 0) {
-        return `Lint passed — 0 errors, 0 warnings, ${result.summary.totalInfos} info${result.summary.totalInfos !== 1 ? "s" : ""}`;
+    if (totalInfos > 0) {
+        return `Lint passed — 0 errors, 0 warnings${infoSuffix}`;
     }
     return "Lint passed — 0 errors, 0 warnings";
 }

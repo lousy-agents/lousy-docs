@@ -203,7 +203,7 @@ describe("LintResults", () => {
                         filePath: "playground-input",
                         line: 1,
                         severity: "info",
-                        message: "Suggestion message",
+                        message: chance.sentence(),
                         ruleId: "skill/suggestion",
                         target: "skill",
                     },
@@ -214,6 +214,80 @@ describe("LintResults", () => {
                     totalFiles: 1,
                     totalErrors: 0,
                     totalWarnings: 0,
+                    totalInfos: 1,
+                },
+            };
+
+            render(<LintResults result={result} />);
+
+            expect(screen.getByText(/1 info/i)).toBeInTheDocument();
+        });
+    });
+
+    describe("given a lint result with mixed severity (errors and infos)", () => {
+        it("should include the info count in the summary text alongside errors", () => {
+            const result: LintOutput = {
+                diagnostics: [
+                    {
+                        filePath: "playground-input",
+                        line: 1,
+                        severity: "error",
+                        message: chance.sentence(),
+                        ruleId: "skill/missing-name",
+                        target: "skill",
+                    },
+                    {
+                        filePath: "playground-input",
+                        line: 2,
+                        severity: "info",
+                        message: chance.sentence(),
+                        ruleId: "skill/suggestion",
+                        target: "skill",
+                    },
+                ],
+                target: "skill",
+                filesAnalyzed: ["playground-input"],
+                summary: {
+                    totalFiles: 1,
+                    totalErrors: 1,
+                    totalWarnings: 0,
+                    totalInfos: 1,
+                },
+            };
+
+            render(<LintResults result={result} />);
+
+            expect(screen.getByText(/1 info/i)).toBeInTheDocument();
+        });
+    });
+
+    describe("given a lint result with mixed severity (warnings and infos)", () => {
+        it("should include the info count in the summary text alongside warnings", () => {
+            const result: LintOutput = {
+                diagnostics: [
+                    {
+                        filePath: "playground-input",
+                        line: 1,
+                        severity: "warning",
+                        message: chance.sentence(),
+                        ruleId: "skill/missing-allowed-tools",
+                        target: "skill",
+                    },
+                    {
+                        filePath: "playground-input",
+                        line: 2,
+                        severity: "info",
+                        message: chance.sentence(),
+                        ruleId: "skill/suggestion",
+                        target: "skill",
+                    },
+                ],
+                target: "skill",
+                filesAnalyzed: ["playground-input"],
+                summary: {
+                    totalFiles: 1,
+                    totalErrors: 0,
+                    totalWarnings: 1,
                     totalInfos: 1,
                 },
             };
