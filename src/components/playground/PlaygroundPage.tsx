@@ -11,6 +11,7 @@ import { useIsMobile } from "@/hooks/useIsMobile";
 import { HEADER_HEIGHT_PX } from "@/lib/layout-constants";
 import {
     LintSkillContentUseCase,
+    PLAYGROUND_FILE_PATH,
     type SkillContentLintGateway,
 } from "@/use-cases/lint-skill-content";
 
@@ -255,7 +256,7 @@ export function PlaygroundPage({
             setResult({
                 diagnostics: [
                     {
-                        filePath: "playground-input",
+                        filePath: PLAYGROUND_FILE_PATH,
                         line: 1,
                         severity: "error",
                         message: `Lint execution failed: ${message}`,
@@ -264,7 +265,7 @@ export function PlaygroundPage({
                     },
                 ],
                 target: "skill",
-                filesAnalyzed: ["playground-input"],
+                filesAnalyzed: [PLAYGROUND_FILE_PATH],
                 summary: {
                     totalFiles: 1,
                     totalErrors: 1,

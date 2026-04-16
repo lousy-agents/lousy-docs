@@ -110,6 +110,9 @@ function getSummaryBackground(result: LintOutput): string {
     if (result.summary.totalWarnings > 0) {
         return "rgba(238, 189, 142, 0.1)";
     }
+    if (result.summary.totalInfos > 0) {
+        return "rgba(189, 206, 137, 0.1)";
+    }
     return "rgba(189, 206, 137, 0.1)";
 }
 
@@ -119,6 +122,9 @@ function getSummaryText(result: LintOutput): string {
     }
     if (result.summary.totalWarnings > 0) {
         return `Lint passed with ${result.summary.totalWarnings} warning${result.summary.totalWarnings !== 1 ? "s" : ""} — 0 errors, ${result.summary.totalWarnings} warning${result.summary.totalWarnings !== 1 ? "s" : ""}`;
+    }
+    if (result.summary.totalInfos > 0) {
+        return `Lint passed — 0 errors, 0 warnings, ${result.summary.totalInfos} info${result.summary.totalInfos !== 1 ? "s" : ""}`;
     }
     return "Lint passed — 0 errors, 0 warnings";
 }

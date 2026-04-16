@@ -40,7 +40,7 @@ export interface SkillContentLintGateway {
 const MAX_CONTENT_LENGTH = 512_000;
 
 /** Placeholder file path used for playground input (not a real file) */
-const PLAYGROUND_FILE_PATH = "playground-input";
+export const PLAYGROUND_FILE_PATH = "playground-input";
 
 const RECOMMENDED_FIELDS = ["allowed-tools"] as const;
 
@@ -132,6 +132,9 @@ export class LintSkillContentUseCase {
         const totalWarnings = diagnostics.filter(
             (d) => d.severity === "warning",
         ).length;
+        const totalInfos = diagnostics.filter(
+            (d) => d.severity === "info",
+        ).length;
 
         return {
             diagnostics,
@@ -141,7 +144,7 @@ export class LintSkillContentUseCase {
                 totalFiles: 1,
                 totalErrors,
                 totalWarnings,
-                totalInfos: 0,
+                totalInfos,
             },
         };
     }
