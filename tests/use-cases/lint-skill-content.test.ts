@@ -1,7 +1,10 @@
 import Chance from "chance";
 import { describe, expect, it } from "vitest";
 import { createSkillContentLintGateway } from "@/gateways/skill-content-lint-gateway";
-import { PlaygroundLintUseCase } from "@/use-cases/lint-skill-content";
+import {
+    PLAYGROUND_FILE_PATH,
+    PlaygroundLintUseCase,
+} from "@/use-cases/lint-skill-content";
 
 const chance = new Chance(42);
 
@@ -472,6 +475,56 @@ describe("PlaygroundLintUseCase with instruction target", () => {
                 "instruction/input-too-large",
             );
             expect(result.target).toBe("instruction");
+        });
+    });
+});
+
+describe("PlaygroundLintUseCase.createInternalErrorOutput", () => {
+    describe("given a target and error message", () => {
+        it("should return a LintOutput with a single error diagnostic", () => {
+            const message = chance.sentence();
+
+            const result = PlaygroundLintUseCase.createInternalErrorOutput(
+                "skill",
+                message,
+            );
+
+            expect(result.diagnostics).toHaveLength(1);
+            expect(result.diagnostics[0]?.severity).toBe("error");
+            expect(result.diagnostics[0]?.message).toContain(message);
+        });
+
+        it("should set the ruleId to target/internal-error", () => {
+            const result = PlaygroundLintUseCase.createInternalErrorOutput(
+                "agent",
+                chance.sentence(),
+            );
+
+            expect(result.diagnostics[0]?.ruleId).toBe("agent/internal-error");
+        });
+
+        it("should set target and filesAnalyzed on the output", () => {
+            const result = PlaygroundLintUseCase.createInternalErrorOutput(
+                "instruction",
+                chance.sentence(),
+            );
+
+            expect(result.target).toBe("instruction");
+            expect(result.filesAnalyzed).toEqual([PLAYGROUND_FILE_PATH]);
+        });
+
+        it("should report one error in the summary", () => {
+            const result = PlaygroundLintUseCase.createInternalErrorOutput(
+                "skill",
+                chance.sentence(),
+            );
+
+            expect(result.summary).toEqual({
+                totalFiles: 1,
+                totalErrors: 1,
+                totalWarnings: 0,
+                totalInfos: 0,
+            });
         });
     });
 });

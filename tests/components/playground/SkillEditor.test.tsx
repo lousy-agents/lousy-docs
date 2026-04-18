@@ -1,8 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import Chance from "chance";
 import { describe, expect, it, vi } from "vitest";
 import { SkillEditor } from "@/components/playground/SkillEditor";
 import type { PlaygroundLintTarget } from "@/use-cases/lint-skill-content";
+
+const chance = new Chance();
 
 function createProps(
     overrides?: Partial<{
@@ -90,7 +93,7 @@ describe("SkillEditor", () => {
 
     describe("given the editor has a value", () => {
         it("should display the provided value in the text area", () => {
-            const content = "---\nname: my-skill\n---";
+            const content = chance.paragraph();
 
             render(<SkillEditor {...createProps({ value: content })} />);
 

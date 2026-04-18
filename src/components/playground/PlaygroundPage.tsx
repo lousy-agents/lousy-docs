@@ -10,7 +10,6 @@ import { createSkillContentLintGateway } from "@/gateways/skill-content-lint-gat
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { HEADER_HEIGHT_PX } from "@/lib/layout-constants";
 import {
-    PLAYGROUND_FILE_PATH,
     type PlaygroundLintTarget,
     PlaygroundLintUseCase,
     type SkillContentLintGateway,
@@ -263,26 +262,12 @@ export function PlaygroundPage({
         } catch (error: unknown) {
             const message =
                 error instanceof Error ? error.message : "Unknown lint error";
-            setResult({
-                diagnostics: [
-                    {
-                        filePath: PLAYGROUND_FILE_PATH,
-                        line: 1,
-                        severity: "error",
-                        message: `Lint execution failed: ${message}`,
-                        ruleId: `${activeTarget}/internal-error`,
-                        target: activeTarget,
-                    },
-                ],
-                target: activeTarget,
-                filesAnalyzed: [PLAYGROUND_FILE_PATH],
-                summary: {
-                    totalFiles: 1,
-                    totalErrors: 1,
-                    totalWarnings: 0,
-                    totalInfos: 0,
-                },
-            });
+            setResult(
+                PlaygroundLintUseCase.createInternalErrorOutput(
+                    activeTarget,
+                    message,
+                ),
+            );
         }
     }, [content, lintUseCase, activeTarget]);
 

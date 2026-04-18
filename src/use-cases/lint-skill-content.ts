@@ -80,6 +80,32 @@ function toLintTarget(target: PlaygroundLintTarget): LintTarget {
 export class PlaygroundLintUseCase {
     constructor(private readonly gateway: SkillContentLintGateway) {}
 
+    static createInternalErrorOutput(
+        target: PlaygroundLintTarget,
+        message: string,
+    ): LintOutput {
+        return {
+            diagnostics: [
+                {
+                    filePath: PLAYGROUND_FILE_PATH,
+                    line: 1,
+                    severity: "error",
+                    message: `Lint execution failed: ${message}`,
+                    ruleId: `${target}/internal-error`,
+                    target,
+                },
+            ],
+            target,
+            filesAnalyzed: [PLAYGROUND_FILE_PATH],
+            summary: {
+                totalFiles: 1,
+                totalErrors: 1,
+                totalWarnings: 0,
+                totalInfos: 0,
+            },
+        };
+    }
+
     async execute(input: PlaygroundLintInput): Promise<LintOutput> {
         const { content } = input;
         const target = input.target ?? "skill";
