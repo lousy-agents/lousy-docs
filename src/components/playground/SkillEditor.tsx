@@ -147,9 +147,10 @@ const runButtonStyle: React.CSSProperties = {
 
 const exampleLinksStyle: React.CSSProperties = {
     display: "flex",
-    gap: "16px",
-    padding: "0 16px",
-    height: "32px",
+    flexWrap: "wrap",
+    gap: "8px 16px",
+    padding: "4px 16px",
+    minHeight: "32px",
     alignItems: "center",
     borderTop: "1px solid rgba(70, 72, 62, 0.15)",
     fontFamily: "'Courier New', Courier, monospace",
