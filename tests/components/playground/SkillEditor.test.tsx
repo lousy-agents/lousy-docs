@@ -1,7 +1,7 @@
-import { render, screen } from "@testing-library/react";
+import { createEvent, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Chance from "chance";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { SkillEditor } from "@/components/playground/SkillEditor";
 import type { PlaygroundLintTarget } from "@/use-cases/lint-skill-content";
 
@@ -25,6 +25,11 @@ function createProps(
         ...overrides,
     };
 }
+
+const MULTI_LINE_CONTENT = Array.from(
+    { length: 50 },
+    (_, i) => `Line ${i + 1}: content`,
+).join("\n");
 
 describe("SkillEditor", () => {
     describe("given the editor is rendered", () => {
@@ -100,6 +105,99 @@ describe("SkillEditor", () => {
             expect(
                 screen.getByRole("textbox", { name: /skill markdown/i }),
             ).toHaveValue(content);
+        });
+    });
+
+    describe("given the editor is scrolled", () => {
+        it("should sync the line numbers scrollTop when the textarea is scrolled", () => {
+            render(
+                <SkillEditor {...createProps({ value: MULTI_LINE_CONTENT })} />,
+            );
+            const textarea = screen.getByRole("textbox", {
+                name: /skill markdown/i,
+            });
+            const lineNumbers = screen.getByTestId("line-numbers");
+
+            textarea.scrollTop = 200;
+            fireEvent.scroll(textarea);
+
+            expect(lineNumbers.scrollTop).toBe(200);
+        });
+
+        it("should scroll the editor when the mouse wheel is used over the line numbers gutter", () => {
+            render(
+                <SkillEditor {...createProps({ value: MULTI_LINE_CONTENT })} />,
+            );
+            const textarea = screen.getByRole("textbox", {
+                name: /skill markdown/i,
+            });
+            const lineNumbers = screen.getByTestId("line-numbers");
+
+            fireEvent.wheel(lineNumbers, { deltaY: 80 });
+
+            expect(textarea.scrollTop).toBe(80);
+        });
+
+        it("should not scroll the editor when ctrl is held during a wheel event over the gutter", () => {
+            render(
+                <SkillEditor {...createProps({ value: MULTI_LINE_CONTENT })} />,
+            );
+            const textarea = screen.getByRole("textbox", {
+                name: /skill markdown/i,
+            });
+            const lineNumbers = screen.getByTestId("line-numbers");
+
+            // happy-dom does not forward ctrlKey through WheelEvent's init
+            // dictionary, so patch the event object directly before dispatching.
+            const wheelEvent = createEvent.wheel(lineNumbers, { deltaY: 80 });
+            Object.defineProperty(wheelEvent, "ctrlKey", { get: () => true });
+            fireEvent(lineNumbers, wheelEvent);
+
+            expect(textarea.scrollTop).toBe(0);
+        });
+
+        it("should normalize line-mode wheel deltas to pixels when scrolling via the gutter", () => {
+            render(
+                <SkillEditor {...createProps({ value: MULTI_LINE_CONTENT })} />,
+            );
+            const textarea = screen.getByRole("textbox", {
+                name: /skill markdown/i,
+            });
+            const lineNumbers = screen.getByTestId("line-numbers");
+
+            // deltaMode 1 = DOM_DELTA_LINE; 3 lines × 22px per line = 66px
+            fireEvent.wheel(lineNumbers, { deltaY: 3, deltaMode: 1 });
+
+            expect(textarea.scrollTop).toBe(66);
+        });
+
+        describe("when the browser reports a computed line height in pixels", () => {
+            afterEach(() => {
+                vi.restoreAllMocks();
+            });
+
+            it("should use the computed line height for DOM_DELTA_LINE wheel events instead of the hardcoded fallback", () => {
+                render(
+                    <SkillEditor
+                        {...createProps({ value: MULTI_LINE_CONTENT })}
+                    />,
+                );
+                const textarea = screen.getByRole("textbox", {
+                    name: /skill markdown/i,
+                });
+                const lineNumbers = screen.getByTestId("line-numbers");
+
+                // Simulate a root font size of 20px: 0.8125rem × 20px = 16.25px,
+                // × 1.7 = 27.625px actual line height.
+                vi.spyOn(window, "getComputedStyle").mockReturnValue({
+                    lineHeight: "27.625px",
+                } as unknown as CSSStyleDeclaration);
+
+                // deltaMode 1 = DOM_DELTA_LINE; 3 lines × 27.625px = 82.875px
+                fireEvent.wheel(lineNumbers, { deltaY: 3, deltaMode: 1 });
+
+                expect(textarea.scrollTop).toBeCloseTo(82.875);
+            });
         });
     });
 

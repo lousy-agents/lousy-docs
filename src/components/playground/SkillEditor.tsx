@@ -23,6 +23,16 @@ const ARIA_LABELS: Record<PlaygroundLintTarget, string> = {
 
 const LINE_COUNT = 12;
 
+const EDITOR_FONT_SIZE_REM = 0.8125;
+const EDITOR_LINE_HEIGHT = 1.7;
+
+// Computed from EDITOR_FONT_SIZE_REM and EDITOR_LINE_HEIGHT (assuming 16 px root
+// font size) so DOM_DELTA_LINE normalization stays in sync if the editor
+// typography changes.
+const LINE_HEIGHT_PX = Math.round(
+    EDITOR_FONT_SIZE_REM * 16 * EDITOR_LINE_HEIGHT,
+);
+
 const editorWrapperStyle: React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
@@ -48,10 +58,10 @@ const fileInfoBarStyle: React.CSSProperties = {
 const editorBodyStyle: React.CSSProperties = {
     display: "flex",
     flex: 1,
-    overflow: "auto",
+    overflow: "hidden",
     fontFamily: "'Courier New', Courier, monospace",
-    fontSize: "0.8125rem",
-    lineHeight: "1.7",
+    fontSize: `${EDITOR_FONT_SIZE_REM}rem`,
+    lineHeight: EDITOR_LINE_HEIGHT,
 };
 
 const lineNumbersStyle: React.CSSProperties = {
@@ -62,10 +72,12 @@ const lineNumbersStyle: React.CSSProperties = {
     userSelect: "none",
     backgroundColor: "#1a1c18",
     flexShrink: 0,
-    lineHeight: "1.7",
-    fontSize: "0.8125rem",
+    lineHeight: EDITOR_LINE_HEIGHT,
+    fontSize: `${EDITOR_FONT_SIZE_REM}rem`,
     fontFamily: "'Courier New', Courier, monospace",
     marginLeft: "8px",
+    overflow: "hidden",
+    minHeight: 0,
 };
 
 const textareaStyle: React.CSSProperties = {
@@ -75,8 +87,8 @@ const textareaStyle: React.CSSProperties = {
     border: "none",
     padding: "16px",
     fontFamily: "'Courier New', Courier, monospace",
-    fontSize: "0.8125rem",
-    lineHeight: "1.7",
+    fontSize: `${EDITOR_FONT_SIZE_REM}rem`,
+    lineHeight: EDITOR_LINE_HEIGHT,
     resize: "none",
     display: "block",
     minHeight: 0,
@@ -187,7 +199,55 @@ export function SkillEditor({
     activeTarget,
     onTargetChange,
 }: SkillEditorProps) {
+    const lineNumbersRef = useRef<HTMLDivElement>(null);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
     const tablistRef = useRef<HTMLDivElement>(null);
+
+    const handleEditorScroll = useCallback(
+        (e: React.UIEvent<HTMLTextAreaElement>) => {
+            if (lineNumbersRef.current) {
+                lineNumbersRef.current.scrollTop = e.currentTarget.scrollTop;
+            }
+        },
+        [],
+    );
+
+    const handleGutterWheel = useCallback(
+        (e: React.WheelEvent<HTMLDivElement>) => {
+            // Let the browser handle zoom gestures (ctrl+wheel / pinch-to-zoom).
+            if (e.ctrlKey || !textareaRef.current) {
+                return;
+            }
+
+            // Normalize deltaY/deltaX to pixels.
+            // deltaMode 0 = DOM_DELTA_PIXEL (most browsers)
+            // deltaMode 1 = DOM_DELTA_LINE (some mice on Linux/Firefox)
+            // deltaMode 2 = DOM_DELTA_PAGE
+            let deltaY = e.deltaY;
+            let deltaX = e.deltaX;
+            if (e.deltaMode === 1) {
+                // Prefer the browser's computed line height so normalization
+                // stays accurate when the user's root font size differs from
+                // 16px (e.g. accessibility/browser zoom settings).
+                const rawLineHeight = window.getComputedStyle(
+                    textareaRef.current,
+                ).lineHeight;
+                const lineHeightPx = rawLineHeight.endsWith("px")
+                    ? Number.parseFloat(rawLineHeight)
+                    : LINE_HEIGHT_PX;
+                deltaY *= lineHeightPx;
+                deltaX *= lineHeightPx;
+            } else if (e.deltaMode === 2) {
+                deltaY *= textareaRef.current.clientHeight;
+                deltaX *= textareaRef.current.clientWidth;
+            }
+
+            e.preventDefault();
+            textareaRef.current.scrollTop += deltaY;
+            textareaRef.current.scrollLeft += deltaX;
+        },
+        [],
+    );
     const lines = value ? value.split("\n").length : LINE_COUNT;
     const lineNumbers = Array.from(
         { length: Math.max(lines, LINE_COUNT) },
@@ -285,18 +345,26 @@ export function SkillEditor({
                         <span>UTF-8 | LF | MD</span>
                     </div>
                     <div style={editorBodyStyle}>
-                        <div style={lineNumbersStyle} aria-hidden="true">
+                        <div
+                            ref={lineNumbersRef}
+                            data-testid="line-numbers"
+                            style={lineNumbersStyle}
+                            aria-hidden="true"
+                            onWheel={handleGutterWheel}
+                        >
                             {lineNumbers.map((n) => (
                                 <div key={n}>{n}</div>
                             ))}
                         </div>
                         <textarea
+                            ref={textareaRef}
                             id="skill-editor"
                             className="playground-editor"
                             aria-label={ARIA_LABELS[activeTarget]}
                             style={textareaStyle}
                             value={value}
                             onChange={(e) => onChange(e.target.value)}
+                            onScroll={handleEditorScroll}
                             placeholder={PLACEHOLDERS[activeTarget]}
                             spellCheck={false}
                         />
