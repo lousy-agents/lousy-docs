@@ -33,7 +33,7 @@ const navLinks = [
     { href: "/protocol", label: "Protocol" },
     { href: "/terminal", label: "Terminal" },
     { href: "/patches", label: "Patches" },
-    { href: "/docs", label: "Docs" },
+    { href: "/docs/quickstart", label: "Docs" },
     { href: "/playground", label: "Playground" },
 ] as const;
 

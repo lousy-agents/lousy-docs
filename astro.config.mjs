@@ -8,7 +8,6 @@ export default defineConfig({
     site: "https://docs.modzed.io",
     integrations: [react(), sitemap(), pagefind()],
     redirects: {
-        "/docs": "/docs/readme",
-        "/docs/README": "/docs/readme",
+        "/docs": "/docs/quickstart",
     },
 });

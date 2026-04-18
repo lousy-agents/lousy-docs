@@ -82,16 +82,27 @@ const shortcutBadgeStyle: React.CSSProperties = {
     pointerEvents: "none",
 };
 
-const navLinks = [
+type NavLink = {
+    readonly href: string;
+    readonly label: string;
+    readonly activePrefix?: string;
+};
+
+const navLinks: readonly NavLink[] = [
     { href: "/protocol", label: "PROTOCOL" },
     { href: "/terminal", label: "TERMINAL" },
     { href: "/patches", label: "PATCHES" },
-    { href: "/docs", label: "DOCS" },
+    { href: "/docs/quickstart", label: "DOCS", activePrefix: "/docs" },
     { href: "/playground", label: "PLAYGROUND" },
-] as const;
+];
 
-function isNavLinkActive(href: string, pathname: string): boolean {
-    return pathname === href || pathname.startsWith(`${href}/`);
+function isNavLinkActive(
+    href: string,
+    pathname: string,
+    activePrefix?: string,
+): boolean {
+    const prefix = activePrefix ?? href;
+    return pathname === prefix || pathname.startsWith(`${prefix}/`);
 }
 
 interface DesktopHeaderProps {
@@ -119,8 +130,12 @@ function DesktopHeader({ currentPathname }: DesktopHeaderProps) {
             </Flex>
             <nav aria-label="Site navigation">
                 <Flex align="center" gap={32}>
-                    {navLinks.map(({ href, label }) => {
-                        const isActive = isNavLinkActive(href, currentPathname);
+                    {navLinks.map(({ href, label, activePrefix }) => {
+                        const isActive = isNavLinkActive(
+                            href,
+                            currentPathname,
+                            activePrefix,
+                        );
                         return (
                             <a
                                 key={href}

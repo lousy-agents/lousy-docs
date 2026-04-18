@@ -42,7 +42,7 @@ test.describe("Documentation navigation", () => {
     });
 
     test.describe("given a user on the homepage", () => {
-        test("navigating to docs via header link displays the readme documentation page with visible content", async ({
+        test("navigating to docs via header link displays the quickstart documentation page with visible content", async ({
             page,
         }) => {
             // Arrange
@@ -54,14 +54,9 @@ test.describe("Documentation navigation", () => {
             await homePage.clickDocsLink();
 
             // Assert
-            await docsPage.expectToBeOnReadmePage();
-            await docsPage.expectHeadingToBeVisible(
-                "Lousy Agents Documentation",
-            );
-            await docsPage.expectContentLinkToBeVisible(
-                "Get up and running in three steps",
-            );
-            await docsPage.expectSidebarLinkToBeActive("Overview");
+            await docsPage.expectToBeOnPage("quickstart");
+            await docsPage.expectHeadingToBeVisible("Quickstart");
+            await docsPage.expectSidebarLinkToBeActive("Quickstart");
         });
     });
 
