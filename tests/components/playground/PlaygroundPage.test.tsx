@@ -7,17 +7,21 @@ import type { SkillContentLintGateway } from "@/use-cases/lint-skill-content";
 
 const chance = new Chance();
 
+function mockMatchMedia(matches: boolean) {
+    window.matchMedia = vi.fn().mockReturnValue({
+        matches,
+        media: "",
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+    }) as unknown as typeof window.matchMedia;
+}
+
 describe("PlaygroundPage", () => {
     let originalMatchMedia: typeof window.matchMedia;
 
     beforeEach(() => {
         originalMatchMedia = window.matchMedia;
-        window.matchMedia = vi.fn().mockReturnValue({
-            matches: false,
-            media: "",
-            addEventListener: vi.fn(),
-            removeEventListener: vi.fn(),
-        }) as unknown as typeof window.matchMedia;
+        mockMatchMedia(false);
     });
 
     afterEach(() => {
@@ -165,6 +169,42 @@ describe("PlaygroundPage", () => {
             expect(
                 screen.getByText(/lint execution failed/i),
             ).toBeInTheDocument();
+        });
+    });
+
+    describe("given a mobile viewport", () => {
+        beforeEach(() => {
+            mockMatchMedia(true);
+        });
+
+        it("should not render the TERMINAL_STREAMS sub-header nav item", () => {
+            render(<PlaygroundPage />);
+
+            expect(
+                screen.queryByText("TERMINAL_STREAMS"),
+            ).not.toBeInTheDocument();
+        });
+
+        it("should not render the LINT_RULES sub-header nav item", () => {
+            render(<PlaygroundPage />);
+
+            expect(screen.queryByText("LINT_RULES")).not.toBeInTheDocument();
+        });
+    });
+
+    describe("given a desktop viewport", () => {
+        it("should render the TERMINAL_STREAMS sub-header nav item", () => {
+            render(<PlaygroundPage />);
+
+            expect(
+                screen.getAllByText("TERMINAL_STREAMS").length,
+            ).toBeGreaterThan(0);
+        });
+
+        it("should render the LINT_RULES sub-header nav item", () => {
+            render(<PlaygroundPage />);
+
+            expect(screen.getByText("LINT_RULES")).toBeInTheDocument();
         });
     });
 });
