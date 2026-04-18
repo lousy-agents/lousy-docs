@@ -3,7 +3,7 @@ title: "Overview"
 description: "What Lousy Agents is, who it's for, and how the three packages work together."
 ---
 
-# Overview
+# Lousy Agents Documentation
 
 Lousy Agents is a set of npm packages that give AI coding assistants the structure they need to produce consistent, production-grade code. Without clear constraints, AI agents guess — and often guess wrong. Lousy Agents provides the scaffolding, validation, and tooling they need to succeed.
 
