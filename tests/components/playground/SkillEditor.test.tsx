@@ -111,9 +111,7 @@ describe("SkillEditor", () => {
     describe("given the editor is scrolled", () => {
         it("should sync the line numbers scrollTop when the textarea is scrolled", () => {
             render(
-                <SkillEditor
-                    {...createProps({ value: MULTI_LINE_CONTENT })}
-                />,
+                <SkillEditor {...createProps({ value: MULTI_LINE_CONTENT })} />,
             );
             const textarea = screen.getByRole("textbox", {
                 name: /skill markdown/i,
@@ -128,9 +126,7 @@ describe("SkillEditor", () => {
 
         it("should scroll the editor when the mouse wheel is used over the line numbers gutter", () => {
             render(
-                <SkillEditor
-                    {...createProps({ value: MULTI_LINE_CONTENT })}
-                />,
+                <SkillEditor {...createProps({ value: MULTI_LINE_CONTENT })} />,
             );
             const textarea = screen.getByRole("textbox", {
                 name: /skill markdown/i,
@@ -144,9 +140,7 @@ describe("SkillEditor", () => {
 
         it("should not scroll the editor when ctrl is held during a wheel event over the gutter", () => {
             render(
-                <SkillEditor
-                    {...createProps({ value: MULTI_LINE_CONTENT })}
-                />,
+                <SkillEditor {...createProps({ value: MULTI_LINE_CONTENT })} />,
             );
             const textarea = screen.getByRole("textbox", {
                 name: /skill markdown/i,
@@ -164,9 +158,7 @@ describe("SkillEditor", () => {
 
         it("should normalize line-mode wheel deltas to pixels when scrolling via the gutter", () => {
             render(
-                <SkillEditor
-                    {...createProps({ value: MULTI_LINE_CONTENT })}
-                />,
+                <SkillEditor {...createProps({ value: MULTI_LINE_CONTENT })} />,
             );
             const textarea = screen.getByRole("textbox", {
                 name: /skill markdown/i,
