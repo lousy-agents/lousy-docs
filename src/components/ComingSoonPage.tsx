@@ -124,7 +124,7 @@ function ComingSoonContent({
                         href="/"
                         style={{
                             background: "transparent",
-                            border: "1px solid rgba(70, 72, 62, 0.3)",
+                            border: "1px solid rgba(189, 206, 137, 0.2)",
                             color: "#bdce89",
                             fontFamily: "'Space Grotesk', sans-serif",
                             fontWeight: 700,
@@ -141,7 +141,7 @@ function ComingSoonContent({
                 </Flex>
 
                 <Text style={codeStyle}>
-                    {`MODULE_${pageName.toUpperCase().replace(/\s/g, "_")} // PENDING_DEPLOY // ${statusCode ?? "503"}`}
+                    {`MODULE_${pageName.toUpperCase().replace(/\s/g, "_")} // PENDING_DEPLOY // ${statusCode}`}
                 </Text>
             </div>
         </section>

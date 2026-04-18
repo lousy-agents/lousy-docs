@@ -25,7 +25,7 @@ Lousy Agents ships three focused npm packages. Most users start with the CLI and
 | --------- | ----------- | ----------- |
 | `@lousy-agents/cli` | `npx @lousy-agents/cli init` | You want the scaffolding CLI — **start here** |
 | `@lousy-agents/mcp` | `npx -y -p @lousy-agents/mcp lousy-agents-mcp` | You want Lousy Agents tools available through an MCP client (VS Code, Cursor, Claude Desktop) |
-| `@lousy-agents/agent-shell` | `npm install -g @lousy-agents/agent-shell` | You want a tamper-proof audit trail of AI agent tool usage |
+| `@lousy-agents/agent-shell` | `npm install -g @lousy-agents/agent-shell` | You want a tamper-proof audit trail of AI agent tool usage (global install required — must be on PATH before `npm ci`) |
 
 **`@lousy-agents/cli` is the entry point.** It scaffolds your project, validates your agents and skills in CI, and generates GitHub Copilot environment setup workflows. The other two packages are optional add-ons.
 

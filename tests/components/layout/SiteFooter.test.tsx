@@ -16,6 +16,14 @@ describe("SiteFooter", () => {
             expect(screen.getByText(/patchwork protocol/i)).toBeInTheDocument();
         });
 
+        it("should render the current year in the copyright", () => {
+            render(<SiteFooter />);
+
+            expect(
+                screen.getByText(new RegExp(String(new Date().getFullYear()))),
+            ).toBeInTheDocument();
+        });
+
         it("should render footer navigation links", () => {
             render(<SiteFooter />);
 

@@ -81,7 +81,7 @@ const underlineStyle: React.CSSProperties = {
 
 const gridStyle: React.CSSProperties = {
     display: "grid",
-    gridTemplateColumns: "repeat(2, 1fr)",
+    gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 480px), 1fr))",
     gap: "1.5rem",
 };
 
