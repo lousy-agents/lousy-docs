@@ -1,7 +1,7 @@
 import { createEvent, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Chance from "chance";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { SkillEditor } from "@/components/playground/SkillEditor";
 import type { PlaygroundLintTarget } from "@/use-cases/lint-skill-content";
 
@@ -169,6 +169,35 @@ describe("SkillEditor", () => {
             fireEvent.wheel(lineNumbers, { deltaY: 3, deltaMode: 1 });
 
             expect(textarea.scrollTop).toBe(66);
+        });
+
+        describe("when the browser reports a computed line height in pixels", () => {
+            afterEach(() => {
+                vi.restoreAllMocks();
+            });
+
+            it("should use the computed line height for DOM_DELTA_LINE wheel events instead of the hardcoded fallback", () => {
+                render(
+                    <SkillEditor
+                        {...createProps({ value: MULTI_LINE_CONTENT })}
+                    />,
+                );
+                const textarea = screen.getByRole("textbox", {
+                    name: /skill markdown/i,
+                });
+                const lineNumbers = screen.getByTestId("line-numbers");
+
+                // Simulate a root font size of 20px: 0.8125rem × 20px = 16.25px,
+                // × 1.7 = 27.625px actual line height.
+                vi.spyOn(window, "getComputedStyle").mockReturnValue({
+                    lineHeight: "27.625px",
+                } as unknown as CSSStyleDeclaration);
+
+                // deltaMode 1 = DOM_DELTA_LINE; 3 lines × 27.625px = 82.875px
+                fireEvent.wheel(lineNumbers, { deltaY: 3, deltaMode: 1 });
+
+                expect(textarea.scrollTop).toBeCloseTo(82.875);
+            });
         });
     });
 

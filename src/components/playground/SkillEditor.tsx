@@ -226,8 +226,17 @@ export function SkillEditor({
             let deltaY = e.deltaY;
             let deltaX = e.deltaX;
             if (e.deltaMode === 1) {
-                deltaY *= LINE_HEIGHT_PX;
-                deltaX *= LINE_HEIGHT_PX;
+                // Prefer the browser's computed line height so normalization
+                // stays accurate when the user's root font size differs from
+                // 16px (e.g. accessibility/browser zoom settings).
+                const rawLineHeight = window.getComputedStyle(
+                    textareaRef.current,
+                ).lineHeight;
+                const lineHeightPx = rawLineHeight.endsWith("px")
+                    ? Number.parseFloat(rawLineHeight)
+                    : LINE_HEIGHT_PX;
+                deltaY *= lineHeightPx;
+                deltaX *= lineHeightPx;
             } else if (e.deltaMode === 2) {
                 deltaY *= textareaRef.current.clientHeight;
                 deltaX *= textareaRef.current.clientWidth;
