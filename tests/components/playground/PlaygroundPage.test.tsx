@@ -1,8 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import Chance from "chance";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { PlaygroundPage } from "@/components/playground/PlaygroundPage";
 import type { SkillContentLintGateway } from "@/use-cases/lint-skill-content";
+
+const chance = new Chance();
 
 describe("PlaygroundPage", () => {
     let originalMatchMedia: typeof window.matchMedia;
@@ -121,7 +124,7 @@ describe("PlaygroundPage", () => {
                 name: /skill markdown/i,
             });
             await user.clear(textarea);
-            await user.type(textarea, "---\nname: my-skill\n---\n");
+            await user.type(textarea, chance.sentence());
 
             await user.click(screen.getByRole("tab", { name: "AGENTS" }));
 

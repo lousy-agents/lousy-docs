@@ -277,6 +277,8 @@ export function SkillEditor({
                     id="editor-tabpanel"
                     role="tabpanel"
                     aria-labelledby={`tab-${activeTarget}`}
+                    // biome-ignore lint/a11y/noNoninteractiveTabindex: WAI-ARIA tabpanel role requires tabIndex="0" for keyboard focusability per APG tabs pattern
+                    tabIndex={0}
                 >
                     <div style={fileInfoBarStyle}>
                         <span>SOURCE_FILE: {TARGET_LABELS[activeTarget]}</span>
