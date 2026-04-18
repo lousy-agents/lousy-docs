@@ -106,6 +106,29 @@ const KNOWN_FIELDS = new Set([
     "allowed-tools",
 ]);
 
+/** Zod schema for validating agent frontmatter fields */
+const AgentFrontmatterSchema = z
+    .object({
+        name: z
+            .string()
+            .min(1, "Name is required")
+            .max(255, "Name must be 255 characters or fewer")
+            .regex(
+                /^[a-zA-Z0-9][a-zA-Z0-9._-]*$/,
+                "Name must start with a letter or number and contain only letters, numbers, dots, underscores, and hyphens.",
+            ),
+        description: z
+            .string()
+            .min(1, "Description is required")
+            .max(1024, "Description must be 1024 characters or fewer")
+            .refine((s) => s.trim().length > 0, {
+                message: "Description cannot be empty or whitespace-only",
+            }),
+    })
+    .passthrough();
+
+const AGENT_KNOWN_FIELDS = new Set(["name", "description"]);
+
 function validateFrontmatter(
     data: Record<string, unknown>,
 ): FrontmatterValidationResult {
@@ -136,7 +159,37 @@ function validateFrontmatter(
     };
 }
 
-/** Creates a browser-compatible skill content lint gateway */
+function validateAgentFrontmatter(
+    data: Record<string, unknown>,
+): FrontmatterValidationResult {
+    const result = AgentFrontmatterSchema.safeParse(data);
+    const unknownFields = Object.keys(data).filter(
+        (key) => !AGENT_KNOWN_FIELDS.has(key),
+    );
+
+    if (result.success) {
+        return {
+            success: true,
+            data: {
+                name: result.data.name,
+                description: result.data.description,
+            },
+            issues: [],
+            unknownFields,
+        };
+    }
+    return {
+        success: false,
+        issues: result.error.issues.map((issue) => ({
+            path: issue.path as readonly (string | number)[],
+            code: issue.code as string,
+            message: issue.message,
+        })),
+        unknownFields,
+    };
+}
+
+/** Creates a browser-compatible content lint gateway */
 export function createSkillContentLintGateway(): SkillContentLintGateway {
-    return { parseFrontmatter, validateFrontmatter };
+    return { parseFrontmatter, validateFrontmatter, validateAgentFrontmatter };
 }

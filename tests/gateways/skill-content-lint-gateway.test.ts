@@ -306,3 +306,115 @@ describe("SkillFrontmatterSchema validation via gateway", () => {
         });
     });
 });
+
+describe("AgentFrontmatterSchema validation via gateway", () => {
+    const gateway = createSkillContentLintGateway();
+
+    describe("given valid agent frontmatter data", () => {
+        it("should accept a valid name and description", () => {
+            const data = {
+                name: "my-agent",
+                description: "A brief description of the agent",
+            };
+
+            const result = gateway.validateAgentFrontmatter(data);
+
+            expect(result.success).toBe(true);
+        });
+
+        it("should accept names with uppercase letters", () => {
+            const data = {
+                name: "MyAgent",
+                description: chance.sentence(),
+            };
+
+            const result = gateway.validateAgentFrontmatter(data);
+
+            expect(result.success).toBe(true);
+            expect(result.data?.name).toBe("MyAgent");
+        });
+
+        it("should accept names with dots and underscores", () => {
+            const data = {
+                name: "my.agent_v2",
+                description: chance.sentence(),
+            };
+
+            const result = gateway.validateAgentFrontmatter(data);
+
+            expect(result.success).toBe(true);
+        });
+    });
+
+    describe("given missing required fields", () => {
+        it("should reject when name is missing", () => {
+            const data = {
+                description: "A brief description",
+            };
+
+            const result = gateway.validateAgentFrontmatter(data);
+
+            expect(result.success).toBe(false);
+        });
+
+        it("should reject when description is missing", () => {
+            const data = {
+                name: "my-agent",
+            };
+
+            const result = gateway.validateAgentFrontmatter(data);
+
+            expect(result.success).toBe(false);
+        });
+    });
+
+    describe("given invalid name format", () => {
+        it("should reject empty names", () => {
+            const data = {
+                name: "",
+                description: "A brief description",
+            };
+
+            const result = gateway.validateAgentFrontmatter(data);
+
+            expect(result.success).toBe(false);
+        });
+
+        it("should reject names starting with a hyphen", () => {
+            const data = {
+                name: "-agent",
+                description: "A brief description",
+            };
+
+            const result = gateway.validateAgentFrontmatter(data);
+
+            expect(result.success).toBe(false);
+        });
+    });
+
+    describe("given unknown agent frontmatter fields", () => {
+        it("should return unknown fields in the result", () => {
+            const data = {
+                name: "my-agent",
+                description: "A brief description",
+                "allowed-tools": "grep",
+            };
+
+            const result = gateway.validateAgentFrontmatter(data);
+
+            expect(result.success).toBe(true);
+            expect(result.unknownFields).toContain("allowed-tools");
+        });
+
+        it("should return empty unknownFields when all fields are known", () => {
+            const data = {
+                name: "my-agent",
+                description: "A brief description",
+            };
+
+            const result = gateway.validateAgentFrontmatter(data);
+
+            expect(result.unknownFields).toHaveLength(0);
+        });
+    });
+});

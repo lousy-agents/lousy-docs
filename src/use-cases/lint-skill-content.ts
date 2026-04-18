@@ -1,10 +1,16 @@
 /**
- * Use case for linting skill markdown content in the browser.
- * Validates frontmatter against the skill schema and produces diagnostics
+ * Use case for linting content in the browser.
+ * Validates frontmatter against target-specific schemas and produces diagnostics
  * in the @lousy-agents/lint LintOutput format.
+ *
+ * Supports skill, agent, and instruction content types.
  */
 
-import type { LintDiagnostic, LintOutput } from "@/entities/skill-lint";
+import type {
+    LintDiagnostic,
+    LintOutput,
+    LintTarget,
+} from "@/entities/skill-lint";
 
 /** Parsed frontmatter data with line number mapping */
 export interface ParsedFrontmatter {
@@ -28,13 +34,19 @@ export interface FrontmatterValidationResult {
     readonly unknownFields: readonly string[];
 }
 
-/** Port interface for the skill content lint gateway */
+/** Port interface for the content lint gateway */
 export interface SkillContentLintGateway {
     parseFrontmatter(content: string): ParsedFrontmatter | null;
     validateFrontmatter(
         data: Record<string, unknown>,
     ): FrontmatterValidationResult;
+    validateAgentFrontmatter(
+        data: Record<string, unknown>,
+    ): FrontmatterValidationResult;
 }
+
+/** Supported playground lint target types */
+export type PlaygroundLintTarget = "skill" | "agent" | "instruction";
 
 /** Maximum input size (500KB) to prevent YAML parser from freezing the browser */
 const MAX_CONTENT_LENGTH = 512_000;
@@ -42,152 +54,127 @@ const MAX_CONTENT_LENGTH = 512_000;
 /** Placeholder file path used for playground input (not a real file) */
 export const PLAYGROUND_FILE_PATH = "playground-input";
 
-const RECOMMENDED_FIELDS = ["allowed-tools"] as const;
+const SKILL_RECOMMENDED_FIELDS = ["allowed-tools"] as const;
 
-const RECOMMENDED_FIELD_RULE_IDS: Record<
-    (typeof RECOMMENDED_FIELDS)[number],
+const SKILL_RECOMMENDED_FIELD_RULE_IDS: Record<
+    (typeof SKILL_RECOMMENDED_FIELDS)[number],
     string
 > = {
     "allowed-tools": "skill/missing-allowed-tools",
 } as const;
 
-export interface LintSkillContentInput {
+export interface PlaygroundLintInput {
     readonly content: string;
-    readonly skillName?: string;
+    readonly expectedName?: string;
+    readonly target?: PlaygroundLintTarget;
 }
 
-export class LintSkillContentUseCase {
+/** @deprecated Use PlaygroundLintInput instead */
+export type LintSkillContentInput = PlaygroundLintInput;
+
+/** Maps a PlaygroundLintTarget to the LintTarget used in diagnostics */
+function toLintTarget(target: PlaygroundLintTarget): LintTarget {
+    return target;
+}
+
+export class PlaygroundLintUseCase {
     constructor(private readonly gateway: SkillContentLintGateway) {}
 
-    async execute(input: LintSkillContentInput): Promise<LintOutput> {
+    async execute(input: PlaygroundLintInput): Promise<LintOutput> {
         const { content } = input;
+        const target = input.target ?? "skill";
+        const lintTarget = toLintTarget(target);
 
         if (content.length > MAX_CONTENT_LENGTH) {
-            return {
-                diagnostics: [
-                    {
-                        filePath: PLAYGROUND_FILE_PATH,
-                        line: 1,
-                        severity: "error",
-                        message: `Input exceeds maximum size of ${MAX_CONTENT_LENGTH} characters. Please reduce the content size.`,
-                        ruleId: "skill/input-too-large",
-                        target: "skill",
-                    },
-                ],
-                target: "skill",
-                filesAnalyzed: [PLAYGROUND_FILE_PATH],
-                summary: {
-                    totalFiles: 1,
-                    totalErrors: 1,
-                    totalWarnings: 0,
-                    totalInfos: 0,
-                },
-            };
+            return this.buildSingleErrorOutput(lintTarget, {
+                message: `Input exceeds maximum size of ${MAX_CONTENT_LENGTH} characters. Please reduce the content size.`,
+                ruleId: `${target}/input-too-large`,
+            });
         }
 
-        let diagnostics: LintDiagnostic[] = [];
+        if (target === "instruction") {
+            return this.lintInstruction(content, lintTarget);
+        }
 
+        return this.lintFrontmatterTarget(content, input.expectedName, target);
+    }
+
+    private lintInstruction(
+        content: string,
+        lintTarget: LintTarget,
+    ): LintOutput {
+        const diagnostics: LintDiagnostic[] = [];
+
+        if (content.trim().length === 0) {
+            diagnostics.push({
+                filePath: PLAYGROUND_FILE_PATH,
+                line: 1,
+                severity: "warning",
+                message:
+                    "Instruction file is empty. Add markdown content with headings and code blocks to document your project.",
+                ruleId: "instruction/empty-content",
+                target: lintTarget,
+            });
+        }
+
+        return this.buildOutput(lintTarget, diagnostics);
+    }
+
+    private lintFrontmatterTarget(
+        content: string,
+        expectedName: string | undefined,
+        target: PlaygroundLintTarget,
+    ): LintOutput {
+        const lintTarget = toLintTarget(target);
         const parsed = this.gateway.parseFrontmatter(content);
 
         if (!parsed) {
             const delimiterState = this.detectFrontmatterDelimiters(content);
+            const targetLabel = target === "skill" ? "Skill" : "Agent";
             const message =
                 delimiterState === "none"
-                    ? "Missing YAML frontmatter. Skill files must begin with --- delimited YAML frontmatter."
+                    ? `Missing YAML frontmatter. ${targetLabel} files must begin with --- delimited YAML frontmatter.`
                     : delimiterState === "unclosed"
                       ? "Unclosed YAML frontmatter. Opening --- found but no closing --- delimiter."
                       : "Invalid YAML frontmatter. The content between --- delimiters could not be parsed as valid YAML.";
             const ruleId =
                 delimiterState === "none"
-                    ? "skill/missing-frontmatter"
-                    : "skill/invalid-frontmatter";
+                    ? `${target}/missing-frontmatter`
+                    : `${target}/invalid-frontmatter`;
 
-            diagnostics.push({
-                filePath: PLAYGROUND_FILE_PATH,
-                line: 1,
-                severity: "error",
+            return this.buildSingleErrorOutput(lintTarget, {
                 message,
                 ruleId,
-                target: "skill",
             });
-
-            return {
-                diagnostics,
-                target: "skill",
-                filesAnalyzed: [PLAYGROUND_FILE_PATH],
-                summary: {
-                    totalFiles: 1,
-                    totalErrors: 1,
-                    totalWarnings: 0,
-                    totalInfos: 0,
-                },
-            };
         }
 
-        diagnostics = this.validateFrontmatter(parsed, input.skillName);
+        const diagnostics =
+            target === "agent"
+                ? this.validateAgentFrontmatter(parsed, expectedName)
+                : this.validateSkillFrontmatter(parsed, expectedName);
 
-        const totalErrors = diagnostics.filter(
-            (d) => d.severity === "error",
-        ).length;
-        const totalWarnings = diagnostics.filter(
-            (d) => d.severity === "warning",
-        ).length;
-        const totalInfos = diagnostics.filter(
-            (d) => d.severity === "info",
-        ).length;
-
-        return {
-            diagnostics,
-            target: "skill",
-            filesAnalyzed: [PLAYGROUND_FILE_PATH],
-            summary: {
-                totalFiles: 1,
-                totalErrors,
-                totalWarnings,
-                totalInfos,
-            },
-        };
+        return this.buildOutput(lintTarget, diagnostics);
     }
 
-    private validateFrontmatter(
+    private validateSkillFrontmatter(
         parsed: ParsedFrontmatter,
-        skillName: string | undefined,
+        expectedName: string | undefined,
     ): LintDiagnostic[] {
         const diagnostics: LintDiagnostic[] = [];
-
         const result = this.gateway.validateFrontmatter(parsed.data);
 
-        if (!result.success) {
-            for (const issue of result.issues) {
-                const fieldName = issue.path[0]?.toString();
-                const line = fieldName
-                    ? (parsed.fieldLines.get(fieldName) ??
-                      parsed.frontmatterStartLine)
-                    : parsed.frontmatterStartLine;
-
-                const ruleId = this.getRuleIdForField(
-                    fieldName,
-                    issue.code,
-                    parsed.data,
-                );
-
-                diagnostics.push({
-                    filePath: PLAYGROUND_FILE_PATH,
-                    line,
-                    severity: "error",
-                    message: issue.message,
-                    field: fieldName,
-                    ruleId,
-                    target: "skill",
-                });
-            }
-        }
+        this.addValidationIssueDiagnostics(
+            diagnostics,
+            result,
+            parsed,
+            "skill",
+        );
 
         if (
             result.success &&
             result.data &&
-            skillName !== undefined &&
-            result.data.name !== skillName
+            expectedName !== undefined &&
+            result.data.name !== expectedName
         ) {
             const nameLine =
                 parsed.fieldLines.get("name") ?? parsed.frontmatterStartLine;
@@ -195,14 +182,14 @@ export class LintSkillContentUseCase {
                 filePath: PLAYGROUND_FILE_PATH,
                 line: nameLine,
                 severity: "error",
-                message: `Frontmatter name '${result.data.name}' must match skill name '${skillName}'`,
+                message: `Frontmatter name '${result.data.name}' must match skill name '${expectedName}'`,
                 field: "name",
                 ruleId: "skill/name-mismatch",
                 target: "skill",
             });
         }
 
-        for (const field of RECOMMENDED_FIELDS) {
+        for (const field of SKILL_RECOMMENDED_FIELDS) {
             if (parsed.data[field] === undefined) {
                 diagnostics.push({
                     filePath: PLAYGROUND_FILE_PATH,
@@ -210,7 +197,7 @@ export class LintSkillContentUseCase {
                     severity: "warning",
                     message: `Recommended field '${field}' is missing`,
                     field,
-                    ruleId: RECOMMENDED_FIELD_RULE_IDS[field],
+                    ruleId: SKILL_RECOMMENDED_FIELD_RULE_IDS[field],
                     target: "skill",
                 });
             }
@@ -233,10 +220,95 @@ export class LintSkillContentUseCase {
         return diagnostics;
     }
 
+    private validateAgentFrontmatter(
+        parsed: ParsedFrontmatter,
+        expectedName: string | undefined,
+    ): LintDiagnostic[] {
+        const diagnostics: LintDiagnostic[] = [];
+        const result = this.gateway.validateAgentFrontmatter(parsed.data);
+
+        this.addValidationIssueDiagnostics(
+            diagnostics,
+            result,
+            parsed,
+            "agent",
+        );
+
+        if (
+            result.success &&
+            result.data &&
+            expectedName !== undefined &&
+            result.data.name !== expectedName
+        ) {
+            const nameLine =
+                parsed.fieldLines.get("name") ?? parsed.frontmatterStartLine;
+            diagnostics.push({
+                filePath: PLAYGROUND_FILE_PATH,
+                line: nameLine,
+                severity: "error",
+                message: `Frontmatter name '${result.data.name}' must match agent name '${expectedName}'`,
+                field: "name",
+                ruleId: "agent/name-mismatch",
+                target: "agent",
+            });
+        }
+
+        for (const field of result.unknownFields) {
+            const line =
+                parsed.fieldLines.get(field) ?? parsed.frontmatterStartLine;
+            diagnostics.push({
+                filePath: PLAYGROUND_FILE_PATH,
+                line,
+                severity: "warning",
+                message: `Unknown frontmatter field '${field}'`,
+                field,
+                ruleId: "agent/unknown-field",
+                target: "agent",
+            });
+        }
+
+        return diagnostics;
+    }
+
+    private addValidationIssueDiagnostics(
+        diagnostics: LintDiagnostic[],
+        result: FrontmatterValidationResult,
+        parsed: ParsedFrontmatter,
+        target: PlaygroundLintTarget,
+    ): void {
+        if (result.success) return;
+
+        for (const issue of result.issues) {
+            const fieldName = issue.path[0]?.toString();
+            const line = fieldName
+                ? (parsed.fieldLines.get(fieldName) ??
+                  parsed.frontmatterStartLine)
+                : parsed.frontmatterStartLine;
+
+            const ruleId = this.getRuleIdForField(
+                fieldName,
+                issue.code,
+                parsed.data,
+                target,
+            );
+
+            diagnostics.push({
+                filePath: PLAYGROUND_FILE_PATH,
+                line,
+                severity: "error",
+                message: issue.message,
+                field: fieldName,
+                ruleId,
+                target: toLintTarget(target),
+            });
+        }
+    }
+
     private getRuleIdForField(
         fieldName: string | undefined,
         issueCode: string,
         inputData: Record<string, unknown>,
+        target: PlaygroundLintTarget,
     ): string {
         const isMissing =
             issueCode === "invalid_type" &&
@@ -244,15 +316,68 @@ export class LintSkillContentUseCase {
 
         if (fieldName === "name") {
             return isMissing
-                ? "skill/missing-name"
-                : "skill/invalid-name-format";
+                ? `${target}/missing-name`
+                : `${target}/invalid-name-format`;
         }
         if (fieldName === "description") {
             return isMissing
-                ? "skill/missing-description"
-                : "skill/invalid-description";
+                ? `${target}/missing-description`
+                : `${target}/invalid-description`;
         }
-        return "skill/invalid-frontmatter";
+        return `${target}/invalid-frontmatter`;
+    }
+
+    private buildOutput(
+        target: LintTarget,
+        diagnostics: LintDiagnostic[],
+    ): LintOutput {
+        const totalErrors = diagnostics.filter(
+            (d) => d.severity === "error",
+        ).length;
+        const totalWarnings = diagnostics.filter(
+            (d) => d.severity === "warning",
+        ).length;
+        const totalInfos = diagnostics.filter(
+            (d) => d.severity === "info",
+        ).length;
+
+        return {
+            diagnostics,
+            target,
+            filesAnalyzed: [PLAYGROUND_FILE_PATH],
+            summary: {
+                totalFiles: 1,
+                totalErrors,
+                totalWarnings,
+                totalInfos,
+            },
+        };
+    }
+
+    private buildSingleErrorOutput(
+        target: LintTarget,
+        error: { message: string; ruleId: string },
+    ): LintOutput {
+        return {
+            diagnostics: [
+                {
+                    filePath: PLAYGROUND_FILE_PATH,
+                    line: 1,
+                    severity: "error",
+                    message: error.message,
+                    ruleId: error.ruleId,
+                    target,
+                },
+            ],
+            target,
+            filesAnalyzed: [PLAYGROUND_FILE_PATH],
+            summary: {
+                totalFiles: 1,
+                totalErrors: 1,
+                totalWarnings: 0,
+                totalInfos: 0,
+            },
+        };
     }
 
     private detectFrontmatterDelimiters(
@@ -270,3 +395,6 @@ export class LintSkillContentUseCase {
         return "unclosed";
     }
 }
+
+/** @deprecated Use PlaygroundLintUseCase instead */
+export const LintSkillContentUseCase = PlaygroundLintUseCase;
