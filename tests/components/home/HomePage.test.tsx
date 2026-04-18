@@ -68,16 +68,10 @@ describe("HomePage", () => {
             );
 
             expect(
-                screen.getByRole("link", { name: /protocol/i }),
-            ).toBeInTheDocument();
-            expect(
-                screen.getByRole("link", { name: /terminal/i }),
-            ).toBeInTheDocument();
-            expect(
-                screen.getByRole("link", { name: /patches/i }),
-            ).toBeInTheDocument();
-            expect(
                 screen.getByRole("link", { name: /docs/i }),
+            ).toBeInTheDocument();
+            expect(
+                screen.getByRole("link", { name: /playground/i }),
             ).toBeInTheDocument();
         });
     });

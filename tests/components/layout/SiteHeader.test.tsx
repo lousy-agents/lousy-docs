@@ -42,30 +42,6 @@ describe("SiteHeader", () => {
             expect(logo).toHaveAttribute("href", "/");
         });
 
-        it("should render the Protocol navigation link", () => {
-            render(<SiteHeader isMobile={false} />);
-
-            expect(
-                screen.getByRole("link", { name: /protocol/i }),
-            ).toBeInTheDocument();
-        });
-
-        it("should render the Terminal navigation link", () => {
-            render(<SiteHeader isMobile={false} />);
-
-            expect(
-                screen.getByRole("link", { name: /terminal/i }),
-            ).toBeInTheDocument();
-        });
-
-        it("should render the Patches navigation link", () => {
-            render(<SiteHeader isMobile={false} />);
-
-            expect(
-                screen.getByRole("link", { name: /patches/i }),
-            ).toBeInTheDocument();
-        });
-
         it("should render the Docs navigation link", () => {
             render(<SiteHeader isMobile={false} />);
 
@@ -118,14 +94,6 @@ describe("SiteHeader", () => {
                 "aria-current",
                 "page",
             );
-        });
-
-        it("should mark the Protocol link as active when on the protocol page", () => {
-            render(<SiteHeader isMobile={false} currentPathname="/protocol" />);
-
-            expect(
-                screen.getByRole("link", { name: /protocol/i }),
-            ).toHaveAttribute("aria-current", "page");
         });
 
         it("should not render a mobile menu button", () => {

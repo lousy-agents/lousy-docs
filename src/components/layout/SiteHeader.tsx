@@ -89,9 +89,6 @@ type NavLink = {
 };
 
 const navLinks: readonly NavLink[] = [
-    { href: "/protocol", label: "PROTOCOL" },
-    { href: "/terminal", label: "TERMINAL" },
-    { href: "/patches", label: "PATCHES" },
     { href: "/docs/quickstart", label: "DOCS", activePrefix: "/docs" },
     { href: "/playground", label: "PLAYGROUND" },
 ];

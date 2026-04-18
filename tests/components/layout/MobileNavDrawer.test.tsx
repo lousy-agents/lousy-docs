@@ -41,27 +41,6 @@ describe("MobileNavDrawer", () => {
             ).toBeInTheDocument();
         });
 
-        it("should render the Protocol link", () => {
-            render(<MobileNavDrawer open={true} onClose={vi.fn()} />);
-
-            const link = screen.getByRole("link", { name: /protocol/i });
-            expect(link).toHaveAttribute("href", "/protocol");
-        });
-
-        it("should render the Terminal link", () => {
-            render(<MobileNavDrawer open={true} onClose={vi.fn()} />);
-
-            const link = screen.getByRole("link", { name: /terminal/i });
-            expect(link).toHaveAttribute("href", "/terminal");
-        });
-
-        it("should render the Patches link", () => {
-            render(<MobileNavDrawer open={true} onClose={vi.fn()} />);
-
-            const link = screen.getByRole("link", { name: /patches/i });
-            expect(link).toHaveAttribute("href", "/patches");
-        });
-
         it("should render the Docs link", () => {
             render(<MobileNavDrawer open={true} onClose={vi.fn()} />);
 
