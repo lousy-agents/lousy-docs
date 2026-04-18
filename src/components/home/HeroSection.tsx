@@ -133,6 +133,7 @@ const terminalWrapperStyle: React.CSSProperties = {
     borderRadius: "8px",
     transform: "rotate(2deg)",
     transition: "transform 0.5s",
+    zIndex: 0,
 };
 
 const terminalBodyStyle: React.CSSProperties = {
@@ -190,6 +191,7 @@ const mascotWrapperStyle: React.CSSProperties = {
     right: "-2rem",
     width: "10rem",
     height: "10rem",
+    zIndex: 2,
 };
 
 const mascotGlowStyle: React.CSSProperties = {
@@ -234,9 +236,10 @@ export function HeroSection() {
                         </Title>
 
                         <Paragraph style={descStyle}>
-                            The first agentic framework designed for
-                            high-friction environments. Built on the Patchwork
-                            Protocol for deterministic outcomes.
+                            Scaffold AI agent behaviors with a single CLI
+                            command, validate instruction quality in CI, and
+                            connect your editor to live lint intelligence via
+                            MCP.
                         </Paragraph>
 
                         <Flex
@@ -296,7 +299,7 @@ export function HeroSection() {
                                             $
                                         </span>
                                         <span style={{ color: "#e3e3dc" }}>
-                                            lousy deploy --target production
+                                            npx @lousy-agents/cli@latest init
                                         </span>
                                     </div>
                                     <div
@@ -305,8 +308,7 @@ export function HeroSection() {
                                             marginBottom: "8px",
                                         }}
                                     >
-                                        [INFO] Handshaking with Patchwork
-                                        Protocol...
+                                        [INFO] Scaffolding agent workspace...
                                     </div>
                                     <div
                                         style={{
@@ -314,8 +316,8 @@ export function HeroSection() {
                                             marginBottom: "8px",
                                         }}
                                     >
-                                        [WARN] Legacy agent detected. Upgrading
-                                        to V.2...
+                                        [INFO] Writing skills, agents, and
+                                        instructions...
                                     </div>
                                     <div
                                         style={{
@@ -332,7 +334,7 @@ export function HeroSection() {
                                                 padding: "0 4px",
                                             }}
                                         >
-                                            Deploying autonomous shell...
+                                            Project initialized successfully.
                                         </span>
                                     </div>
                                     <div

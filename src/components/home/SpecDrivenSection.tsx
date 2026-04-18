@@ -42,7 +42,7 @@ const steps: ProcessStep[] = [
 ];
 
 const sectionStyle: React.CSSProperties = {
-    padding: "6rem 1.5rem",
+    padding: "4rem 1.5rem",
     backgroundColor: "#121410",
     position: "relative",
     overflow: "hidden",
@@ -67,7 +67,7 @@ const containerStyle: React.CSSProperties = {
 };
 
 const headerStyle: React.CSSProperties = {
-    marginBottom: "5rem",
+    marginBottom: "3rem",
 };
 
 const headingStyle: React.CSSProperties = {

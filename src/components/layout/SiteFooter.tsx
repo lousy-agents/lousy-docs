@@ -60,7 +60,7 @@ export function SiteFooter() {
                     </a>
                 </Flex>
                 <span style={copyrightStyle}>
-                    &copy;1979 PATCHWORK PROTOCOL V.2.0.1
+                    &copy;{new Date().getFullYear()} PATCHWORK PROTOCOL V.2.0.1
                 </span>
             </Flex>
         </footer>

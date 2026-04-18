@@ -42,11 +42,11 @@ describe("HeroSection", () => {
             ).toBeInTheDocument();
         });
 
-        it("should render a terminal mockup with a shell prompt", () => {
+        it("should render a terminal mockup with the init install command", () => {
             render(<HeroSection />);
 
             expect(
-                screen.getByText(/lousy deploy --target production/i),
+                screen.getByText(/npx @lousy-agents\/cli@latest init/i),
             ).toBeInTheDocument();
         });
 

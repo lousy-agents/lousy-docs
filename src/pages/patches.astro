@@ -1,0 +1,10 @@
+---
+// biome-ignore lint/correctness/noUnusedImports: used in Astro HTML template
+import { ComingSoonPage } from "../components/ComingSoonPage";
+// biome-ignore lint/correctness/noUnusedImports: used in Astro HTML template
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Patches — Lousy Agents" description="Lousy Agents Patches — coming soon." pagefindIgnore={true}>
+    <ComingSoonPage client:only="react" pageName="Patches" />
+</BaseLayout>
