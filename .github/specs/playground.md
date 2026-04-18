@@ -72,6 +72,23 @@ so that I can **trust the playground results are consistent with the CLI tool's 
 - [x] The playground shall set `target: "skill"` on all skill lint output.
 - [x] The playground summary shall include `totalInfos` alongside `totalErrors` and `totalWarnings`.
 
+### Story 5: Lint agents and instructions in addition to skills
+
+As a **developer**,
+I want **to paste agent or instruction markdown into the playground and see lint feedback**,
+so that I can **validate all three content types without installing the CLI**.
+
+#### Acceptance Criteria
+
+- [x] When a user views the playground, the system shall display clickable tabs for SKILLS, AGENTS, and INSTRUCTIONS.
+- [x] When a user clicks a target tab, the system shall update the active target and reset any previous lint results.
+- [x] When a user pastes agent markdown and clicks "Run Lint" with the AGENTS tab selected, the system shall validate agent frontmatter (name, description) and display agent-prefixed diagnostics.
+- [x] When agent frontmatter uses uppercase letters in the name field, the system shall accept it as valid (agents allow `^[a-zA-Z0-9][a-zA-Z0-9._-]*$`).
+- [x] When a user pastes instruction markdown and clicks "Run Lint" with the INSTRUCTIONS tab selected, the system shall return lint output with target set to "instruction".
+- [x] If the instruction content is empty, the system shall display a warning about empty content.
+- [x] When the playground produces a diagnostic, the `target` field shall match the selected tab (skill, agent, or instruction).
+- [x] When the playground produces a diagnostic, the `ruleId` shall use the correct target prefix (e.g., `agent/missing-frontmatter`, `instruction/empty-content`).
+
 ---
 
 ## Design
@@ -91,73 +108,61 @@ so that I can **trust the playground results are consistent with the CLI tool's 
 ### Dependencies
 
 - `zod` — Already in project, used for frontmatter schema validation
-- `yaml` — Needed for YAML frontmatter parsing in browser (new dependency)
-- `@lousy-agents/lint` — Source of truth for lint output types (`LintDiagnostic`, `LintOutput`, `LintSeverity`, `LintTarget`); used via `import type` only since runtime code requires Node.js filesystem APIs
+- `yaml` — Needed for YAML frontmatter parsing in browser (existing dependency)
+- `@lousy-agents/lint` v5.11.0 — Source of truth for lint output types (`LintDiagnostic`, `LintOutput`, `LintSeverity`, `LintTarget`); used via `import type` only since runtime code requires Node.js filesystem APIs. v5.11.0 adds `lintContent` API specification for future browser-compatible runtime integration.
 
 ### Data Flow
 
-```
-User pastes skill markdown into editor
-        │
-        ▼
-User clicks "Run Lint"
-        │
-        ▼
-PlaygroundPage passes content to lint use case
-        │
-        ▼
-Gateway parses YAML frontmatter from text
-        │
-        ▼
-Use case validates frontmatter against Zod schema
-        │
-        ▼
-Diagnostics mapped to @lousy-agents/lint LintDiagnostic shape
-        │
-        ▼
-LintOutput (from @lousy-agents/lint) returned to PlaygroundPage
-        │
-        ▼
-LintResults renders diagnostics with severity icons
+```mermaid
+flowchart TD
+    A[User pastes content into editor] --> B[User selects target tab: SKILLS / AGENTS / INSTRUCTIONS]
+    B --> C[User clicks Run Lint]
+    C --> D[PlaygroundPage passes content + target to LintSkillContentUseCase]
+    D --> E{Target type?}
+    E -->|skill| F[Gateway parses YAML frontmatter]
+    E -->|agent| G[Gateway parses YAML frontmatter]
+    E -->|instruction| H[Validate instruction content]
+    F --> I[Validate against SkillFrontmatterSchema]
+    G --> J[Validate against AgentFrontmatterSchema]
+    I --> K[Map diagnostics to LintDiagnostic with skill/ prefix]
+    J --> L[Map diagnostics to LintDiagnostic with agent/ prefix]
+    H --> M[Map diagnostics to LintDiagnostic with instruction/ prefix]
+    K --> N[Return LintOutput to PlaygroundPage]
+    L --> N
+    M --> N
+    N --> O[LintResults renders diagnostics with severity icons]
 ```
 
 ### Sequence Diagram
 
-```
-┌──────────┐     ┌─────────────┐     ┌──────────────────┐     ┌──────────────┐
-│   User   │     │ Playground  │     │ LintSkillContent │     │   Gateway    │
-│          │     │   Page      │     │    UseCase       │     │  (browser)   │
-└────┬─────┘     └──────┬──────┘     └────────┬─────────┘     └──────┬───────┘
-     │   paste markdown  │                     │                      │
-     │──────────────────>│                     │                      │
-     │                   │                     │                      │
-     │   click Run Lint  │                     │                      │
-     │──────────────────>│                     │                      │
-     │                   │   execute(content)  │                      │
-     │                   │────────────────────>│                      │
-     │                   │                     │  parseFrontmatter()  │
-     │                   │                     │─────────────────────>│
-     │                   │                     │   ParsedFrontmatter  │
-     │                   │                     │<─────────────────────│
-     │                   │                     │                      │
-     │                   │                     │ validateFrontmatter()│
-     │                   │                     │─────────────────────>│
-     │                   │                     │   ValidationResult   │
-     │                   │                     │<─────────────────────│
-     │                   │                     │                      │
-     │                   │                     │  map to LintDiag-    │
-     │                   │                     │  nostic (from        │
-     │                   │                     │  @lousy-agents/lint) │
-     │                   │                     │──────┐               │
-     │                   │                     │      │               │
-     │                   │                     │<─────┘               │
-     │                   │   LintOutput        │                      │
-     │                   │   (from @lousy-     │                      │
-     │                   │    agents/lint)     │                      │
-     │                   │<────────────────────│                      │
-     │  render results   │                     │                      │
-     │<──────────────────│                     │                      │
-     │                   │                     │                      │
+```mermaid
+sequenceDiagram
+    participant User
+    participant PlaygroundPage
+    participant UseCase as LintSkillContentUseCase
+    participant Gateway as ContentLintGateway
+
+    User->>PlaygroundPage: select target tab (skill/agent/instruction)
+    User->>PlaygroundPage: paste content
+    User->>PlaygroundPage: click Run Lint
+    PlaygroundPage->>UseCase: execute({ content, target })
+
+    alt target is skill or agent
+        UseCase->>Gateway: parseFrontmatter(content)
+        Gateway-->>UseCase: ParsedFrontmatter | null
+        alt target is skill
+            UseCase->>Gateway: validateFrontmatter(data)
+        else target is agent
+            UseCase->>Gateway: validateAgentFrontmatter(data)
+        end
+        Gateway-->>UseCase: FrontmatterValidationResult
+    else target is instruction
+        UseCase->>UseCase: validate instruction content
+    end
+
+    UseCase->>UseCase: map to LintDiagnostic with target prefix
+    UseCase-->>PlaygroundPage: LintOutput
+    PlaygroundPage->>PlaygroundPage: render LintResults
 ```
 
 ### Open Questions
@@ -302,17 +307,56 @@ LintResults renders diagnostics with severity icons
 
 ---
 
+### Task 5: Add agent and instruction lint targets to playground
+
+**Depends on**: Task 2, Task 3, Task 4
+
+**Objective**: Extend the lint playground to support linting agents and instructions in addition to skills, using `@lousy-agents/lint` v5.11.0.
+
+**Context**: The v5.11.0 release of `@lousy-agents/lint` specifies a `lintContent` API for string-based input. While the runtime implementation is not yet available, the playground implements browser-compatible validation matching the API's target types. This enables users to paste skill, agent, or instruction content and receive target-specific feedback.
+
+**Affected files**:
+- `package.json` — Upgrade `@lousy-agents/lint` from 5.10.0 to 5.11.0
+- `src/use-cases/lint-skill-content.ts` — Add `PlaygroundLintTarget` type and `target` param; add agent and instruction lint paths
+- `src/gateways/skill-content-lint-gateway.ts` — Add `AgentFrontmatterSchema` and `validateAgentFrontmatter` method
+- `src/components/playground/SkillEditor.tsx` — Enable functional tab switching for SKILLS/AGENTS/INSTRUCTIONS
+- `src/components/playground/PlaygroundPage.tsx` — Add `activeTarget` state and wire to use case
+- `tests/use-cases/lint-skill-content.test.ts` — Add agent and instruction target tests
+- `tests/gateways/skill-content-lint-gateway.test.ts` — Add agent frontmatter validation tests
+- `tests/components/playground/SkillEditor.test.tsx` — Add tab switching tests
+
+**Requirements**:
+- When a user views the playground, the system shall display clickable tabs for SKILLS, AGENTS, and INSTRUCTIONS.
+- When a user clicks a target tab, the system shall update the active target and reset any previous lint results.
+- When linting agent content, diagnostics shall use `agent/` prefixed rule IDs.
+- When linting instruction content, diagnostics shall use `instruction/` prefixed rule IDs.
+- Agent names shall accept the format `^[a-zA-Z0-9][a-zA-Z0-9._-]*$` (more permissive than skill names).
+
+**Verification**:
+- [x] `npx biome check` passes
+- [x] `npm test` passes
+- [x] `npm run build` succeeds
+- [x] Agent frontmatter with uppercase names validates successfully
+- [x] Instruction empty content produces a warning
+
+**Done when**:
+- [x] All verification steps pass
+- [x] Tab switching changes the active target
+- [x] Agent and instruction targets produce target-specific diagnostics
+
+---
+
 ## Out of Scope
 
-- Agent, hook, and instruction linting (only skill linting for this phase)
+- Hook linting (skills, agents, and instructions only for this phase)
 - File upload support (paste-only for this phase)
 - Syntax highlighting in the editor
 - Persisting editor content across page loads
 
 ## Future Considerations
 
-- Add agent frontmatter linting
-- Add instruction quality analysis
+- Add hook frontmatter linting
+- Integrate runtime `lintContent()` API from `@lousy-agents/lint` when available
 - Add file upload for linting
 - Add syntax-highlighted editor (CodeMirror or Monaco)
 - Add shareable playground URLs with encoded content

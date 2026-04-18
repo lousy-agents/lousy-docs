@@ -123,6 +123,11 @@ describe("PlaygroundPage", () => {
                     issues: [],
                     unknownFields: [],
                 }),
+                validateAgentFrontmatter: () => ({
+                    success: false,
+                    issues: [],
+                    unknownFields: [],
+                }),
             };
             const user = userEvent.setup();
             render(<PlaygroundPage gateway={failingGateway} />);
