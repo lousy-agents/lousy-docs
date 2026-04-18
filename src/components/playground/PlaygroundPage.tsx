@@ -249,6 +249,7 @@ export function PlaygroundPage({
 
     const handleTargetChange = useCallback((target: PlaygroundLintTarget) => {
         setActiveTarget(target);
+        setContent("");
         setResult(null);
     }, []);
 

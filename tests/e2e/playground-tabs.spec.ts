@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { PlaygroundPage } from "./pages";
 
 test.describe("Playground target tabs", () => {
@@ -66,6 +66,18 @@ test.describe("Playground target tabs", () => {
             await playground.clickTab("INSTRUCTIONS");
 
             await playground.expectTabpanelLabelledBy("tab-instruction");
+        });
+
+        test("clears the textarea content when switching targets", async ({
+            page,
+        }) => {
+            const playground = new PlaygroundPage(page);
+            await playground.goto();
+
+            await playground.textarea.fill("---\nname: my-skill\n---\n");
+            await playground.clickTab("AGENTS");
+
+            await expect(playground.textarea).toHaveValue("");
         });
     });
 

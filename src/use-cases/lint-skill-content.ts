@@ -148,27 +148,32 @@ export class PlaygroundLintUseCase {
             });
         }
 
-        const diagnostics =
+        const validate =
             target === "agent"
-                ? this.validateAgentFrontmatter(parsed, expectedName)
-                : this.validateSkillFrontmatter(parsed, expectedName);
+                ? this.gateway.validateAgentFrontmatter
+                : this.gateway.validateFrontmatter;
+        const diagnostics = this.validateTargetFrontmatter(
+            parsed,
+            expectedName,
+            target,
+            validate,
+        );
 
         return this.buildOutput(lintTarget, diagnostics);
     }
 
-    private validateSkillFrontmatter(
+    private validateTargetFrontmatter(
         parsed: ParsedFrontmatter,
         expectedName: string | undefined,
+        target: PlaygroundLintTarget,
+        validate: (
+            data: Record<string, unknown>,
+        ) => FrontmatterValidationResult,
     ): LintDiagnostic[] {
         const diagnostics: LintDiagnostic[] = [];
-        const result = this.gateway.validateFrontmatter(parsed.data);
+        const result = validate(parsed.data);
 
-        this.addValidationIssueDiagnostics(
-            diagnostics,
-            result,
-            parsed,
-            "skill",
-        );
+        this.addValidationIssueDiagnostics(diagnostics, result, parsed, target);
 
         if (
             result.success &&
@@ -182,89 +187,41 @@ export class PlaygroundLintUseCase {
                 filePath: PLAYGROUND_FILE_PATH,
                 line: nameLine,
                 severity: "error",
-                message: `Frontmatter name '${result.data.name}' must match skill name '${expectedName}'`,
+                message: `Frontmatter name '${result.data.name}' must match ${target} name '${expectedName}'`,
                 field: "name",
-                ruleId: "skill/name-mismatch",
-                target: "skill",
+                ruleId: `${target}/name-mismatch`,
+                target,
             });
         }
 
-        for (const field of SKILL_RECOMMENDED_FIELDS) {
-            if (parsed.data[field] === undefined) {
-                diagnostics.push({
-                    filePath: PLAYGROUND_FILE_PATH,
-                    line: parsed.frontmatterStartLine,
-                    severity: "warning",
-                    message: `Recommended field '${field}' is missing`,
-                    field,
-                    ruleId: SKILL_RECOMMENDED_FIELD_RULE_IDS[field],
-                    target: "skill",
-                });
+        for (const field of result.unknownFields) {
+            const line =
+                parsed.fieldLines.get(field) ?? parsed.frontmatterStartLine;
+            diagnostics.push({
+                filePath: PLAYGROUND_FILE_PATH,
+                line,
+                severity: "warning",
+                message: `Unknown frontmatter field '${field}'`,
+                field,
+                ruleId: `${target}/unknown-field`,
+                target,
+            });
+        }
+
+        if (target === "skill") {
+            for (const field of SKILL_RECOMMENDED_FIELDS) {
+                if (parsed.data[field] === undefined) {
+                    diagnostics.push({
+                        filePath: PLAYGROUND_FILE_PATH,
+                        line: parsed.frontmatterStartLine,
+                        severity: "warning",
+                        message: `Recommended field '${field}' is missing`,
+                        field,
+                        ruleId: SKILL_RECOMMENDED_FIELD_RULE_IDS[field],
+                        target: "skill",
+                    });
+                }
             }
-        }
-
-        for (const field of result.unknownFields) {
-            const line =
-                parsed.fieldLines.get(field) ?? parsed.frontmatterStartLine;
-            diagnostics.push({
-                filePath: PLAYGROUND_FILE_PATH,
-                line,
-                severity: "warning",
-                message: `Unknown frontmatter field '${field}'`,
-                field,
-                ruleId: "skill/unknown-field",
-                target: "skill",
-            });
-        }
-
-        return diagnostics;
-    }
-
-    private validateAgentFrontmatter(
-        parsed: ParsedFrontmatter,
-        expectedName: string | undefined,
-    ): LintDiagnostic[] {
-        const diagnostics: LintDiagnostic[] = [];
-        const result = this.gateway.validateAgentFrontmatter(parsed.data);
-
-        this.addValidationIssueDiagnostics(
-            diagnostics,
-            result,
-            parsed,
-            "agent",
-        );
-
-        if (
-            result.success &&
-            result.data &&
-            expectedName !== undefined &&
-            result.data.name !== expectedName
-        ) {
-            const nameLine =
-                parsed.fieldLines.get("name") ?? parsed.frontmatterStartLine;
-            diagnostics.push({
-                filePath: PLAYGROUND_FILE_PATH,
-                line: nameLine,
-                severity: "error",
-                message: `Frontmatter name '${result.data.name}' must match agent name '${expectedName}'`,
-                field: "name",
-                ruleId: "agent/name-mismatch",
-                target: "agent",
-            });
-        }
-
-        for (const field of result.unknownFields) {
-            const line =
-                parsed.fieldLines.get(field) ?? parsed.frontmatterStartLine;
-            diagnostics.push({
-                filePath: PLAYGROUND_FILE_PATH,
-                line,
-                severity: "warning",
-                message: `Unknown frontmatter field '${field}'`,
-                field,
-                ruleId: "agent/unknown-field",
-                target: "agent",
-            });
         }
 
         return diagnostics;

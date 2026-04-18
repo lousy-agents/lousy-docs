@@ -112,6 +112,25 @@ describe("PlaygroundPage", () => {
         });
     });
 
+    describe("given the user switches the active target tab", () => {
+        it("should clear the textarea content when switching targets", async () => {
+            const user = userEvent.setup();
+            render(<PlaygroundPage />);
+
+            const textarea = screen.getByRole("textbox", {
+                name: /skill markdown/i,
+            });
+            await user.clear(textarea);
+            await user.type(textarea, "---\nname: my-skill\n---\n");
+
+            await user.click(screen.getByRole("tab", { name: "AGENTS" }));
+
+            expect(
+                screen.getByRole("textbox", { name: /agent markdown/i }),
+            ).toHaveValue("");
+        });
+    });
+
     describe("given the gateway throws an unexpected error", () => {
         it("should display an internal error diagnostic", async () => {
             const failingGateway: SkillContentLintGateway = {
