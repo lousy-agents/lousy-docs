@@ -55,7 +55,7 @@ export function SiteFooter() {
                     >
                         ENCRYPTED_FEED
                     </a>
-                    <a href="/docs" style={linkStyle}>
+                    <a href="/docs/quickstart" style={linkStyle}>
                         MANUAL
                     </a>
                 </Flex>

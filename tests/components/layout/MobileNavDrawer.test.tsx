@@ -66,7 +66,7 @@ describe("MobileNavDrawer", () => {
             render(<MobileNavDrawer open={true} onClose={vi.fn()} />);
 
             const link = screen.getByRole("link", { name: /docs/i });
-            expect(link).toHaveAttribute("href", "/docs");
+            expect(link).toHaveAttribute("href", "/docs/quickstart");
         });
 
         it("should render the Playground link", () => {

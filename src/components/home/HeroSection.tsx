@@ -247,7 +247,7 @@ export function HeroSection() {
                             <Button
                                 style={primaryButtonStyle}
                                 size="large"
-                                href="/docs"
+                                href="/docs/quickstart"
                             >
                                 INITIALIZE_CLI
                             </Button>
