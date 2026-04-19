@@ -114,55 +114,6 @@ const bodyLayoutStyle: React.CSSProperties = {
     overflow: "hidden",
 };
 
-const sidebarStyle: React.CSSProperties = {
-    width: "240px",
-    display: "flex",
-    flexDirection: "column",
-    backgroundColor: "#1a1c18",
-    borderRight: "1px solid rgba(70, 72, 62, 0.15)",
-    flexShrink: 0,
-    fontFamily: "'Space Grotesk', monospace",
-    fontSize: "11px",
-    letterSpacing: "0.12em",
-    textTransform: "uppercase",
-    color: "#e6ead8",
-};
-
-const sidebarHeaderStyle: React.CSSProperties = {
-    padding: "16px",
-    borderBottom: "1px solid rgba(70, 72, 62, 0.25)",
-};
-
-const sidebarTitleStyle: React.CSSProperties = {
-    fontWeight: 700,
-    fontSize: "11px",
-    color: "#e6ead8",
-};
-
-const sidebarSubtitleStyle: React.CSSProperties = {
-    fontSize: "10px",
-    color: "rgba(155, 160, 138, 0.6)",
-    marginTop: "2px",
-};
-
-const sidebarNavItemActiveStyle: React.CSSProperties = {
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
-    padding: "12px 16px",
-    backgroundColor: "#1e201c",
-    borderLeft: "2px solid #bdce89",
-    fontWeight: 700,
-    cursor: "default",
-};
-
-const sidebarFooterStyle: React.CSSProperties = {
-    padding: "16px",
-    borderTop: "1px solid rgba(70, 72, 62, 0.25)",
-    backgroundColor: "#1a1c18",
-    marginTop: "auto",
-};
-
 const splitLayoutStyle: React.CSSProperties = {
     display: "flex",
     flex: 1,
@@ -170,7 +121,7 @@ const splitLayoutStyle: React.CSSProperties = {
 };
 
 const leftPanelStyle: React.CSSProperties = {
-    width: "55%",
+    width: "67%",
     display: "flex",
     flexDirection: "column",
     borderRight: "1px solid rgba(70, 72, 62, 0.15)",
@@ -179,7 +130,7 @@ const leftPanelStyle: React.CSSProperties = {
 };
 
 const rightPanelStyle: React.CSSProperties = {
-    width: "45%",
+    width: "33%",
     display: "flex",
     flexDirection: "column",
     backgroundColor: "#1a1c18",
@@ -193,34 +144,6 @@ const mobilePanelStyle: React.CSSProperties = {
     flex: 1,
     gap: "0",
 };
-
-function Sidebar({ linterState }: { linterState: string }) {
-    return (
-        <aside style={sidebarStyle} aria-label="Playground sidebar">
-            <div style={sidebarHeaderStyle}>
-                <div style={sidebarTitleStyle}>LINT_PLAYGROUND</div>
-                <div style={sidebarSubtitleStyle}>SKILL VALIDATOR</div>
-            </div>
-            <div style={{ flex: 1, paddingTop: "4px" }} role="presentation">
-                <div style={sidebarNavItemActiveStyle}>
-                    <span aria-hidden="true">⌘</span>
-                    <span>TERMINAL_STREAMS</span>
-                </div>
-            </div>
-            <div style={sidebarFooterStyle}>
-                <div
-                    style={{
-                        fontSize: "10px",
-                        color: "rgba(155, 160, 138, 0.5)",
-                        letterSpacing: "0.12em",
-                    }}
-                >
-                    {linterState}
-                </div>
-            </div>
-        </aside>
-    );
-}
 
 interface PlaygroundPageProps {
     gateway?: SkillContentLintGateway;
@@ -347,11 +270,6 @@ export function PlaygroundPage({
                         </div>
                     ) : (
                         <div style={bodyLayoutStyle}>
-                            <Sidebar
-                                linterState={
-                                    result ? "LINT_COMPLETE" : "AWAITING_INPUT"
-                                }
-                            />
                             <div style={splitLayoutStyle}>
                                 <div style={leftPanelStyle}>
                                     <SkillEditor
