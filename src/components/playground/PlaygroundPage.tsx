@@ -330,6 +330,7 @@ export function PlaygroundPage({
                             <div
                                 style={{
                                     minHeight: `${MOBILE_EDITOR_MIN_HEIGHT_PX}px`,
+                                    flexShrink: 0,
                                 }}
                             >
                                 <SkillEditor

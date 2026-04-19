@@ -196,9 +196,10 @@ describe("PlaygroundPage", () => {
         it("should render the TERMINAL_STREAMS sub-header nav item", () => {
             render(<PlaygroundPage />);
 
-            expect(
-                screen.getAllByText("TERMINAL_STREAMS").length,
-            ).toBeGreaterThan(0);
+            // Desktop renders TERMINAL_STREAMS twice: once in the Sidebar and
+            // once in the sub-header right nav. Asserting the exact count means
+            // this test fails if the sub-header nav is accidentally removed.
+            expect(screen.getAllByText("TERMINAL_STREAMS")).toHaveLength(2);
         });
 
         it("should render the LINT_RULES sub-header nav item", () => {
