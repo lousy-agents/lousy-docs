@@ -153,7 +153,7 @@ describe("DocsLayoutShell", () => {
                 </DocsLayoutShell>,
             );
 
-            expect(screen.getByText(/patchwork protocol/i)).toBeInTheDocument();
+            expect(screen.getByText(/lousy agents/i)).toBeInTheDocument();
         });
 
         it("should render a main element for the content area", () => {

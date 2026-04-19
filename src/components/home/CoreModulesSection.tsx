@@ -46,7 +46,7 @@ const features: Feature[] = [
 ];
 
 const sectionStyle: React.CSSProperties = {
-    padding: "6rem 1.5rem",
+    padding: "4rem 1.5rem",
     backgroundColor: "#1a1c18",
 };
 
@@ -59,7 +59,7 @@ const headerStyle: React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    marginBottom: "4rem",
+    marginBottom: "2.5rem",
 };
 
 const headingStyle: React.CSSProperties = {
@@ -81,7 +81,7 @@ const underlineStyle: React.CSSProperties = {
 
 const gridStyle: React.CSSProperties = {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+    gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 480px), 1fr))",
     gap: "1.5rem",
 };
 

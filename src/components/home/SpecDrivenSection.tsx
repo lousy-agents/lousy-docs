@@ -42,7 +42,7 @@ const steps: ProcessStep[] = [
 ];
 
 const sectionStyle: React.CSSProperties = {
-    padding: "6rem 1.5rem",
+    padding: "4rem 1.5rem",
     backgroundColor: "#121410",
     position: "relative",
     overflow: "hidden",
@@ -67,7 +67,7 @@ const containerStyle: React.CSSProperties = {
 };
 
 const headerStyle: React.CSSProperties = {
-    marginBottom: "5rem",
+    marginBottom: "3rem",
 };
 
 const headingStyle: React.CSSProperties = {
@@ -162,7 +162,7 @@ export function SpecDrivenSection() {
                         Spec-Driven Development
                     </Title>
                     <Paragraph style={subtitleStyle}>
-                        The three pillars of the Patchwork Protocol. No edge
+                        The three pillars of spec-driven development. No edge
                         cases, only expected outcomes.
                     </Paragraph>
                 </div>
