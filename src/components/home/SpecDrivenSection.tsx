@@ -162,7 +162,7 @@ export function SpecDrivenSection() {
                         Spec-Driven Development
                     </Title>
                     <Paragraph style={subtitleStyle}>
-                        The three pillars of the Patchwork Protocol. No edge
+                        The three pillars of spec-driven development. No edge
                         cases, only expected outcomes.
                     </Paragraph>
                 </div>

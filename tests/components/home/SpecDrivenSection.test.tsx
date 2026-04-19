@@ -43,7 +43,7 @@ describe("SpecDrivenSection", () => {
 
             expect(
                 screen.getByText(
-                    /the three pillars of the patchwork protocol/i,
+                    /the three pillars of spec-driven development/i,
                 ),
             ).toBeInTheDocument();
         });
