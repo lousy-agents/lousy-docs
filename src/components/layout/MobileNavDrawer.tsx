@@ -1,4 +1,5 @@
 import { Drawer, Flex } from "antd";
+import { navLinks } from "@/lib/nav-links";
 
 interface MobileNavDrawerProps {
     open: boolean;
@@ -28,11 +29,6 @@ const navLinkStyle: React.CSSProperties = {
     display: "block",
     transition: "color 0.15s",
 };
-
-const navLinks = [
-    { href: "/docs/quickstart", label: "Docs" },
-    { href: "/playground", label: "Playground" },
-] as const;
 
 export function MobileNavDrawer({ open, onClose }: MobileNavDrawerProps) {
     return (

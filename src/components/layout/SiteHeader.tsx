@@ -1,5 +1,6 @@
 import { Flex } from "antd";
 import { HEADER_HEIGHT_PX } from "@/lib/layout-constants";
+import { navLinks } from "@/lib/nav-links";
 import { isMacPlatform } from "@/lib/platform";
 
 const headerStyle: React.CSSProperties = {
@@ -81,17 +82,6 @@ const shortcutBadgeStyle: React.CSSProperties = {
     lineHeight: 1.4,
     pointerEvents: "none",
 };
-
-type NavLink = {
-    readonly href: string;
-    readonly label: string;
-    readonly activePrefix?: string;
-};
-
-const navLinks: readonly NavLink[] = [
-    { href: "/docs/quickstart", label: "DOCS", activePrefix: "/docs" },
-    { href: "/playground", label: "PLAYGROUND" },
-];
 
 function isNavLinkActive(
     href: string,
