@@ -74,7 +74,6 @@ const searchButtonStyle: React.CSSProperties = {
 
 const shortcutBadgeStyle: React.CSSProperties = {
     fontFamily: "'Courier New', Courier, monospace",
-    fontSize: "0.6875rem",
     color: "rgba(189, 206, 137, 0.5)",
     border: "1px solid rgba(70, 72, 62, 0.15)",
     borderRadius: "4px",
@@ -105,6 +104,13 @@ function getShortcutLabel(): string {
         return "Ctrl+K";
     }
     return isMacPlatform(navigator.userAgent) ? "⌘K" : "Ctrl+K";
+}
+
+function getShortcutFontSize(): string {
+    if (typeof navigator === "undefined") {
+        return "0.625rem";
+    }
+    return isMacPlatform(navigator.userAgent) ? "0.75rem" : "0.625rem";
 }
 
 function DesktopHeader({ currentPathname }: DesktopHeaderProps) {
@@ -149,7 +155,14 @@ function DesktopHeader({ currentPathname }: DesktopHeaderProps) {
                     >
                         search
                     </span>
-                    <kbd style={shortcutBadgeStyle}>{getShortcutLabel()}</kbd>
+                    <kbd
+                        style={{
+                            ...shortcutBadgeStyle,
+                            fontSize: getShortcutFontSize(),
+                        }}
+                    >
+                        {getShortcutLabel()}
+                    </kbd>
                 </button>
                 <button
                     type="button"

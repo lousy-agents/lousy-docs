@@ -152,6 +152,76 @@ describe("SiteHeader", () => {
                     globalThis.navigator = savedNavigator;
                 }
             });
+
+            it("should use a larger font size for the ⌘K badge on Mac/iPadOS platforms", () => {
+                userAgentSpy = vi
+                    .spyOn(navigator, "userAgent", "get")
+                    .mockReturnValue(
+                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
+                    );
+
+                try {
+                    render(<SiteHeader isMobile={false} />);
+
+                    expect(screen.getByText("⌘K").style.fontSize).toBe(
+                        "0.75rem",
+                    );
+                } finally {
+                    userAgentSpy.mockRestore();
+                }
+            });
+
+            it("should use a larger font size for the ⌘K badge on iPadOS platforms", () => {
+                userAgentSpy = vi
+                    .spyOn(navigator, "userAgent", "get")
+                    .mockReturnValue(
+                        "Mozilla/5.0 (iPad; CPU OS 16_0 like Mac OS X) AppleWebKit/605.1.15",
+                    );
+
+                try {
+                    render(<SiteHeader isMobile={false} />);
+
+                    expect(screen.getByText("⌘K").style.fontSize).toBe(
+                        "0.75rem",
+                    );
+                } finally {
+                    userAgentSpy.mockRestore();
+                }
+            });
+
+            it("should use a smaller font size for the Ctrl+K badge on non-Mac platforms", () => {
+                userAgentSpy = vi
+                    .spyOn(navigator, "userAgent", "get")
+                    .mockReturnValue(
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+                    );
+
+                try {
+                    render(<SiteHeader isMobile={false} />);
+
+                    expect(screen.getByText("Ctrl+K").style.fontSize).toBe(
+                        "0.625rem",
+                    );
+                } finally {
+                    userAgentSpy.mockRestore();
+                }
+            });
+
+            it("should use the non-Mac font size for the Ctrl+K badge when navigator is unavailable", () => {
+                const savedNavigator = globalThis.navigator;
+                delete (globalThis as unknown as Record<string, unknown>)
+                    .navigator;
+
+                try {
+                    render(<SiteHeader isMobile={false} />);
+
+                    expect(screen.getByText("Ctrl+K").style.fontSize).toBe(
+                        "0.625rem",
+                    );
+                } finally {
+                    globalThis.navigator = savedNavigator;
+                }
+            });
         });
     });
 
