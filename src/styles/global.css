@@ -246,7 +246,7 @@ body {
 }
 
 /* Mobile responsive styles */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .docs-content h1 {
         font-size: 1.5rem;
     }

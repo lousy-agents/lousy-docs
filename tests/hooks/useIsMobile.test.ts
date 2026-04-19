@@ -2,7 +2,7 @@ import { act, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
-const MOBILE_BREAKPOINT = 768;
+const MOBILE_BREAKPOINT = 767;
 
 function createMockMatchMedia(matches: boolean) {
     const listeners: Array<(event: { matches: boolean }) => void> = [];
