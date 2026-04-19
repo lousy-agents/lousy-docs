@@ -8,7 +8,10 @@ import { AntDProvider } from "@/components/providers/AntDProvider";
 import type { LintOutput } from "@/entities/skill-lint";
 import { createSkillContentLintGateway } from "@/gateways/skill-content-lint-gateway";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import { HEADER_HEIGHT_PX } from "@/lib/layout-constants";
+import {
+    HEADER_HEIGHT_PX,
+    MOBILE_EDITOR_MIN_HEIGHT_PX,
+} from "@/lib/layout-constants";
 import {
     type PlaygroundLintTarget,
     PlaygroundLintUseCase,
@@ -303,15 +306,19 @@ export function PlaygroundPage({
                             </h2>
                             <span style={badgeStyle}>BETA_V.01</span>
                         </div>
-                        <div style={subHeaderRightStyle}>
-                            <div style={subHeaderNavStyle}>
-                                <span style={subNavLinkActiveStyle}>
-                                    TERMINAL_STREAMS
-                                </span>
-                                <span style={subNavLinkStyle}>LINT_RULES</span>
+                        {!isMobile && (
+                            <div style={subHeaderRightStyle}>
+                                <div style={subHeaderNavStyle}>
+                                    <span style={subNavLinkActiveStyle}>
+                                        TERMINAL_STREAMS
+                                    </span>
+                                    <span style={subNavLinkStyle}>
+                                        LINT_RULES
+                                    </span>
+                                </div>
+                                <div style={subHeaderDividerStyle} />
                             </div>
-                            <div style={subHeaderDividerStyle} />
-                        </div>
+                        )}
                     </header>
                     {isMobile ? (
                         <div
@@ -320,7 +327,12 @@ export function PlaygroundPage({
                                 overflow: "auto",
                             }}
                         >
-                            <div style={{ minHeight: "400px" }}>
+                            <div
+                                style={{
+                                    minHeight: `${MOBILE_EDITOR_MIN_HEIGHT_PX}px`,
+                                    flexShrink: 0,
+                                }}
+                            >
                                 <SkillEditor
                                     value={content}
                                     onChange={setContent}
