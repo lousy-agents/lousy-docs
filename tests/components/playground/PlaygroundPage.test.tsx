@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Chance from "chance";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -196,13 +196,17 @@ describe("PlaygroundPage", () => {
         it("should render the TERMINAL_STREAMS sub-header nav item", () => {
             render(<PlaygroundPage />);
 
-            expect(screen.getByText("TERMINAL_STREAMS")).toBeInTheDocument();
+            const nav = screen.getByTestId("playground-sub-header-nav");
+            expect(
+                within(nav).getByText("TERMINAL_STREAMS"),
+            ).toBeInTheDocument();
         });
 
         it("should render the LINT_RULES sub-header nav item", () => {
             render(<PlaygroundPage />);
 
-            expect(screen.getByText("LINT_RULES")).toBeInTheDocument();
+            const nav = screen.getByTestId("playground-sub-header-nav");
+            expect(within(nav).getByText("LINT_RULES")).toBeInTheDocument();
         });
     });
 });

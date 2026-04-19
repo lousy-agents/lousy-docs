@@ -193,10 +193,10 @@ This section defines patterns for interactive tool pages—browser-based utiliti
 
 Interactive tool pages use a horizontal split-panel layout within the main content area. This is a variant of the standard Sidebar + Content layout (§6), not a replacement.
 
-- **Input Panel:** ~55% width. Uses `surface` (recessed) background for the primary input area, reinforcing that it is an editable zone distinct from the surrounding container surface.
-- **Output Panel:** ~45% width. Uses the same surface tier as the parent container. Content flows top-to-bottom: score display → data table → diagnostic log.
+- **Input Panel:** ~67% width. Uses `surface` (recessed) background for the primary input area, reinforcing that it is an editable zone distinct from the surrounding container surface.
+- **Output Panel:** ~33% width. Uses the same surface tier as the parent container. Content flows top-to-bottom: score display → data table → diagnostic log.
 - **Panel Boundary:** Achieved through a tonal shift between the input area’s recessed `surface` and the output panel’s `surface-container` background—no opaque border. A ghost separator at 15% opacity may be added between the panels if the tonal shift alone is insufficient.
-- **Responsive Behavior:** Below the mobile breakpoint (768px), panels stack vertically—input on top, output below. The input area reduces to a minimum height of 200px with a drag handle to resize.
+- **Responsive Behavior:** Below the mobile breakpoint (`max-width: 767px`; viewports ≥ 768px, including iPad portrait, use the desktop split), panels stack vertically—input on top, output below. The input area reduces to a minimum height of 200px with a drag handle to resize.
 
 ### Code Input Area
 
@@ -294,11 +294,11 @@ Displayed in the output panel when no input has been provided. Uses the system�
 
 ### Responsive Behavior
 
-- **Mobile breakpoint:** 768px. Below this, the sidebar collapses into a drawer overlay.
+- **Mobile breakpoint:** `max-width: 767px` (i.e., viewports ≥ 768px, including iPad portrait, receive the desktop layout). Below this, the sidebar collapses into a drawer overlay.
 - **Touch targets:** Minimum 44×44px for all interactive elements (project standard, exceeds WCAG 2.2 SC 2.5.8’s 24×24px minimum).
 - **Content reflow:** Single-column layout on mobile with full-width cards and reduced heading sizes.
 - **Progressive disclosure:** Navigation collapses to a hamburger menu; content density is preserved.
-- **Tool page reflow:** Split-panel layouts stack vertically below 768px. The input panel appears first (top), the output panel second (below), maintaining the natural workflow order.
+- **Tool page reflow:** Split-panel layouts stack vertically below 768px (`max-width: 767px`). The input panel appears first (top), the output panel second (below), maintaining the natural workflow order.
 
 -----
 
@@ -356,7 +356,7 @@ When prompting AI tools (Stitch, Copilot, Claude) to generate new screens or com
 
 ### Interactive Tool Page Prompts
 
-- “Create a split-panel tool layout: recessed surface input area on the left (55%), output panel on the right (45%), separated by tonal shift only”
+- "Create a split-panel tool layout: recessed surface input area on the left (67%), output panel on the right (33%), separated by tonal shift only"
 - “Design a diagnostic log entry with severity badge (ERR in coral-red, WARN in amber), monospace rule ID in brackets, plain-language message in Manrope, and dimmed file path below”
 - “Build a segmented progress bar using primary lichen-green fills with 2px gaps between segments on a surface-container background”
 - “Design an empty state with centered monospace heading, dashed ghost border (stitch pattern), and a list of supported file types in dimmed monospace”

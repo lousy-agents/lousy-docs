@@ -231,7 +231,10 @@ export function PlaygroundPage({
                         </div>
                         {!isMobile && (
                             <div style={subHeaderRightStyle}>
-                                <div style={subHeaderNavStyle}>
+                                <div
+                                    style={subHeaderNavStyle}
+                                    data-testid="playground-sub-header-nav"
+                                >
                                     <span style={subNavLinkActiveStyle}>
                                         TERMINAL_STREAMS
                                     </span>
