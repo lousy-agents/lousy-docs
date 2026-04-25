@@ -21,16 +21,16 @@ The current homepage markets capabilities that do not exist in the published Lou
 
 ## Documented Feature Inventory
 
-The following are the only features the homepage may market. Each must link to an existing docs page that describes it.
+The following are the only features the homepage may market. Each must link to an existing docs page that describes it, preferring the dedicated per-feature route and using `/docs/quickstart` only as a fallback when no standalone page exists.
 
 | Feature | npm package / surface | Docs source | Homepage doc link |
 | --- | --- | --- | --- |
-| Project scaffolding (`init`) | `@lousy-agents/cli` | `zpratt/lousy-agents/docs/init.md` | `/docs/quickstart` (step 1) |
-| Resource generators (`new --copilot-agent`, `new skill`) | `@lousy-agents/cli` | `zpratt/lousy-agents/docs/new.md` | `/docs/new` (when fetched) |
-| Quality validation (`lint`) | `@lousy-agents/cli` | `zpratt/lousy-agents/docs/lint.md` | `/docs/quickstart` (step 2) |
-| Copilot environment workflow (`copilot-setup`) | `@lousy-agents/cli` | `zpratt/lousy-agents/docs/copilot-setup.md` | `/docs/copilot-setup` (when fetched) |
-| MCP server (Model Context Protocol) | `@lousy-agents/mcp` | `zpratt/lousy-agents/docs/mcp-server.md` | `/docs/quickstart` (step 3) |
-| Agent Shell audit trail | `@lousy-agents/agent-shell` | `src/content/local-docs/readme.md` | `/docs/readme` |
+| Project scaffolding (`init`) | `@lousy-agents/cli` | `zpratt/lousy-agents/docs/init.md` | `/docs/init` (fallback: `/docs/quickstart`) |
+| Resource generators (`new --copilot-agent`, `new skill`) | `@lousy-agents/cli` | `zpratt/lousy-agents/docs/new.md` | `/docs/new` |
+| Quality validation (`lint`) | `@lousy-agents/cli` | `zpratt/lousy-agents/docs/lint.md` | `/docs/lint` (fallback: `/docs/quickstart`) |
+| Copilot environment workflow (`copilot-setup`) | `@lousy-agents/cli` | `zpratt/lousy-agents/docs/copilot-setup.md` | `/docs/copilot-setup` |
+| MCP server (Model Context Protocol) | `@lousy-agents/mcp` | `zpratt/lousy-agents/docs/mcp-server.md` | `/docs/mcp-server` (fallback: `/docs/quickstart`) |
+| Agent Shell audit trail | `@lousy-agents/agent-shell` | `packages/agent-shell/README.md` (copied by `scripts/fetch-docs.sh`) | `/docs/agent-shell` |
 
 Anything not in the table above is out of scope for the homepage until it has a published docs page.
 
@@ -182,7 +182,7 @@ Used by `CoreModulesSection` and (if retained) `QuickstartFlowSection` so a feat
                                           │ getCollection('docs') at build time
                                           ▼
        ┌──────────────────────────────────────────────────────────┐
-       │ index.astro (build-time RSC equivalent in Astro)         │
+       │ index.astro (build-time Astro page)                      │
        │ - reads docs collection                                  │
        │ - passes availableSlugs as prop into <HomePage/>         │
        └────────────────┬─────────────────────────────────────────┘
@@ -244,8 +244,8 @@ If a card's docs slug is not present in the collection, the selector returns an 
 
 - [ ] **OQ-1 (product):** Should we keep a "workflow narrative" section after deleting `SpecDrivenSection`, or is the documented Quickstart flow already represented well enough by the feature cards alone? *Recommendation: keep a `QuickstartFlowSection` rendering the three documented Quickstart steps because it preserves the visual rhythm of the page and gives a strong CTA to `/docs/quickstart`. Confirm before Task 4.*
 - [ ] **OQ-2 (product):** Do we want to retain the mascot "Developer Patch" callout card visually but with documented content (e.g. a "Pro tip: run `lint` in CI" pointing to `/docs/quickstart#2-enforce-quality-in-ci-lint`), or remove that visual element entirely? *Recommendation: remove for now; reintroduce only if/when there is a documented tip with a stable anchor.*
-- [ ] **OQ-3 (engineering):** Should the inventory live in `src/lib/` (used by Astro build) or `src/entities/` (per Clean Architecture rules in `software-architecture.instructions.md`)? *Recommendation: place schema + types in `src/entities/feature.ts`, place the selector in `src/use-cases/select-available-features.ts`, and keep the seeded inventory data in `src/lib/documented-features.ts`. Confirm in Task 1.*
-- [ ] **OQ-4 (content):** When upstream `docs/init.md`, `docs/lint.md`, `docs/mcp-server.md`, `docs/copilot-setup.md`, and `docs/new.md` are fetched into `src/content/docs/`, should each card's `docsHref` switch from `/docs/quickstart` to the per-command page automatically? *Recommendation: yes — drive `docsHref` from `requiresContentSlug` so adding a docs page lights up the deeper link without code changes.*
+- [ ] **OQ-3 (engineering):** Should the inventory live in `src/lib/` (used by Astro build) or `src/entities/` (per Clean Architecture rules in `.github/instructions/software-architecture.instructions.md`)? *Recommendation: place schema + types in `src/entities/feature.ts`, place the selector in `src/use-cases/select-available-features.ts`, and keep the seeded inventory data in `src/lib/documented-features.ts`. Confirm in Task 1.*
+- [ ] **OQ-4 (content):** ~~When upstream `docs/init.md`, `docs/lint.md`, `docs/mcp-server.md`, `docs/copilot-setup.md`, and `docs/new.md` are fetched into `src/content/docs/`, should each card's `docsHref` switch from `/docs/quickstart` to the per-command page automatically?~~ **Resolved by the inventory update** — the inventory now links directly to per-command pages (e.g. `/docs/init`, `/docs/lint`, `/docs/mcp-server`) with `/docs/quickstart` as a fallback, eliminating the need for the selector to handle per-command promotion separately.
 
 ---
 
@@ -466,7 +466,7 @@ If a card's docs slug is not present in the collection, the selector returns an 
 
 ## Out of Scope
 
-- Authoring new docs pages for `init`, `new`, `lint`, `copilot-setup`, or `agent-shell`. This spec only governs which features the homepage may market; expanding doc coverage is tracked separately.
+- Authoring new docs pages for `init`, `new`, `lint`, or `copilot-setup`. This spec only governs which features the homepage may market; expanding doc coverage is tracked separately. Note: `agent-shell` docs are already generated by `scripts/fetch-docs.sh` (which copies `packages/agent-shell/README.md` into `src/content/docs/agent-shell.md`) and are therefore considered present for homepage linking purposes.
 - Redesigning the Analog Terminal visual system. Surface tiers, borders, shadows, and typography remain governed by `DESIGN.md`.
 - Restructuring the docs sidebar or `/docs` routing.
 - Internationalization, light-mode variants, or marketing analytics instrumentation.
@@ -475,7 +475,7 @@ If a card's docs slug is not present in the collection, the selector returns an 
 
 ## Future Considerations
 
-- Once `init`, `new`, `lint`, `copilot-setup`, and `mcp-server` docs pages are present in `src/content/docs/`, switch each card's `docsHref` from `/docs/quickstart` to the per-command page (already supported by the selector — see OQ-4).
-- Consider promoting `agent-shell` from a feature card to its own narrative section once it has a dedicated `/docs/agent-shell` page.
+- All per-command docs pages (`init`, `new`, `lint`, `copilot-setup`, `mcp-server`) are fetched by `scripts/fetch-docs.sh` and are already present in `src/content/docs/` after a successful build. The inventory links directly to each per-command page so no further `docsHref` promotion work is needed.
+- Consider promoting `agent-shell` from a feature card to its own narrative section once `/docs/agent-shell` is improved and stabilized as a long-term reference page.
 - Consider a `/about` (manifesto) page if the secondary hero CTA is reinstated.
 - Add a CI step that regenerates a "documented features" snapshot from `src/content/docs/` and fails the build if the homepage inventory drifts from it.
