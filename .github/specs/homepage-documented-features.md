@@ -162,8 +162,12 @@ export const HomepageFeatureInventoryItemSchema = z.object({
     fallbackContentSlug: z.literal('quickstart').optional(),
 }).refine(
     (feature) =>
-        (feature.fallbackDocsHref !== undefined) ===
-        (feature.fallbackContentSlug !== undefined),
+        !(
+            (feature.fallbackDocsHref === undefined &&
+                feature.fallbackContentSlug !== undefined) ||
+            (feature.fallbackDocsHref !== undefined &&
+                feature.fallbackContentSlug === undefined)
+        ),
     { message: 'Fallback href and content slug must be configured together' },
 );
 
