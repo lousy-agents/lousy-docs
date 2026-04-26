@@ -45,13 +45,14 @@ so that I can **decide in under 10 seconds whether to read further**.
 #### Acceptance Criteria
 
 - [ ] The `HeroSection` shall describe Lousy Agents as a CLI that scaffolds, validates, and connects AI agent configurations through documented commands.
-- [ ] When the hero subhead references a capability, the homepage shall link to a docs page that documents that capability.
-- [ ] If a capability mentioned in the hero is not documented, then the homepage shall not reference that capability.
-- [ ] The terminal mock in the hero shall display only commands that exist in the documented CLI surface (e.g. `npx @lousy-agents/cli@latest init`).
+- [ ] When the `HeroSection` subhead references a capability, the `HeroSection` shall render a link to a docs page that documents that capability.
+- [ ] If a capability mentioned in the `HeroSection` is not documented, then the `HeroSection` shall not reference that capability.
+- [ ] The `HeroSection` terminal mock shall display only commands that exist in the documented CLI surface (e.g. `npx @lousy-agents/cli@latest init`).
+- [ ] The `HeroSection` shall render a primary CTA whose `href` is `/docs/quickstart`.
 - [ ] The `HeroSection` shall render a secondary CTA whose `href` is `https://github.com/zpratt/lousy-agents`.
 - [ ] The `HeroSection` shall not render any anchor whose `href` is `/about`.
-- [ ] The hero shall not display a hardcoded version string matching `/v\d+\.\d+\.\d+/` (e.g. `agent_v2.0.1`).
-- [ ] If a window-title or label is rendered in the hero, then its text content shall match one of the enumerated neutral placeholders: `cli`, `lousy-agents`, or `shell — lousy-agents`.
+- [ ] The `HeroSection` shall not display a hardcoded version string matching `/v\d+\.\d+\.\d+/` (e.g. `agent_v2.0.1`).
+- [ ] If a window-title or label is rendered in the `HeroSection`, then its text content shall match one of the enumerated neutral placeholders: `cli`, `lousy-agents`, or `shell — lousy-agents`.
 
 ### Story 2: Feature cards reflect only documented features
 
@@ -63,18 +64,18 @@ so that I can **drill into the docs to verify each claim before adopting the too
 
 - [ ] While a feature's primary content slug is present in the docs content collection, the `selectAvailableFeatures` selector shall resolve that feature's `docsHref` to `primaryDocsHref`.
 - [ ] While `resolvedFeatures` contains an entry for a feature, the `CoreModulesSection` shall render exactly one card for that feature using the supplied `docsHref`.
-- [ ] If a feature's primary content slug is absent from the docs content collection, and that feature's inventory entry has a fallback configured (both `fallbackDocsHref` and `fallbackContentSlug` are set), and the configured fallback content slug is present in the docs content collection, then the `selectAvailableFeatures` selector shall resolve that feature's `docsHref` to `fallbackDocsHref`.
-- [ ] Each feature card shall use the documented feature's name (e.g. `init`, `lint`, `MCP Server`, `Agent Shell`) rather than invented module names (`CLI Engine`, `Smart Linting`).
-- [ ] Each feature card description shall not contain any coined term from the banned list in Story 6 AC1 ("cognitive workloads", "operational perimeter", "hallucination loops", "feedback loop", "logic feedback loop").
-- [ ] The homepage shall not introduce in a feature card description any capability not present in that card's corresponding docs page.
+- [ ] While a feature's primary content slug is absent from the docs content collection, and that feature's inventory entry has a fallback configured (both `fallbackDocsHref` and `fallbackContentSlug` are set), and the configured fallback content slug is present in the docs content collection, the `selectAvailableFeatures` selector shall resolve that feature's `docsHref` to `fallbackDocsHref`.
+- [ ] The `CoreModulesSection` shall render each card with the documented feature name (e.g. `init`, `lint`, `MCP Server`, `Agent Shell`) rather than invented module names (`CLI Engine`, `Smart Linting`).
+- [ ] The `CoreModulesSection` shall not render any card description containing a coined term from the banned list in Story 6 AC1 ("cognitive workloads", "operational perimeter", "hallucination loops", "feedback loop", "logic feedback loop").
+- [ ] The `CoreModulesSection` shall not render any card description that introduces a capability not present in that card's corresponding docs page.
 
 > Note: The constraint in the preceding AC is verified by editorial review during PR code review, not by an automated check. Any PR that modifies feature card summaries must be reviewed against the corresponding docs page.
-- [ ] The MCP Server card shall expand `MCP` as `Model Context Protocol`, not `Multi-Agent Control Protocol`.
-- [ ] The Agent Shell card shall describe Agent Shell as an audit-trail wrapper around npm's `script-shell` (matching `src/content/local-docs/readme.md`), not a sandboxed runtime.
-- [ ] Each feature card shall include a link to the docs page for that feature.
+- [ ] The `CoreModulesSection` shall render the MCP Server card with `MCP` expanded as `Model Context Protocol`, not `Multi-Agent Control Protocol`.
+- [ ] The `CoreModulesSection` shall render the Agent Shell card describing Agent Shell as an audit-trail wrapper around npm's `script-shell` (matching `src/content/local-docs/readme.md`), not a sandboxed runtime.
+- [ ] The `CoreModulesSection` shall render a link to the docs page for each feature card.
 - [ ] When a visitor navigates to a feature card's docs link, the built site shall return a 200 response.
-- [ ] If no resolvable `docsHref` is produced by the `selectAvailableFeatures` selector for a feature, then the homepage shall omit that feature's card entirely.
-- [ ] Feature cards shall not display fabricated version labels (e.g. `v2.0.1 // system.bin`).
+- [ ] If no resolvable `docsHref` is produced by the `selectAvailableFeatures` selector for a feature, then the `CoreModulesSection` shall omit that feature's card entirely.
+- [ ] The `CoreModulesSection` shall not render fabricated version labels (e.g. `v2.0.1 // system.bin`).
 
 ### Story 3: Remove fabricated "Spec-Driven Development" pillars section
 
@@ -85,13 +86,16 @@ so that I can **trust the homepage to reflect the actual product surface**.
 #### Acceptance Criteria
 
 - [ ] The current `SpecDrivenSection` ("Define the Spec / Mock the World / Atomic Deploy") shall be removed from the homepage.
-- [ ] The `QuickstartFlowSection` shall replace `SpecDrivenSection` and render the documented three-step Quickstart flow (`init` → `lint` in CI → MCP Server).
-- [ ] The `QuickstartFlowSection` copy shall be paraphrased from `src/content/local-docs/quickstart.md` and shall not introduce undocumented behavior.
+- [ ] The `QuickstartFlowSection` shall render exactly three steps with labels `init`, `lint` (in CI), and `MCP Server`.
+- [ ] The `QuickstartFlowSection` copy shall be paraphrased from `src/content/local-docs/quickstart.md`.
+- [ ] The `QuickstartFlowSection` shall not render any text that describes behavior absent from `src/content/local-docs/quickstart.md`.
 - [ ] The `QuickstartFlowSection` step labels and links shall be statically embedded in the component (not fetched or computed at runtime).
 - [ ] The `QuickstartFlowSection` shall render each of the three steps as a link pointing to `/docs/quickstart`.
 - [ ] The `QuickstartFlowSection` shall include a primary CTA linking to `/docs/quickstart`.
 - [ ] Each `QuickstartFlowSection` step link shall have a unique, descriptive `aria-label` that includes the step name (e.g. `aria-label="Learn about init"`) so assistive technologies can distinguish the three links to the same URL.
-- [ ] The homepage shall not reference a built-in "mocking engine", "atomic deploy", or "Protocol" compliance enforcement, because none of these are documented features.
+- [ ] The homepage shall not reference a built-in "mocking engine".
+- [ ] The homepage shall not reference "atomic deploy".
+- [ ] The homepage shall not reference "Protocol" compliance enforcement.
 
 ### Story 4: Remove fabricated "Developer Patch" tip
 
@@ -128,7 +132,7 @@ so that I do **not encounter dead ends**.
 
 - [ ] If an internal homepage link's normalized path target — computed using the standard link-normalization algorithm — does not correspond to an entry in the docs content collection or a static page in `src/pages/`, then the `HomePage` component shall not render that link.
 - [ ] If no fallback is configured in the inventory for an inventory-backed feature link, and that feature's primary content slug is absent from the docs collection, then the `HomePage` component shall omit that feature link.
-- [ ] If a fallback is configured in the inventory for an inventory-backed feature link, and that feature's primary content slug is absent from the docs collection, then the `HomePage` component shall render the link pointing to `fallbackDocsHref`.
+- [ ] If a fallback is configured in the inventory for an inventory-backed feature link, and that feature's primary content slug is absent from the docs collection, and the configured fallback content slug is present in the docs collection, then the `HomePage` component shall render the link pointing to `fallbackDocsHref`.
 - [ ] If a homepage link's `href` does not start with `/`, then the `HomePage` component shall not subject that link to internal docs-page matching.
 
 ### Story 6: Homepage copy is grounded in documentation, not jargon
@@ -140,9 +144,9 @@ so that I can **search the docs for any term I see on the homepage and find a ma
 #### Acceptance Criteria
 
 - [ ] The homepage shall not introduce coined terms ("cognitive workloads", "operational perimeter", "hallucination loops", "feedback loop", "logic feedback loop") that are not present in the docs content collection.
-- [ ] When the homepage names a capability, the homepage shall use the same term as the corresponding docs page heading (e.g. `lint`, not `Smart Linting`).
-- [ ] The `CoreModulesSection` shall not render a card title that is absent from every document in the docs content collection.
-- [ ] The `CoreModulesSection` shall not render a card description containing a feature name that is absent from every document in the docs content collection.
+- [ ] When the `CoreModulesSection` renders a card title, the `CoreModulesSection` shall use the same term as the `h1` heading of that feature's corresponding docs page (e.g. `lint`, not `Smart Linting`).
+- [ ] The `CoreModulesSection` shall not render a card title that is absent from every document in the docs content collection (matching is case-insensitive; a title is considered present if it appears as a substring within the concatenated text content of any document).
+- [ ] The `CoreModulesSection` shall not render a card description containing a feature name that is absent from every document in the docs content collection (matching is case-insensitive; a feature name is considered present if it appears as a substring within the concatenated text content of any document).
 
 ---
 
@@ -153,7 +157,7 @@ so that I can **search the docs for any term I see on the homepage and find a ma
 ### Components Affected
 
 - `src/components/home/HeroSection.tsx` — Replace marketing claims with documented capability summary; remove `agent_v2.0.1` label; ensure terminal mock uses the documented `npx @lousy-agents/cli@latest init` command and accurate output.
-- `src/components/home/CoreModulesSection.tsx` — Replace the four invented modules with documented features; receives `resolvedFeatures: ResolvedHomepageFeature[]` as a prop (does not call the selector or import inventory directly); add learn-more link per card; remove fictional version-string labels (for example `feature.version` text such as `v2.0.1 // ...`) and, if needed, replace them with neutral documented metadata while retaining styling tokens such as `accentColor` required for the Analog Terminal design.
+- `src/components/home/CoreModulesSection.tsx` — Replace the four invented modules with documented features; receives `resolvedFeatures: ResolvedHomepageFeature[]` as a prop (does not call the selector or import inventory directly); add learn-more link per card; remove fictional version-string labels (for example `feature.version` text such as `v2.0.1 // ...`); accent colors for each card shall be sourced from a hardcoded per-feature map keyed on `feature.id` within `CoreModulesSection.tsx` (not passed through `resolvedFeatures`) to preserve Analog Terminal design tokens.
 - `src/components/home/SpecDrivenSection.tsx` — **Delete** (and remove its mount from `HomePage.tsx`).
 - `src/components/home/QuickstartFlowSection.tsx` *(new)* — Renders the three documented Quickstart steps (`init`, `lint` in CI, `MCP Server`) with a primary CTA linking to `/docs/quickstart`. Copy paraphrased from `src/content/local-docs/quickstart.md`; introduces no undocumented behavior.
 - `src/components/home/DeveloperPatch.tsx` — **Delete** (and remove its mount from `HomePage.tsx`).
@@ -571,7 +575,7 @@ If a card's dedicated docs slug is not present in the collection, the selector e
 - The unit test shall render `HomePage` with `resolvedFeatures` produced by calling `selectAvailableFeatures(inventory, docsSlugs)` where `docsSlugs` is imported from `tests/fixtures/docs-slugs.json`, so that all inventory-backed anchors present in the fixture are exercised.
 - Unit test also asserts that each card title rendered by `CoreModulesSection` appears verbatim in at least one document in the content collection (vocabulary check for Story 6 AC3).
 - Unit test also asserts that no card description rendered by `CoreModulesSection` contains any banned coined term from Story 6 AC1 ("cognitive workloads", "operational perimeter", "hallucination loops", "feedback loop", "logic feedback loop") (vocabulary check for Story 6 AC4).
-- Apply the standard link-normalization algorithm (defined in Story 5) to all internal homepage link targets before validation in both the unit test and the e2e spec.
+- In the unit test, apply all steps of the standard link-normalization algorithm (including step 6 slug translation) before checking slug existence in the fixture. In the e2e spec, apply steps 0–5 only (lowercase, strip fragment, strip query string, decode percent-encoding, collapse consecutive slashes, strip trailing slash) before issuing the Playwright request; step 6 (slug translation) is inapplicable in e2e because the test issues a real HTTP request to the full routable path (`/docs/lint`, not `lint`).
 - E2e test runs against the production build (`npm run test:e2e:dist`) so static-only routes are exercised.
 
 **Verification**:
