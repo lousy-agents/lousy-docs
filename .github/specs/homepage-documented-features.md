@@ -49,7 +49,7 @@ so that I can **decide in under 10 seconds whether to read further**.
 - [ ] If a capability mentioned in the hero is not documented, then the homepage shall not reference that capability.
 - [ ] The terminal mock in the hero shall display only commands that exist in the documented CLI surface (e.g. `npx @lousy-agents/cli@latest init`).
 - [ ] The hero shall not display a hardcoded version string for the CLI (e.g. `agent_v2.0.1`).
-- [ ] If a version label is shown, then the hero shall use a neutral placeholder such as `cli` or `lousy-agents`.
+- [ ] When a version label is rendered in the hero, the `HeroSection` shall use a neutral placeholder such as `cli` or `lousy-agents` rather than a hardcoded version string.
 
 ### Story 2: Feature cards reflect only documented features
 
@@ -59,7 +59,8 @@ so that I can **drill into the docs to verify each claim before adopting the too
 
 #### Acceptance Criteria
 
-- [ ] While a feature's primary docs slug or explicitly allowed fallback docs slug is present in the docs content collection, the features section shall render exactly one card for that feature, drawn from the Documented Feature Inventory table.
+- [ ] While a feature's primary content slug is present in the docs content collection, the `CoreModulesSection` shall render exactly one card for that feature linking to `primaryDocsHref`, drawn from the Documented Feature Inventory table.
+- [ ] While a feature's primary content slug is absent from the docs content collection and the `quickstart` fallback content slug is present, the `CoreModulesSection` shall render exactly one card for that feature linking to `/docs/quickstart`.
 - [ ] Each feature card shall use the documented feature's name (e.g. `init`, `lint`, `MCP Server`, `Agent Shell`) rather than invented module names (`CLI Engine`, `Smart Linting`).
 - [ ] Each feature card description shall paraphrase language from the corresponding docs page.
 - [ ] The homepage shall not introduce in a feature card description any capability not present in that card's corresponding docs page.
@@ -67,11 +68,11 @@ so that I can **drill into the docs to verify each claim before adopting the too
 - [ ] The Agent Shell card shall describe Agent Shell as an audit-trail wrapper around npm's `script-shell` (matching `src/content/local-docs/readme.md`), not a sandboxed runtime.
 - [ ] Each feature card shall include a link to the docs page for that feature.
 - [ ] When a visitor navigates to a feature card's docs link, the built site shall return a 200 response.
-- [ ] If a feature's dedicated docs page is not present and a `quickstart` fallback slug is present in the content collection, then the feature shall link to `/docs/quickstart`.
-- [ ] If neither a feature's dedicated docs slug nor the `quickstart` fallback slug is present in the content collection, then the feature shall be omitted from the homepage.
+- [ ] While the `quickstart` fallback content slug is present in the docs content collection, if a feature's primary content slug is absent, then the `CoreModulesSection` shall render a card for that feature linking to `/docs/quickstart`.
+- [ ] If no resolvable `docsHref` is produced by the `selectAvailableFeatures` selector for a feature, then the `CoreModulesSection` shall omit that feature.
 - [ ] Feature cards shall not display fabricated version labels (e.g. `v2.0.1 // system.bin`).
-- [ ] If version metadata is shown on a feature card and real package metadata is available, then the feature card shall display the version derived from that package metadata.
-- [ ] If version metadata is shown on a feature card and no real package metadata is available, then the feature card shall omit the version display.
+- [ ] While version metadata is displayed on a feature card and real package metadata is available, the feature card shall display the version derived from that package metadata.
+- [ ] While version metadata is displayed on a feature card and real package metadata is unavailable, the feature card shall omit the version display.
 
 ### Story 3: Remove fabricated "Spec-Driven Development" pillars section
 
@@ -82,8 +83,8 @@ so that I can **trust the homepage to reflect the actual product surface**.
 #### Acceptance Criteria
 
 - [ ] The current `SpecDrivenSection` ("Define the Spec / Mock the World / Atomic Deploy") shall be removed from the homepage.
-- [ ] If a workflow narrative is retained on the homepage, then the `SpecDrivenSection` shall be replaced with a `QuickstartFlowSection` rendering the documented three-step Quickstart flow (`init` → `lint` in CI → MCP Server) sourced from `src/content/local-docs/quickstart.md`.
-- [ ] While a Quickstart narrative is rendered, the system shall include a primary CTA linking to `/docs/quickstart`.
+- [ ] Where the Quickstart narrative is enabled in the page composition, the `QuickstartFlowSection` shall replace `SpecDrivenSection` and render the documented three-step Quickstart flow (`init` → `lint` in CI → MCP Server) sourced from `src/content/local-docs/quickstart.md`.
+- [ ] While a Quickstart narrative is rendered, the `QuickstartFlowSection` shall include a primary CTA linking to `/docs/quickstart`.
 - [ ] The homepage shall not reference a built-in "mocking engine", "atomic deploy", or "Protocol" compliance enforcement, because none of these are documented features.
 
 ### Story 4: Remove fabricated "Developer Patch" tip
@@ -95,7 +96,7 @@ so that I am **not misled into searching for features that do not exist**.
 #### Acceptance Criteria
 
 - [ ] The current `DeveloperPatch` section referencing the fictional `--break-loop` flag and "'79 simulation" shall be removed from the homepage.
-- [ ] If the homepage retains a tip / callout slot in that position, then the callout slot shall reference only documented commands.
+- [ ] Where the callout slot is retained in the page composition, the callout slot shall reference only documented commands.
 - [ ] If no documented command is suitable for the callout slot, then the slot shall be replaced with a documented call-to-action (e.g. a link to the Quickstart or the GitHub repository).
 
 ### Story 5: All internal homepage links resolve to documented pages
@@ -106,11 +107,11 @@ so that I do **not encounter dead ends**.
 
 #### Acceptance Criteria
 
-- [ ] The system shall not render any internal homepage link (an `href` starting with `/`) that points to a route without a corresponding entry in the docs content collection or a static page in `src/pages`.
-- [ ] When a referenced internal docs page is not yet available locally and no documented equivalent exists, the system shall omit the link.
-- [ ] When a referenced internal docs page is not yet available locally and a documented equivalent exists, the system shall render the link pointing to that equivalent (e.g. `/docs/quickstart`).
-- [ ] While a homepage link's href does not start with `/`, the system shall exclude it from the internal docs-page matching requirement.
-- [ ] If an internal homepage link is added in code without a matching docs page or static page, then the unit test suite shall fail with a message identifying the missing page.
+- [ ] The `HomePage` component shall not render any internal link (an `href` starting with `/`) that points to a route without a corresponding entry in the docs content collection or a static page in `src/pages`.
+- [ ] While no fallback equivalent is configured in the inventory, when the primary content slug for a link is absent from the docs collection, the `HomePage` component shall omit that link.
+- [ ] While a documented equivalent is configured in the inventory, when the primary content slug for a link is absent from the docs collection, the `HomePage` component shall render the link pointing to that equivalent (e.g. `/docs/quickstart`).
+- [ ] While a homepage link's `href` does not start with `/`, the link-integrity test shall exclude that link from the internal docs-page matching requirement.
+- [ ] If an internal homepage `href` is added in code that does not resolve to a valid internal route (a docs-collection slug or a `src/pages` entry), then the link-integrity unit test shall fail with a message identifying the unresolved `href`.
 
 ### Story 6: Homepage copy is grounded in documentation, not jargon
 
@@ -122,7 +123,8 @@ so that I can **search the docs for any term I see on the homepage and find a ma
 
 - [ ] The homepage shall not introduce coined terms ("cognitive workloads", "operational perimeter", "hallucination loops", "feedback loop", "logic feedback loop") that are not present in the docs content collection.
 - [ ] When the homepage names a capability, the homepage shall use the same term as the corresponding docs page heading (e.g. `lint`, not `Smart Linting`).
-- [ ] The homepage shall not render a card title or feature term that is absent from every document in the docs content collection.
+- [ ] The `CoreModulesSection` shall not render a card title that is absent from every document in the docs content collection.
+- [ ] The `CoreModulesSection` shall not render a feature term that is absent from every document in the docs content collection.
 
 ---
 
