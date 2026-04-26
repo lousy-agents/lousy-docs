@@ -29,7 +29,7 @@ The following are the only features the homepage may market. Each must link to a
 | Resource generators (`new --copilot-agent`, `new skill`) | `@lousy-agents/cli` | `zpratt/lousy-agents/docs/new.md` | `/docs/new` |
 | Quality validation (`lint`) | `@lousy-agents/cli` | `zpratt/lousy-agents/docs/lint.md` | `/docs/lint` (fallback: `/docs/quickstart`) |
 | Copilot environment workflow (`copilot-setup`) | `@lousy-agents/cli` | `zpratt/lousy-agents/docs/copilot-setup.md` | `/docs/copilot-setup` |
-| MCP server (Model Context Protocol) | `@lousy-agents/mcp` | `zpratt/lousy-agents/docs/mcp-server.md` | `/docs/mcp-server` (fallback: `/docs/quickstart`) |
+| MCP Server (Model Context Protocol) | `@lousy-agents/mcp` | `zpratt/lousy-agents/docs/mcp-server.md` | `/docs/mcp-server` (fallback: `/docs/quickstart`) |
 | Agent Shell audit trail | `@lousy-agents/agent-shell` | `packages/agent-shell/README.md` (copied by `scripts/fetch-docs.sh`) | `/docs/agent-shell` |
 
 Anything not in the table above is out of scope for the homepage until it has a published docs page.
@@ -66,7 +66,7 @@ so that I can **drill into the docs to verify each claim before adopting the too
 - [ ] While `resolvedFeatures` contains an entry for a feature, the `CoreModulesSection` shall render exactly one card for that feature using the supplied `docsHref`.
 - [ ] While a feature's primary content slug is absent from the docs content collection, and that feature's inventory entry has a fallback configured (both `fallbackDocsHref` and `fallbackContentSlug` are set), and the configured fallback content slug is present in the docs content collection, the `selectAvailableFeatures` selector shall resolve that feature's `docsHref` to `fallbackDocsHref`.
 - [ ] The `CoreModulesSection` shall render each card with the documented feature name (e.g. `init`, `lint`, `MCP Server`, `Agent Shell`) rather than invented module names (`CLI Engine`, `Smart Linting`).
-- [ ] The `CoreModulesSection` shall not render any card description containing a coined term from the banned list in Story 6 AC1 ("cognitive workloads", "operational perimeter", "hallucination loops", "feedback loop", "logic feedback loop").
+- [ ] The `CoreModulesSection` shall not render any card description containing a coined term ("cognitive workloads", "operational perimeter", "hallucination loops", "feedback loop", "logic feedback loop").
 - [ ] The `CoreModulesSection` shall not render any card description that introduces a capability not present in that card's corresponding docs page.
 
 > Note: The constraint in the preceding AC is verified by editorial review during PR code review, not by an automated check. Any PR that modifies feature card summaries must be reviewed against the corresponding docs page.
@@ -76,6 +76,7 @@ so that I can **drill into the docs to verify each claim before adopting the too
 - [ ] When a visitor navigates to a feature card's docs link, the built site shall return a 200 response.
 - [ ] If no resolvable `docsHref` is produced by the `selectAvailableFeatures` selector for a feature, then the `CoreModulesSection` shall omit that feature's card entirely.
 - [ ] The `CoreModulesSection` shall not render fabricated version labels (e.g. `v2.0.1 // system.bin`).
+- [ ] The `CoreModulesSection` shall resolve each card's accent color from a hardcoded `feature.id`-keyed map defined within `CoreModulesSection.tsx`; the `ResolvedHomepageFeature` prop shall carry no color data.
 
 ### Story 3: Remove fabricated "Spec-Driven Development" pillars section
 
@@ -92,7 +93,8 @@ so that I can **trust the homepage to reflect the actual product surface**.
 - [ ] The `QuickstartFlowSection` step labels and links shall be statically embedded in the component (not fetched or computed at runtime).
 - [ ] The `QuickstartFlowSection` shall render each of the three steps as a link pointing to `/docs/quickstart`.
 - [ ] The `QuickstartFlowSection` shall include a primary CTA linking to `/docs/quickstart`.
-- [ ] Each `QuickstartFlowSection` step link shall have a unique, descriptive `aria-label` that includes the step name (e.g. `aria-label="Learn about init"`) so assistive technologies can distinguish the three links to the same URL.
+- [ ] Each `QuickstartFlowSection` step link shall carry an `aria-label` that is unique across all three step links.
+- [ ] Each `QuickstartFlowSection` step link's `aria-label` shall include the step's label (e.g. `aria-label="Learn about init"`).
 - [ ] The homepage shall not reference a built-in "mocking engine".
 - [ ] The homepage shall not reference "atomic deploy".
 - [ ] The homepage shall not reference "Protocol" compliance enforcement.
@@ -130,9 +132,9 @@ so that I do **not encounter dead ends**.
 
 #### Acceptance Criteria
 
-- [ ] If an internal homepage link's normalized path target — computed using the standard link-normalization algorithm — does not correspond to an entry in the docs content collection or a static page in `src/pages/`, then the `HomePage` component shall not render that link.
-- [ ] If no fallback is configured in the inventory for an inventory-backed feature link, and that feature's primary content slug is absent from the docs collection, then the `HomePage` component shall omit that feature link.
-- [ ] If a fallback is configured in the inventory for an inventory-backed feature link, and that feature's primary content slug is absent from the docs collection, and the configured fallback content slug is present in the docs collection, then the `HomePage` component shall render the link pointing to `fallbackDocsHref`.
+- [ ] If an internal homepage link's normalized path target — computed using the standard link-normalization algorithm — does not correspond to an entry in the docs content collection or a static page in `src/pages/`, then the rendered homepage shall not include that link.
+- [ ] If no fallback is configured in the inventory for an inventory-backed feature link, and that feature's primary content slug is absent from the docs collection, then the `selectAvailableFeatures` selector shall not emit that feature in its output.
+- [ ] If a fallback is configured in the inventory for an inventory-backed feature link, and that feature's primary content slug is absent from the docs collection, and the configured fallback content slug is present in the docs collection, then the `selectAvailableFeatures` selector shall resolve that feature's `docsHref` to `fallbackDocsHref`.
 - [ ] If a homepage link's `href` does not start with `/`, then the `HomePage` component shall not subject that link to internal docs-page matching.
 
 ### Story 6: Homepage copy is grounded in documentation, not jargon
@@ -144,7 +146,7 @@ so that I can **search the docs for any term I see on the homepage and find a ma
 #### Acceptance Criteria
 
 - [ ] The homepage shall not introduce coined terms ("cognitive workloads", "operational perimeter", "hallucination loops", "feedback loop", "logic feedback loop") that are not present in the docs content collection.
-- [ ] When the `CoreModulesSection` renders a card title, the `CoreModulesSection` shall use the same term as the `h1` heading of that feature's corresponding docs page (e.g. `lint`, not `Smart Linting`).
+- [ ] The `CoreModulesSection` shall use the same term as the `h1` heading of each feature's corresponding docs page as that feature's card title (e.g. `lint`, not `Smart Linting`).
 - [ ] The `CoreModulesSection` shall not render a card title that is absent from every document in the docs content collection (matching is case-insensitive; a title is considered present if it appears as a substring within the concatenated text content of any document).
 - [ ] The `CoreModulesSection` shall not render a card description containing a feature name that is absent from every document in the docs content collection (matching is case-insensitive; a feature name is considered present if it appears as a substring within the concatenated text content of any document).
 
@@ -258,7 +260,7 @@ export const ResolvedHomepageFeatureSchema = z.object({
     id: z.string(),
     title: z.string(),
     summary: z.string(),
-    docsHref: z.string(),
+    docsHref: z.string().regex(/^\/docs\/[^/]+$/, "docsHref must match /docs/<slug>"),
 });
 
 export type ResolvedHomepageFeature = z.infer<typeof ResolvedHomepageFeatureSchema>;
@@ -405,7 +407,7 @@ If a card's dedicated docs slug is not present in the collection, the selector e
 - `tests/lib/documented-features.test.ts` *(new — schema and inventory shape; imports `tests/fixtures/docs-slugs.json` to assert all configured slugs are known)*
 
 **Requirements**:
-- Implements Story 2 (cards reflect documented features) and Story 5 (no broken links).
+- Implements Story 2 (cards reflect documented features) and Story 5 ACs 2–3 (selector enforces inventory-backed link resolution — AC1 of Story 5 and non-inventory CTAs are enforced by editorial review and the link-integrity test in Task 6).
 - `src/entities/feature.ts` exports only the inventory-item schema and type. `src/use-cases/select-available-features.ts` exports `ResolvedHomepageFeatureSchema`, `ResolvedHomepageFeature`, and `selectAvailableFeatures`.
 - Schema validates each inventory item has `id`, `title`, `summary`, `primaryDocsHref` (must match `^/docs/[^/]+$`), `primaryContentSlug` (must equal the slug segment captured from `primaryDocsHref`), optional `fallbackDocsHref`, and optional `fallbackContentSlug`; cross-field validation enforces that `primaryContentSlug` matches the captured segment from `primaryDocsHref` and that fallback href/slug are either both present or both absent.
 - The seeded inventory array in `src/lib/documented-features.ts` is validated with a uniqueness check on `id` values.
@@ -449,6 +451,7 @@ If a card's dedicated docs slug is not present in the collection, the selector e
 - MCP card title is `MCP Server`; summary expands as `Model Context Protocol`.
 - Agent Shell summary describes audit-trail wrapper of npm `script-shell` (matches `readme.md`).
 - No fabricated version strings (`v2.0.1`, etc.); the version metadata block is removed.
+- Accent colors for each card are sourced from a hardcoded per-feature map keyed on `feature.id` defined within `CoreModulesSection.tsx` (not passed through `resolvedFeatures`); the map must include an entry for each of the six known IDs: `init`, `new`, `lint`, `copilot-setup`, `mcp-server`, `agent-shell`.
 - Section keeps Analog Terminal styling (surface tier, ghost border, ambient shadow).
 
 **Verification**:
@@ -456,6 +459,7 @@ If a card's dedicated docs slug is not present in the collection, the selector e
 - [ ] Test asserts MCP expansion text appears in DOM
 - [ ] Test asserts no `/^v\d+\.\d+\.\d+/` strings appear in any rendered card
 - [ ] Test asserts no card title contains banned terms (`CLI Engine`, `Smart Linting`, `Multi-Agent`)
+- [ ] Test asserts the accent color map in `CoreModulesSection.tsx` contains entries for `init`, `new`, `lint`, `copilot-setup`, `mcp-server`, and `agent-shell`
 - [ ] `npx biome check src/components/home/CoreModulesSection.tsx tests/components/home/CoreModulesSection.test.tsx` passes
 - [ ] Visual verification per `.github/instructions/visual-verification.instructions.md` (screenshot of cards on desktop and mobile breakpoints attached to PR)
 
@@ -514,12 +518,14 @@ If a card's dedicated docs slug is not present in the collection, the selector e
 **Requirements**:
 - Implements Story 3.
 - `QuickstartFlowSection` renders exactly three steps named `init`, `lint` (in CI), and `MCP Server`, each linking to `/docs/quickstart` (anchor-level linking is out of scope; the base URL is sufficient and fragment validation is excluded by the standard link-normalization algorithm).
+- Each step link carries an `aria-label` that is unique across the three steps and includes the step name (e.g. `aria-label="Learn about init"`), satisfying WCAG 2.1 AA SC 2.4.4 for three adjacent anchors pointing to the same URL.
 - Section copy is paraphrased from `src/content/local-docs/quickstart.md` and shall not introduce undocumented behavior.
 - Primary CTA at the bottom of the section links to `/docs/quickstart`.
 
 **Verification**:
 - [ ] `npm test tests/components/home/QuickstartFlowSection.test.tsx` passes
 - [ ] Test asserts each of the three step elements renders an anchor whose `href` equals `/docs/quickstart`
+- [ ] Test asserts each step anchor has a distinct `aria-label` that contains the step name (`init`, `lint`, `MCP Server` respectively)
 - [ ] `tests/components/home/SpecDrivenSection.test.tsx` no longer exists
 - [ ] `npm test tests/components/home/HomePage.test.tsx` passes — asserts `SpecDrivenSection` is not rendered
 - [ ] `npx biome check` passes for all touched files
