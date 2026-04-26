@@ -48,6 +48,8 @@ so that I can **decide in under 10 seconds whether to read further**.
 - [ ] When the hero subhead references a capability, the homepage shall link to a docs page that documents that capability.
 - [ ] If a capability mentioned in the hero is not documented, then the homepage shall not reference that capability.
 - [ ] The terminal mock in the hero shall display only commands that exist in the documented CLI surface (e.g. `npx @lousy-agents/cli@latest init`).
+- [ ] The `HeroSection` shall render a secondary CTA whose `href` is `https://github.com/zpratt/lousy-agents`.
+- [ ] The `HeroSection` shall not render any anchor whose `href` is `/about`.
 - [ ] The hero shall not display a hardcoded version string for the CLI (e.g. `agent_v2.0.1`).
 - [ ] When a version label is rendered in the hero, the `HeroSection` shall use a neutral placeholder such as `cli` or `lousy-agents` rather than a hardcoded version string.
 
@@ -80,7 +82,8 @@ so that I can **trust the homepage to reflect the actual product surface**.
 #### Acceptance Criteria
 
 - [ ] The current `SpecDrivenSection` ("Define the Spec / Mock the World / Atomic Deploy") shall be removed from the homepage.
-- [ ] The `QuickstartFlowSection` shall replace `SpecDrivenSection` and render the documented three-step Quickstart flow (`init` → `lint` in CI → MCP Server) sourced from `src/content/local-docs/quickstart.md`.
+- [ ] The `QuickstartFlowSection` shall replace `SpecDrivenSection` and render the documented three-step Quickstart flow (`init` → `lint` in CI → MCP Server), with copy paraphrased from `src/content/local-docs/quickstart.md`; step labels and links shall be statically embedded in the component.
+- [ ] The `QuickstartFlowSection` shall render each of the three steps as a link pointing to `/docs/quickstart`.
 - [ ] The `QuickstartFlowSection` shall include a primary CTA linking to `/docs/quickstart`.
 - [ ] The homepage shall not reference a built-in "mocking engine", "atomic deploy", or "Protocol" compliance enforcement, because none of these are documented features.
 
@@ -93,8 +96,8 @@ so that I am **not misled into searching for features that do not exist**.
 #### Acceptance Criteria
 
 - [ ] The current `DeveloperPatch` section referencing the fictional `--break-loop` flag and "'79 simulation" shall be removed from the homepage.
-- [ ] Where the callout slot is retained in the page composition, the callout slot shall reference only documented commands.
-- [ ] If no documented command is suitable for the callout slot, then the slot shall be replaced with a documented call-to-action (e.g. a link to the Quickstart or the GitHub repository).
+
+> Note: The callout slot is not retained. See OQ-2 resolution.
 
 ### Story 5: All internal homepage links resolve to documented pages
 
@@ -102,15 +105,23 @@ As a **visitor exploring the site**,
 I want **every internal CTA and learn-more link on the homepage to resolve to a real, indexed docs page**,
 so that I do **not encounter dead ends**.
 
+#### Definitions
+
+> **Inventory-backed feature link**: any anchor `href` rendered by `CoreModulesSection` whose target is drawn from the Documented Feature Inventory table above.
+>
+> **Standard link-normalization algorithm**: given an internal `href` (starting with `/`), produce a canonical path by:
+> 1. Stripping any `#...` fragment.
+> 2. Stripping any `?...` query string.
+> 3. Stripping any trailing slash — except the root path `/`, which is kept as-is.
+> 4. If the result matches `/docs/<slug>` (where `<slug>` is a single path segment, no `/` characters, anchored by `^/docs/([^/]+)$`), translate it to `<slug>` for slug-existence checks; `/docs` itself is treated as a valid static route without translation.
+
 #### Acceptance Criteria
 
-> **Definition**: An **inventory-backed feature link** is any anchor `href` rendered by `CoreModulesSection` whose target is drawn from the Documented Feature Inventory table above.
-
-- [ ] The `HomePage` component shall render an internal link (an `href` starting with `/`) only when its normalized path target — derived by stripping any `#...` fragment, stripping any `?...` query string, and stripping any trailing slash (except for the root path `/`, which is treated as-is), then translating a `/docs/<slug>` pattern (where `<slug>` is a single path segment containing no `/` characters, anchored at end-of-path (`^/docs/([^/]+)$`)) to `<slug>` for slug-existence checks while treating `/docs` itself as a valid static route — corresponds to an entry in the docs content collection or a static page in `src/pages`.
+- [ ] The `HomePage` component shall render an internal link (an `href` starting with `/`) only when its normalized path target — computed using the standard link-normalization algorithm — corresponds to an entry in the docs content collection or a static page in `src/pages`.
 - [ ] If no fallback is configured in the inventory for an inventory-backed feature link, and that feature's primary content slug is absent from the docs collection, then the `HomePage` component shall omit that feature link.
 - [ ] If a fallback is configured in the inventory for an inventory-backed feature link, and that feature's primary content slug is absent from the docs collection, then the `HomePage` component shall render the link pointing to `fallbackDocsHref`.
 - [ ] If a homepage link's `href` does not start with `/`, then the link-integrity test shall exclude that link from the internal docs-page matching requirement.
-- [ ] If an internal homepage `href` is added in code whose normalized path target — derived by stripping any `#...` fragment, stripping any `?...` query string, and stripping any trailing slash (except for the root path `/`, which is treated as-is), then translating a `/docs/<slug>` pattern (where `<slug>` is a single path segment containing no `/` characters, anchored at end-of-path (`^/docs/([^/]+)$`)) to `<slug>` for slug-existence checks while treating `/docs` itself as a valid static route — does not resolve to a valid internal route (a docs-collection slug or a `src/pages` entry), then the link-integrity unit test shall fail with a message identifying the unresolved `href`.
+- [ ] If an internal homepage `href` is added in code whose normalized path target — computed using the standard link-normalization algorithm — does not resolve to a valid internal route (a docs-collection slug or a `src/pages` entry), then the link-integrity unit test shall fail with a message identifying the unresolved `href`.
 
 ### Story 6: Homepage copy is grounded in documentation, not jargon
 
@@ -135,7 +146,8 @@ so that I can **search the docs for any term I see on the homepage and find a ma
 
 - `src/components/home/HeroSection.tsx` — Replace marketing claims with documented capability summary; remove `agent_v2.0.1` label; ensure terminal mock uses the documented `npx @lousy-agents/cli@latest init` command and accurate output.
 - `src/components/home/CoreModulesSection.tsx` — Replace the four invented modules with documented features from the inventory (`init`, `new`, `lint`, `copilot-setup`, `MCP Server`, `Agent Shell`) whenever their primary docs slug or allowed fallback slug is present; add learn-more link per card; remove fictional version-string labels (for example `feature.version` text such as `v2.0.1 // ...`) and, if needed, replace them with neutral documented metadata while retaining styling tokens such as `accentColor` required for the Analog Terminal design.
-- `src/components/home/SpecDrivenSection.tsx` — **Delete** (and remove its mount from `HomePage.tsx`) **or** rewrite as a `QuickstartFlowSection` rendering the three documented Quickstart steps with a CTA to `/docs/quickstart`. Decision recorded in Open Questions.
+- `src/components/home/SpecDrivenSection.tsx` — **Delete** (and remove its mount from `HomePage.tsx`).
+- `src/components/home/QuickstartFlowSection.tsx` *(new)* — Renders the three documented Quickstart steps (`init`, `lint` in CI, `MCP Server`) with a primary CTA linking to `/docs/quickstart`. Copy paraphrased from `src/content/local-docs/quickstart.md`; introduces no undocumented behavior.
 - `src/components/home/DeveloperPatch.tsx` — **Delete** (and remove its mount from `HomePage.tsx`).
 - `src/components/home/HomePage.tsx` — Update the section composition to reflect the new component set; preserve `AntDProvider`, `SiteHeader`, `SiteFooter`, `MobileNavDrawer` wiring; preserve the `client:only="react"` mount in `src/pages/index.astro`.
 - `src/entities/feature.ts` *(new)* — Defines Zod schemas and types for inventory items (`{ id, title, summary, primaryDocsHref, primaryContentSlug, fallbackDocsHref?, fallbackContentSlug? }`) and selector-resolved features (`{ id, title, summary, docsHref }`).
@@ -143,7 +155,8 @@ so that I can **search the docs for any term I see on the homepage and find a ma
 - `src/lib/documented-features.ts` *(new)* — Single source of truth for the homepage feature list. Exports the seeded inventory array validated with the entity schema.
 - `tests/components/home/HeroSection.test.tsx` — Update assertions to match new copy and links.
 - `tests/components/home/CoreModulesSection.test.tsx` — Replace assertions to match documented-feature cards; add tests for: link presence per card, MCP expansion, no fabricated version labels, no fictional terms.
-- `tests/components/home/SpecDrivenSection.test.tsx` — Delete (or rewrite as `QuickstartFlowSection.test.tsx`).
+- `tests/components/home/SpecDrivenSection.test.tsx` — **Delete**.
+- `tests/components/home/QuickstartFlowSection.test.tsx` *(new)* — Asserts: (1) exactly three steps are rendered with labels `init`, `lint` (in CI), and `MCP Server`; (2) each step links to `/docs/quickstart`; (3) primary CTA renders and links to `/docs/quickstart`; (4) no text contains `Define the Spec`, `Mock the World`, or `Atomic Deploy`.
 - `tests/components/home/DeveloperPatch.test.tsx` — Delete.
 - `tests/components/home/HomePage.test.tsx` — Update to assert removed sections are not rendered and new section composition is correct.
 - `tests/lib/documented-features.test.ts` *(new)* — Validate the inventory shape and assert that every configured primary/fallback docs link is represented by the docs collection or an allowed fallback.
@@ -217,7 +230,7 @@ export function selectAvailableFeatures(
 ): ResolvedHomepageFeature[];
 ```
 
-Used by `CoreModulesSection` and (if retained) `QuickstartFlowSection` so a feature renders only with a resolved docs link:
+Used by `CoreModulesSection`. `QuickstartFlowSection` uses fixed hardcoded steps and does not call the selector:
 
 1. If `primaryContentSlug` is present in `availableSlugs`, resolve `docsHref` to `primaryDocsHref`.
 2. If `primaryContentSlug` is missing from `availableSlugs`, `fallbackDocsHref` is `/docs/quickstart`, and `fallbackContentSlug` (`quickstart`) is present in `availableSlugs`, resolve `docsHref` to `fallbackDocsHref`.
@@ -258,7 +271,7 @@ Used by `CoreModulesSection` and (if retained) `QuickstartFlowSection` so a feat
                         ▼
        ┌──────────────────────────────────────────────────────────┐
        │ HomePage.tsx (client:only react island)                  │
-       │ - composes Hero, CoreModules, (Quickstart?), Footer      │
+       │ - composes Hero, CoreModules, QuickstartFlowSection, Footer  │
        └─┬───────────────────┬───────────────────┬────────────────┘
          │                   │                   │
          ▼                   ▼                   ▼
@@ -410,13 +423,14 @@ If a card's dedicated docs slug is not present in the collection, the selector e
 - Subhead describes scaffolding (`init`), CI validation (`lint`), and editor integration via the MCP server — using docs vocabulary.
 - Terminal mock uses `npx @lousy-agents/cli@latest init` and shows realistic, documented output (no invented `[INFO]` lines that imply behavior the CLI does not have).
 - Replaces the `agent_v2.0.1` window title with a neutral label (`shell — lousy-agents` or omit).
-- Primary CTA links to `/docs/quickstart`. Secondary CTA links to a real destination (e.g. the GitHub repository) — no link to a missing `/about` page; if `/about` exists it remains, otherwise the secondary CTA is updated or removed.
+- Primary CTA links to `/docs/quickstart`. Secondary CTA links to the Lousy Agents GitHub repository (`https://github.com/zpratt/lousy-agents`). No `/about` link shall be rendered.
 - No invented version labels.
 
 **Verification**:
 - [ ] `npm test tests/components/home/HeroSection.test.tsx` passes
 - [ ] Test asserts subhead does not contain `Multi-Agent` or `cognitive workloads`
-- [ ] Test asserts every internal CTA `href` (starting with `/`), after normalizing the target by stripping any `#...` fragment, stripping any `?...` query string, stripping any trailing slash (except for the root path `/`, which is treated as-is), and translating a `/docs/<slug>` pattern (where `<slug>` is a single path segment containing no `/` characters, anchored at end-of-path (`^/docs/([^/]+)$`)) to `<slug>`, resolves to a slug in the docs collection or a static page in `src/pages`; external CTAs (e.g. the GitHub repository URL) are excluded from this assertion
+- [ ] Test asserts every internal CTA `href` (starting with `/`), after applying the standard link-normalization algorithm (defined in Story 5), resolves to a slug in the docs collection or a static page in `src/pages`; external CTAs (e.g. the GitHub repository URL) are excluded from this assertion
+- [ ] Test asserts secondary CTA `href` equals `https://github.com/zpratt/lousy-agents` and no anchor `href` equals `/about`
 - [ ] `npx biome check src/components/home/HeroSection.tsx tests/components/home/HeroSection.test.tsx` passes
 - [ ] Visual verification screenshot attached (desktop + mobile)
 
@@ -426,28 +440,30 @@ If a card's dedicated docs slug is not present in the collection, the selector e
 
 ---
 
-### Task 4: Replace `SpecDrivenSection` per OQ-1 resolution
+### Task 4: Replace `SpecDrivenSection` with `QuickstartFlowSection`
 
-**Depends on**: Task 1, OQ-1 resolved
+**Depends on**: Task 1
 
-**Objective**: Delete the fabricated three-pillar section; if OQ-1 resolves to "keep a flow section", create `QuickstartFlowSection` driven by the documented Quickstart steps.
+**Objective**: Delete the fabricated three-pillar section and replace it with `QuickstartFlowSection` driven by the documented Quickstart steps.
 
 **Affected files**:
 - `src/components/home/SpecDrivenSection.tsx` *(delete)*
-- `src/components/home/QuickstartFlowSection.tsx` *(new, only if OQ-1 = keep)*
+- `src/components/home/QuickstartFlowSection.tsx` *(new)*
 - `src/components/home/HomePage.tsx`
 - `tests/components/home/SpecDrivenSection.test.tsx` *(delete)*
-- `tests/components/home/QuickstartFlowSection.test.tsx` *(new, only if OQ-1 = keep)*
+- `tests/components/home/QuickstartFlowSection.test.tsx` *(new)*
 - `tests/components/home/HomePage.test.tsx`
 
 **Requirements**:
 - Implements Story 3.
-- If retained, `QuickstartFlowSection` renders exactly three steps named `init`, `lint` (in CI), and `MCP Server`, each linking to the corresponding section anchor in `/docs/quickstart`.
+- `QuickstartFlowSection` renders exactly three steps named `init`, `lint` (in CI), and `MCP Server`, each linking to `/docs/quickstart` (anchor-level linking is out of scope; the base URL is sufficient and fragment validation is excluded by the standard link-normalization algorithm).
 - Section copy is paraphrased from `src/content/local-docs/quickstart.md` and shall not introduce undocumented behavior.
 - Primary CTA at the bottom of the section links to `/docs/quickstart`.
 
 **Verification**:
-- [ ] `npm test tests/components/home/QuickstartFlowSection.test.tsx` passes (if retained) or `tests/components/home/SpecDrivenSection.test.tsx` no longer exists (if deleted)
+- [ ] `npm test tests/components/home/QuickstartFlowSection.test.tsx` passes
+- [ ] Test asserts each of the three step elements renders an anchor whose `href` equals `/docs/quickstart`
+- [ ] `tests/components/home/SpecDrivenSection.test.tsx` no longer exists
 - [ ] `npm test tests/components/home/HomePage.test.tsx` passes — asserts `SpecDrivenSection` is not rendered
 - [ ] `npx biome check` passes for all touched files
 - [ ] Visual verification screenshot attached
@@ -460,9 +476,9 @@ If a card's dedicated docs slug is not present in the collection, the selector e
 
 ### Task 5: Remove `DeveloperPatch` per OQ-2 resolution
 
-**Depends on**: Task 1, OQ-2 resolved
+**Depends on**: Task 1
 
-**Objective**: Delete the fabricated `--break-loop` callout. Reintroduce the visual slot only if a documented replacement is approved.
+**Objective**: Delete the fabricated `--break-loop` callout.
 
 **Affected files**:
 - `src/components/home/DeveloperPatch.tsx` *(delete)*
@@ -492,14 +508,14 @@ If a card's dedicated docs slug is not present in the collection, the selector e
 **Objective**: Prevent regressions where homepage code references an internal docs page that does not exist; add e2e coverage that every internal homepage link resolves at runtime.
 
 **Affected files**:
-- `tests/components/home/homepage-link-integrity.test.tsx` *(new — unit test that walks `HomePage` rendered output and asserts each internal anchor `href` (starting with `/`) corresponds to either a slug in a fixture content collection or a static page after normalizing the link target by stripping any `#...` fragment, stripping any `?...` query string, and stripping any trailing slash (except for the root path `/`, which is treated as-is); when the normalized target matches `/docs/<slug>` (where `<slug>` is a single path segment containing no `/` characters, anchored at end-of-path (`^/docs/([^/]+)$`)), translate it to `<slug>` before checking the fixture content collection, while still allowing static routes such as `/docs`; external links are excluded from the check)*
-- `tests/e2e/homepage.spec.ts` *(new or extended — Playwright walks each internal homepage link (href starting with `/`), normalizes the target by stripping any `#...` fragment, stripping any `?...` query string, and stripping any trailing slash (except for the root path `/`, which is treated as-is) before issuing the request, then asserts the underlying internal page returns 200; `/docs/<slug>` (where `<slug>` is a single path segment containing no `/` characters, anchored at end-of-path (`^/docs/([^/]+)$`)) remains a routable URL in e2e; external links are excluded)*
+- `tests/components/home/homepage-link-integrity.test.tsx` *(new — unit test that walks `HomePage` rendered output and asserts each internal anchor `href` (starting with `/`) corresponds to either a slug in a fixture content collection or a static page, applying the standard link-normalization algorithm defined in Story 5; external links are excluded from the check)*
+- `tests/e2e/homepage.spec.ts` *(new or extended — Playwright walks each internal homepage link (href starting with `/`), applies the standard link-normalization algorithm defined in Story 5 before issuing the request (fragment and query string are stripped; `/docs/<slug>` remains a routable URL in e2e without slug translation), then asserts the underlying internal page returns 200; external links are excluded)*
 
 **Requirements**:
 - Implements Story 5 and Story 6.
 - Unit test fails with a message naming the missing slug if an internal card or CTA `href` (starting with `/`) points to an unmapped internal route.
 - Unit test also asserts that each card title rendered by `CoreModulesSection` appears verbatim in at least one document in the content collection (vocabulary check for Story 6 AC3).
-- Normalize internal homepage link targets before validation by stripping `#...` fragments, stripping `?...` query strings, and stripping trailing slashes (except for the root path `/`, which is treated as-is) before matching slugs/routes and before issuing e2e requests; when the normalized target matches `/docs/<slug>` (where `<slug>` is a single path segment containing no `/` characters, anchored at end-of-path (`^/docs/([^/]+)$`)), translate it to `<slug>` for the slug-existence check.
+- Apply the standard link-normalization algorithm (defined in Story 5) to all internal homepage link targets before validation in both the unit test and the e2e spec.
 - E2e test runs against the production build (`npm run test:e2e:dist`) so static-only routes are exercised.
 
 **Verification**:
