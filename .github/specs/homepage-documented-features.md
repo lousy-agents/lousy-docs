@@ -91,17 +91,18 @@ so that I am **not misled into searching for features that do not exist**.
 - [ ] The current `DeveloperPatch` section referencing the fictional `--break-loop` flag and "'79 simulation" shall be removed from the homepage.
 - [ ] If the homepage retains a tip / callout slot in that position, then it shall reference only documented commands or be replaced with a documented call-to-action (e.g. linking to the Quickstart or the GitHub repository).
 
-### Story 5: All homepage links resolve to documented pages
+### Story 5: All internal homepage links resolve to documented pages
 
 As a **visitor exploring the site**,
-I want **every CTA and learn-more link on the homepage to resolve to a real, indexed docs page**,
+I want **every internal CTA and learn-more link on the homepage to resolve to a real, indexed docs page**,
 so that I do **not encounter dead ends**.
 
 #### Acceptance Criteria
 
-- [ ] The system shall not render any homepage link that points to a route without a corresponding entry in the docs content collection or a static page in `src/pages`.
-- [ ] When a referenced docs page is not yet available locally, the system shall either omit the link or point at the closest documented equivalent (e.g. `/docs/quickstart`).
-- [ ] If a homepage link is added in code without a matching docs page, then the unit test suite shall fail with a message identifying the missing page.
+- [ ] The system shall not render any internal homepage link (an `href` starting with `/`) that points to a route without a corresponding entry in the docs content collection or a static page in `src/pages`.
+- [ ] When a referenced internal docs page is not yet available locally, the system shall either omit the link or point at the closest documented equivalent (e.g. `/docs/quickstart`).
+- [ ] Where a homepage link's href does not start with `/`, the system shall exclude it from the internal docs-page matching requirement.
+- [ ] If an internal homepage link is added in code without a matching docs page or static page, then the unit test suite shall fail with a message identifying the missing page.
 
 ### Story 6: Homepage copy is grounded in documentation, not jargon
 
@@ -137,7 +138,7 @@ so that I can **search the docs for any term I see on the homepage and find a ma
 - `tests/components/home/DeveloperPatch.test.tsx` — Delete.
 - `tests/components/home/HomePage.test.tsx` — Update to assert removed sections are not rendered and new section composition is correct.
 - `tests/lib/documented-features.test.ts` *(new)* — Validate the inventory shape and assert that every configured primary/fallback docs link is represented by the docs collection or an allowed fallback.
-- `tests/e2e/homepage.spec.ts` *(new or extended)* — Smoke test that every homepage link resolves (status 200) when running against the built site (`npm run test:e2e:dist`).
+- `tests/e2e/homepage.spec.ts` *(new or extended)* — Smoke test that every internal homepage link (href starting with `/`) resolves (status 200) when running against the built site (`npm run test:e2e:dist`).
 
 ### Dependencies
 
@@ -379,7 +380,7 @@ If a card's dedicated docs slug is not present in the collection, the selector e
 **Verification**:
 - [ ] `npm test tests/components/home/HeroSection.test.tsx` passes
 - [ ] Test asserts subhead does not contain `Multi-Agent` or `cognitive workloads`
-- [ ] Test asserts every CTA `href` resolves to a known route
+- [ ] Test asserts every internal CTA `href` (starting with `/`) resolves to a slug in the docs collection or a static page in `src/pages`; external CTAs (e.g. the GitHub repository URL) are excluded from this assertion
 - [ ] `npx biome check src/components/home/HeroSection.tsx tests/components/home/HeroSection.test.tsx` passes
 - [ ] Visual verification screenshot attached (desktop + mobile)
 
@@ -452,15 +453,15 @@ If a card's dedicated docs slug is not present in the collection, the selector e
 
 **Depends on**: Tasks 2–5
 
-**Objective**: Prevent regressions where homepage code references a docs page that does not exist; add e2e coverage that every homepage link resolves at runtime.
+**Objective**: Prevent regressions where homepage code references an internal docs page that does not exist; add e2e coverage that every internal homepage link resolves at runtime.
 
 **Affected files**:
-- `tests/components/home/homepage-link-integrity.test.tsx` *(new — unit test that walks `HomePage` rendered output and asserts each anchor `href` corresponds to a slug in a fixture content collection or a static page)*
-- `tests/e2e/homepage.spec.ts` *(new or extended — Playwright walks each homepage link and asserts 200)*
+- `tests/components/home/homepage-link-integrity.test.tsx` *(new — unit test that walks `HomePage` rendered output and asserts each internal anchor `href` (starting with `/`) corresponds to a slug in a fixture content collection or a static page; external links are excluded from the check)*
+- `tests/e2e/homepage.spec.ts` *(new or extended — Playwright walks each internal homepage link (href starting with `/`) and asserts 200; external links are excluded)*
 
 **Requirements**:
 - Implements Story 5 and Story 6.
-- Unit test fails with a message naming the missing slug if a card or CTA points to an unmapped route.
+- Unit test fails with a message naming the missing slug if an internal card or CTA `href` (starting with `/`) points to an unmapped internal route.
 - E2e test runs against the production build (`npm run test:e2e:dist`) so static-only routes are exercised.
 
 **Verification**:
@@ -489,7 +490,7 @@ If a card's dedicated docs slug is not present in the collection, the selector e
 - [ ] `npm run build`
 - [ ] `npm run test:e2e:dist`
 - [ ] Before/after screenshots attached to the PR for desktop and a mobile breakpoint, per `.github/instructions/visual-verification.instructions.md`
-- [ ] Manual check: every `href` on `/` opens a 200 page
+- [ ] Manual check: every internal `href` (starting with `/`) on `/` opens a 200 page; external links are excluded from this check
 
 **Done when**:
 - [ ] All verification steps pass
