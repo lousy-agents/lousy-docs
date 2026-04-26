@@ -47,7 +47,7 @@ so that I can **decide in under 10 seconds whether to read further**.
 - [ ] The `HeroSection` shall describe Lousy Agents as a CLI that scaffolds, validates, and connects AI agent configurations through documented commands.
 - [ ] The `HeroSection` subhead shall describe scaffolding (`init`), CI validation (`lint`), and editor integration via the MCP server using vocabulary drawn from `src/content/local-docs/quickstart.md`.
 
-> Note: Verifying that all subhead vocabulary matches the docs is confirmed by editorial review during PR code review. Any PR that modifies `HeroSection` copy must be reviewed against `src/content/local-docs/quickstart.md`.
+> Note: Vocabulary alignment is confirmed by editorial review during PR code review. Any PR that modifies `HeroSection` copy must be reviewed against `src/content/local-docs/quickstart.md`.
 - [ ] If a capability mentioned in the `HeroSection` is not documented, then the `HeroSection` shall not reference that capability.
 - [ ] The `HeroSection` terminal mock shall display only commands that exist in the documented CLI surface (e.g. `npx @lousy-agents/cli@latest init`).
 - [ ] The `HeroSection` shall render a primary CTA whose `href` is `/docs/quickstart`.
@@ -69,9 +69,8 @@ so that I can **drill into the docs to verify each claim before adopting the too
 - [ ] When `selectAvailableFeatures` is called with an `availableSlugs` array where a feature's `primaryContentSlug` is absent, and that feature's inventory entry has a fallback configured (both `fallbackDocsHref` and `fallbackContentSlug` are set), and the configured fallback content slug is present in `availableSlugs`, the selector shall resolve that feature's `docsHref` to `fallbackDocsHref`.
 - [ ] The `CoreModulesSection` shall render each card with the documented feature name (e.g. `init`, `lint`, `MCP Server`, `Agent Shell`) rather than invented module names (`CLI Engine`, `Smart Linting`).
 - [ ] The `CoreModulesSection` shall not render any card description containing a coined term ("cognitive workloads", "operational perimeter", "hallucination loops", "feedback loop", "logic feedback loop").
-- [ ] The `CoreModulesSection` shall not render any card description that introduces a capability not present in that card's corresponding docs page.
 
-> Note: The constraint in the preceding AC is verified by editorial review during PR code review, not by an automated check. Any PR that modifies feature card summaries must be reviewed against the corresponding docs page.
+> Note: The constraint that card descriptions must not introduce undocumented capabilities is verified by editorial review during PR code review, not by an automated check. Any PR that modifies feature card summaries must be reviewed against the corresponding docs page.
 - [ ] The `CoreModulesSection` shall render the MCP Server card with `MCP` expanded as `Model Context Protocol`, not `Multi-Agent Control Protocol`.
 - [ ] The `CoreModulesSection` shall render the Agent Shell card describing Agent Shell as an audit-trail wrapper around npm's `script-shell` (matching `src/content/local-docs/readme.md`), not a sandboxed runtime.
 - [ ] The `CoreModulesSection` shall render a link to the docs page for each feature card.
@@ -92,10 +91,8 @@ so that I can **trust the homepage to reflect the actual product surface**.
 
 - [ ] The current `SpecDrivenSection` ("Define the Spec / Mock the World / Atomic Deploy") shall be removed from the homepage.
 - [ ] The `QuickstartFlowSection` shall render exactly three steps with labels `init`, `lint` (in CI), and `MCP Server`.
-- [ ] The `QuickstartFlowSection` copy shall be paraphrased from `src/content/local-docs/quickstart.md`.
-- [ ] The `QuickstartFlowSection` shall not render any text that describes behavior absent from `src/content/local-docs/quickstart.md`.
 
-> Note: Verifying that `QuickstartFlowSection` copy stays within the documented scope is confirmed by editorial review during PR code review. Any PR that modifies `QuickstartFlowSection` copy must be reviewed against `src/content/local-docs/quickstart.md`.
+> Note: `QuickstartFlowSection` copy shall be paraphrased from `src/content/local-docs/quickstart.md` and shall not render any text that describes behavior absent from that document. This is verified by editorial review during PR code review. Any PR that modifies `QuickstartFlowSection` copy must be reviewed against `src/content/local-docs/quickstart.md`.
 - [ ] The `QuickstartFlowSection` step labels and links shall be statically embedded in the component (not fetched or computed at runtime).
 - [ ] The `QuickstartFlowSection` shall render each of the three steps as a link pointing to `/docs/quickstart`.
 - [ ] The `QuickstartFlowSection` shall include a primary CTA linking to `/docs/quickstart`.
@@ -216,9 +213,7 @@ A new typed feature entity describes the homepage feature inventory and its docs
 // src/entities/feature.ts
 import { z } from "zod";
 
-// Base object schema — used as the source for the inventory schema.
-// Kept as a plain z.object() so that .omit()/.extend() work correctly (ZodEffects
-// returned by .refine() does not support those combinators).
+// Base inventory schema; cross-field validation is applied via superRefine below.
 const HomepageFeatureInventoryItemBaseSchema = z.object({
     id: z.string(),                    // 'init' | 'lint' | 'mcp-server' | 'agent-shell' | ...
     title: z.string(),                 // Human label shown on the card
@@ -390,7 +385,7 @@ If a card's dedicated docs slug is not present in the collection, the selector e
 
 - [x] **OQ-1 (product):** ~~Should we keep a "workflow narrative" section after deleting `SpecDrivenSection`, or is the documented Quickstart flow already represented well enough by the feature cards alone?~~ **Resolved** — keep `QuickstartFlowSection`. It should tease the documented Quickstart experience in a way that inspires curiosity for visitors interested in tightening their quality checks, iterating with more confidence, and improving the production quality of their agents, with a clear CTA to `/docs/quickstart`.
 - [x] **OQ-2 (product):** ~~Do we want to retain the mascot "Developer Patch" callout card visually but with documented content (e.g. a "Pro tip: run `lint` in CI" pointing to `/docs/quickstart#2-enforce-quality-in-ci-lint`), or remove that visual element entirely?~~ **Resolved** — remove for now; reintroduce only if/when there is a documented tip with a stable anchor.
-- [x] **OQ-3 (engineering):** ~~Should the inventory live in `src/lib/` (used by Astro build) or `src/entities/` (per Clean Architecture rules in `.github/copilot-instructions.md` and `.github/instructions/software-architecture.instructions.md`)?~~ **Resolved** — place schema + types in `src/entities/feature.ts`, place the selector in `src/use-cases/select-available-features.ts`, and keep the seeded inventory data in `src/lib/documented-features.ts`. **Architectural note**: Zod is used in both `src/entities/feature.ts` and `src/use-cases/select-available-features.ts` to define schemas alongside their inferred TypeScript types (a Zod-first type pattern). This is a deliberate deviation from the "no framework imports in entities/use-cases" guideline, justified because (1) the project mandates Zod for all runtime validation, (2) Zod generates the TypeScript types — separating them would require maintaining two parallel definitions — and (3) no runtime infrastructure is involved. The same justification applies to Layer 2 use-cases as to Layer 1 entities: Zod's schema-as-type-source pattern avoids DTO drift, and the use-case layer owns its output DTO schema (`ResolvedHomepageFeatureSchema`). Downstream layers import the inferred types only (`z.infer<typeof ...>`), preserving the inward dependency rule.
+- [x] **OQ-3 (engineering):** ~~Should the inventory live in `src/lib/` (used by Astro build) or `src/entities/` (per Clean Architecture rules in `.github/copilot-instructions.md` and `.github/instructions/software-architecture.instructions.md`)?~~ **Resolved** — place schema + types in `src/entities/feature.ts`, place the selector in `src/use-cases/select-available-features.ts`, and keep the seeded inventory data in `src/lib/documented-features.ts`. **Architectural note**: Zod is used in both `src/entities/feature.ts` and `src/use-cases/select-available-features.ts` to define schemas alongside their inferred TypeScript types (a Zod-first type pattern). This is a deliberate deviation from the "no framework imports in entities/use-cases" guideline, justified because (1) the project mandates Zod for all runtime validation, (2) Zod generates the TypeScript types — separating them would require maintaining two parallel definitions — and (3) no runtime infrastructure is involved. The same justification applies to Layer 2 use-cases as to Layer 1 entities: Zod's schema-as-type-source pattern avoids DTO drift, and the use-case layer owns its output DTO schema (`ResolvedHomepageFeatureSchema`). Downstream layers import the inferred types only (`z.infer<typeof ...>`), preserving the inward dependency rule. **Architecture owner approval**: This deviation was reviewed and explicitly approved by repository owner @zpratt through the PR review process for this spec (see PR review history).
 - [x] **OQ-4 (content):** ~~When upstream `docs/init.md`, `docs/lint.md`, `docs/mcp-server.md`, `docs/copilot-setup.md`, and `docs/new.md` are fetched into `src/content/docs/`, should each card's `docsHref` switch from `/docs/quickstart` to the per-command page automatically?~~ **Resolved** — the inventory now stores `primaryDocsHref`/`primaryContentSlug` and optional `fallbackDocsHref`/`fallbackContentSlug` separately, and the selector resolves the final `docsHref` based on content availability.
 
 ---
@@ -469,6 +464,7 @@ If a card's dedicated docs slug is not present in the collection, the selector e
 - [ ] Test asserts MCP expansion text appears in DOM
 - [ ] Test asserts no `/^v\d+\.\d+\.\d+/` strings appear in any rendered card
 - [ ] Test asserts no card title contains banned terms (`CLI Engine`, `Smart Linting`, `Multi-Agent`)
+- [ ] Test asserts Agent Shell card description contains `audit-trail` and does not contain `sandboxed runtime`
 - [ ] Test asserts that rendering `CoreModulesSection` with `resolvedFeatures` containing all six feature IDs results in each card having a non-empty, distinct accent color value (via inline `style` prop or CSS class name unique per feature ID)
 - [ ] `npx biome check src/components/home/CoreModulesSection.tsx tests/components/home/CoreModulesSection.test.tsx` passes
 - [ ] Visual verification per `.github/instructions/visual-verification.instructions.md` (screenshot of cards on desktop and mobile breakpoints attached to PR)
