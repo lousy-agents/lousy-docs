@@ -174,7 +174,7 @@ so that I can **search the docs for any term I see on the homepage and find a ma
 - `src/pages/index.astro` — At build time, calls `selectAvailableFeatures(inventory, availableSlugs)` and passes the returned `resolvedFeatures` array as a typed prop into `<HomePage client:only="react" resolvedFeatures={resolvedFeatures} />`.
 - `src/entities/feature.ts` *(new)* — Defines plain TypeScript types only (no Zod): `HomepageFeatureInventoryItem` (`{ id, title, summary, primaryDocsHref, primaryContentSlug, fallbackDocsHref?, fallbackContentSlug? }`).
 - `src/use-cases/select-available-features.ts` *(new)* — Pure selector that resolves each inventory item to a `ResolvedHomepageFeature` with a single `docsHref`, using the primary route when available, an explicit fallback when allowed, or omission when no docs route can be resolved.
-- `src/lib/documented-features.ts` *(new)* — Single source of truth for the homepage feature list. Exports the seeded inventory array validated with the entity schema.
+- `src/lib/documented-features.ts` *(new)* — Exports `DOCUMENTED_FEATURES: HomepageFeatureInventoryItem[]` — the seeded inventory array parsed and validated by `HomepageFeatureInventoryItemSchema` (owned by this file). Imports the entity type from `src/entities/feature.ts` for annotation.
 - `tests/components/home/HeroSection.test.tsx` — Update assertions to match new copy and links.
 - `tests/components/home/CoreModulesSection.test.tsx` — Replace assertions to match documented-feature cards; add tests for: link presence per card, MCP expansion, no fabricated version labels, no fictional terms.
 - `tests/components/home/SpecDrivenSection.test.tsx` — **Delete**.
@@ -209,11 +209,12 @@ import docsSlugs from "../../fixtures/docs-slugs.json";
 
 A new typed feature entity describes the homepage feature inventory and its docs binding. The source inventory preserves the difference between a preferred per-feature docs route and the only allowed fallback (`/docs/quickstart`) so the implementation can resolve links deterministically.
 
-Per Clean Architecture rules, `src/entities/` and `src/use-cases/` must remain framework-free (no Zod imports). Zod schemas and runtime validation live in `src/lib/` (adapter layer), and plain TypeScript types derived from those schemas are exported inward:
+Per Clean Architecture rules, `src/entities/` and `src/use-cases/` must remain framework-free (no Zod imports). `src/entities/feature.ts` defines plain TypeScript types with no imports. `src/lib/documented-features.ts` (adapter layer) owns all Zod schemas and validation, imports the entity type from `src/entities/feature.ts` (adapter importing from entity — valid direction), and annotates the inventory array against that imported type:
 
 ```ts
 // src/lib/documented-features.ts  (adapter layer — imports Zod here only)
 import { z } from "zod";
+import type { HomepageFeatureInventoryItem } from "../entities/feature";
 
 // Base inventory schema; cross-field validation is applied via superRefine below.
 const HomepageFeatureInventoryItemBaseSchema = z.object({
@@ -251,11 +252,8 @@ export const HomepageFeatureInventoryItemSchema =
         }
     });
 
-export type HomepageFeatureInventoryItem = z.infer<
-    typeof HomepageFeatureInventoryItemSchema
->;
-
-// Seeded inventory array, validated with a uniqueness check on id values:
+// Seeded inventory array, validated with a uniqueness check on id values.
+// Type annotation uses the entity type (imported from src/entities/feature.ts — valid direction).
 export const documentedFeaturesInventorySchema = z.array(HomepageFeatureInventoryItemSchema).refine(
     items => new Set(items.map(i => i.id)).size === items.length,
     { message: "Duplicate inventory IDs detected" }
@@ -406,7 +404,7 @@ If a card's dedicated docs slug is not present in the collection, the selector e
 
 - [x] **OQ-1 (product):** ~~Should we keep a "workflow narrative" section after deleting `SpecDrivenSection`, or is the documented Quickstart flow already represented well enough by the feature cards alone?~~ **Resolved** — keep `QuickstartFlowSection`. It should tease the documented Quickstart experience in a way that inspires curiosity for visitors interested in tightening their quality checks, iterating with more confidence, and improving the production quality of their agents, with a clear CTA to `/docs/quickstart`.
 - [x] **OQ-2 (product):** ~~Do we want to retain the mascot "Developer Patch" callout card visually but with documented content (e.g. a "Pro tip: run `lint` in CI" pointing to `/docs/quickstart#2-enforce-quality-in-ci-lint`), or remove that visual element entirely?~~ **Resolved** — remove for now; reintroduce only if/when there is a documented tip with a stable anchor.
-- [x] **OQ-3 (engineering):** ~~Should the inventory live in `src/lib/` (used by Astro build) or `src/entities/` (per Clean Architecture rules in `.github/copilot-instructions.md` and `.github/instructions/software-architecture.instructions.md`)?~~ **Resolved** — keep `src/entities/*` and `src/use-cases/*` framework-free. Place the Zod schemas, runtime validation, and seeded inventory data in `src/lib/documented-features.ts` (adapter layer, used by the Astro build). Export plain TypeScript types derived from those schemas (`z.infer<typeof ...>`) and import them inward into `src/entities/feature.ts` and `src/use-cases/select-available-features.ts` as pure TypeScript interfaces. The use-case selector remains pure selection logic over validated inputs with no Zod dependency. This preserves the repository's Clean Architecture rule (entities and use-cases MUST NOT depend on frameworks) while still applying Zod validation at the adapter boundary where external content is loaded.
+- [x] **OQ-3 (engineering):** ~~Should the inventory live in `src/lib/` (used by Astro build) or `src/entities/` (per Clean Architecture rules in `.github/copilot-instructions.md` and `.github/instructions/software-architecture.instructions.md`)?~~ **Resolved** — keep `src/entities/*` and `src/use-cases/*` framework-free. `src/entities/feature.ts` defines plain TypeScript types with no imports. `src/lib/documented-features.ts` (adapter layer) owns all Zod schemas and runtime validation; it imports the entity type from `src/entities/feature.ts` (adapter→entity is the valid inward direction) and annotates `DOCUMENTED_FEATURES` against that imported type. The use-case selector in `src/use-cases/select-available-features.ts` operates on entity types from `src/entities/feature.ts` with no Zod dependency. This preserves the repository's Clean Architecture rule (entities and use-cases MUST NOT depend on frameworks) while still applying Zod validation at the adapter boundary where external content is loaded.
 - [x] **OQ-4 (content):** ~~When upstream `docs/init.md`, `docs/lint.md`, `docs/mcp-server.md`, `docs/copilot-setup.md`, and `docs/new.md` are fetched into `src/content/docs/`, should each card's `docsHref` switch from `/docs/quickstart` to the per-command page automatically?~~ **Resolved** — the inventory now stores `primaryDocsHref`/`primaryContentSlug` and optional `fallbackDocsHref`/`fallbackContentSlug` separately, and the selector resolves the final `docsHref` based on content availability.
 
 ---
@@ -449,7 +447,7 @@ If a card's dedicated docs slug is not present in the collection, the selector e
 - [ ] `npm run fixture:docs-slugs` runs without error and writes `tests/fixtures/docs-slugs.json` (run `bash scripts/fetch-docs.sh` first if `src/content/docs/` does not yet exist; no Astro build required)
 - [ ] `npm test tests/use-cases/select-available-features.test.ts` passes
 - [ ] `npm test tests/lib/documented-features.test.ts` passes
-- [ ] `npx biome check src/entities/feature.ts src/use-cases/select-available-features.ts src/lib/documented-features.ts tests/use-cases/select-available-features.test.ts tests/lib/documented-features.test.ts` passes
+- [ ] `npx biome check src/entities/feature.ts src/use-cases/select-available-features.ts src/lib/documented-features.ts scripts/generate-docs-slugs.mjs tests/use-cases/select-available-features.test.ts tests/lib/documented-features.test.ts` passes
 
 **Done when**:
 - [ ] All verification steps pass
