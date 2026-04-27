@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { HomepageFeatureInventoryItem } from "../entities/feature";
+import type { HomepageFeatureInventoryItem } from "@/entities/feature";
 
 const HomepageFeatureInventoryItemBaseSchema = z.object({
     id: z.string(),

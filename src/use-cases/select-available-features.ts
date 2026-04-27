@@ -1,4 +1,4 @@
-import type { HomepageFeatureInventoryItem } from "../entities/feature";
+import type { HomepageFeatureInventoryItem } from "@/entities/feature";
 
 export type ResolvedHomepageFeature = {
     id: string;
