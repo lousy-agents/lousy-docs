@@ -9,7 +9,7 @@ const ACCENT_COLORS: Record<string, string> = {
     lint: "#eebd8e",
     "copilot-setup": "#cfb0e0",
     "mcp-server": "#8ec4ee",
-    "agent-shell": "#e8a3a3",
+    "agent-shell": "#d4c294",
 };
 
 const FALLBACK_ACCENT = "#bdce89";
@@ -79,10 +79,10 @@ const gridStyle: React.CSSProperties = {
 const cardStyle = (accentColor: string): React.CSSProperties => ({
     backgroundColor: "#1e201c",
     padding: "2rem",
+    borderTop: "1px solid rgba(70, 72, 62, 0.15)",
+    borderRight: "1px solid rgba(70, 72, 62, 0.15)",
+    borderBottom: "1px solid rgba(70, 72, 62, 0.15)",
     borderLeft: `4px solid ${accentColor}`,
-    border: "1px solid rgba(70, 72, 62, 0.15)",
-    borderLeftWidth: "4px",
-    borderLeftColor: accentColor,
     boxShadow: "0 4px 40px rgba(18, 20, 16, 0.06)",
     transition: "background-color 0.2s",
     display: "flex",
@@ -169,6 +169,7 @@ export function CoreModulesSection({
                                 <a
                                     href={feature.docsHref}
                                     style={linkStyle(accentColor)}
+                                    className="home-card-link"
                                     aria-label={`Learn more about ${feature.title}`}
                                 >
                                     Learn more →

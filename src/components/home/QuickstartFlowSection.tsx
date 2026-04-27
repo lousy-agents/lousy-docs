@@ -197,6 +197,7 @@ export function QuickstartFlowSection() {
                             key={step.id}
                             href={QUICKSTART_HREF}
                             style={stepLinkStyle}
+                            className="home-step-link"
                             aria-label={`Learn about ${step.label}`}
                         >
                             <div style={numberOverlayStyle}>

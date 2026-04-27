@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { HomePage } from "@/components/home/HomePage";
 import { DOCUMENTED_FEATURES } from "@/lib/documented-features";
 import { selectAvailableFeatures } from "@/use-cases/select-available-features";
@@ -59,7 +59,10 @@ function isResolvable(path: string): boolean {
 
 describe("Homepage link integrity", () => {
     describe("given a desktop viewport with the full resolved feature set from the docs fixture", () => {
+        let originalMatchMedia: typeof window.matchMedia;
+
         beforeEach(() => {
+            originalMatchMedia = window.matchMedia;
             const mql = {
                 matches: false,
                 media: "",
@@ -72,6 +75,7 @@ describe("Homepage link integrity", () => {
         });
 
         afterEach(() => {
+            window.matchMedia = originalMatchMedia;
             vi.restoreAllMocks();
         });
 

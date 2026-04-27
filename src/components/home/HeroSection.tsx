@@ -215,11 +215,22 @@ export function HeroSection() {
     return (
         <section style={sectionStyle} aria-label="Hero">
             <div style={gridOverlayStyle} aria-hidden="true">
-                {["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"].map(
-                    (id) => (
-                        <div key={id} style={gridLineStyle} />
-                    ),
-                )}
+                {[
+                    "a",
+                    "b",
+                    "c",
+                    "d",
+                    "e",
+                    "f",
+                    "g",
+                    "h",
+                    "i",
+                    "j",
+                    "k",
+                    "l",
+                ].map((id) => (
+                    <div key={id} style={gridLineStyle} />
+                ))}
             </div>
 
             <div style={containerStyle}>
@@ -284,7 +295,10 @@ export function HeroSection() {
                                             "rgba(189, 206, 137, 0.4)",
                                         )}
                                     />
-                                    <span style={terminalTitleStyle}>
+                                    <span
+                                        style={terminalTitleStyle}
+                                        aria-hidden="true"
+                                    >
                                         shell — lousy-agents
                                     </span>
                                 </div>
