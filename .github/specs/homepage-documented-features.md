@@ -125,13 +125,11 @@ so that I do **not encounter dead ends**.
 > **Inventory-backed feature link**: any anchor `href` rendered by `CoreModulesSection` whose target is drawn from the Documented Feature Inventory table above.
 >
 > **Standard link-normalization algorithm**: given an internal `href` (starting with `/`), produce a canonical path by:
-> 0. Lowercase the entire path.
-> 1. Strip any `#...` fragment (everything from the first `#` onwards). *(Strip before decode so that percent-encoded delimiters like `%23` in the raw href are not mistaken for structural `#` characters; stripping first ensures `%23section` is preserved through step 3 and does not prematurely truncate the path.)*
-> 2. Strip any `?...` query string (everything from the first `?` onwards). *(Same rationale as step 1 for `%3F`.)*
-> 3. Decode any percent-encoded characters (e.g. `%2D` → `-`) using `decodeURIComponent`.
-> 4. Collapse any consecutive `/` separators to a single `/`.
-> 5. Strip any trailing slash — except the root path `/`, which is kept as-is.
-> 6. If the result matches `/docs/<slug>` (where `<slug>` is a single path segment, no `/` characters, anchored by `^/docs/([^/]+)$`), translate it to `<slug>` for slug-existence checks; `/docs` itself is treated as a valid static route without translation.
+> 0. Resolve the `href` against a base URL using `new URL(href, 'http://localhost')`.
+> 1. Read the resulting `.pathname` as the canonical path. *(This preserves actual routing case and handles percent-encoding consistently, while excluding query strings and fragments without risk of `%23`/`%3F` being re-introduced as structural delimiters after decoding.)*
+> 2. Collapse any consecutive `/` separators to a single `/`.
+> 3. Strip any trailing slash — except the root path `/`, which is kept as-is.
+> 4. If the result matches `/docs/<slug>` (where `<slug>` is a single path segment, no `/` characters, anchored by `^/docs/([^/]+)$`), translate it to `<slug>` for slug-existence checks; `/docs` itself is treated as a valid static route without translation.
 
 #### Acceptance Criteria
 
@@ -599,17 +597,17 @@ If a card's dedicated docs slug is not present in the collection, the selector e
 
 **Affected files**:
 - `tests/fixtures/docs-slugs.json` *(must exist — created in Task 1; see Test Data Strategy in Design)*
-- `tests/components/home/homepage-link-integrity.test.tsx` *(new — unit test that walks `HomePage` rendered output and asserts each internal anchor `href` (starting with `/`) corresponds to either a slug in `tests/fixtures/docs-slugs.json` or a static page, applying the standard link-normalization algorithm defined in Story 5; external links are excluded from the check)*
-- `tests/e2e/homepage.spec.ts` *(new or extended — Playwright walks each internal homepage link (href starting with `/`), applies the standard link-normalization algorithm defined in Story 5 before issuing the request (fragment and query string are stripped; `/docs/<slug>` remains a routable URL in e2e without slug translation), then asserts the underlying internal page returns 200; external links are excluded)*
+- `tests/components/home/homepage-link-integrity.test.tsx` *(new — unit test that walks the `<main>` content rendered by `HomePage` and asserts each internal anchor `href` (starting with `/`) within homepage sections — cards, CTAs, in-section links — corresponds to either a slug in `tests/fixtures/docs-slugs.json` or a static page, applying the standard link-normalization algorithm defined in Story 5; external links and site-shell links rendered outside `<main>` are excluded from the check)*
+- `tests/e2e/homepage.spec.ts` *(new or extended — Playwright walks each internal link within the `<main>` content on the homepage (href starting with `/`), applies steps 0–3 of the standard link-normalization algorithm defined in Story 5 before issuing the request (fragment and query string are excluded via `.pathname`; `/docs/<slug>` remains a routable URL in e2e without slug translation), then asserts the underlying internal page returns 200; external links and site-shell links outside `<main>` are excluded)*
 
 **Requirements**:
 - Implements Story 5 and Story 6.
-- Unit test fails with a message naming the missing slug if an internal card or CTA `href` (starting with `/`) points to an unmapped internal route.
+- Unit test fails with a message naming the missing slug if an internal card, CTA, or other homepage-section link within `<main>` (href starting with `/`) points to an unmapped internal route.
 - The unit test shall render `HomePage` with `resolvedFeatures` produced by calling `selectAvailableFeatures(inventory, docsSlugs)` where `docsSlugs` is imported from `tests/fixtures/docs-slugs.json`, so that all inventory-backed anchors present in the fixture are exercised.
 - Unit test asserts each card title rendered by `CoreModulesSection` matches one of the six expected titles from the inventory: `init`, `new`, `lint`, `copilot-setup`, `MCP Server`, `Agent Shell`. These titles are deterministic (hardcoded in the inventory) and require no docs-content fixture.
 - Unit test also asserts that no card description rendered by `CoreModulesSection` contains any banned coined term from Story 6 AC1 ("cognitive workloads", "operational perimeter", "hallucination loops", "feedback loop", "logic feedback loop") (vocabulary check for Story 2 AC5).
-- External links (href not starting with `/`) are excluded from the slug-existence check in the unit test.
-- In the unit test, apply all steps of the standard link-normalization algorithm (including step 6 slug translation) before checking slug existence in the fixture. In the e2e spec, apply steps 0–5 only (lowercase, strip fragment, strip query string, decode percent-encoding, collapse consecutive slashes, strip trailing slash) before issuing the Playwright request; step 6 (slug translation) is inapplicable in e2e because the test issues a real HTTP request to the full routable path (`/docs/lint`, not `lint`).
+- External links (href not starting with `/`) are excluded from the slug-existence check in the unit test. Internal links rendered by shared layout chrome outside `<main>` (for example, header or footer navigation supplied by the site shell) are also excluded from both the unit test and the e2e link-resolution walk.
+- In the unit test, apply all steps of the standard link-normalization algorithm (including step 4 slug translation) before checking slug existence in the fixture. In the e2e spec, apply steps 0–3 only (resolve href via `new URL`, read `.pathname`, collapse consecutive slashes, strip trailing slash) before issuing the Playwright request; step 4 (slug translation) is inapplicable in e2e because the test issues a real HTTP request to the full routable path (`/docs/lint`, not `lint`).
 - E2e test runs against the production build (`npm run test:e2e:dist`) so static-only routes are exercised.
 
 **Verification**:
