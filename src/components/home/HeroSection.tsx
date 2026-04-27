@@ -225,9 +225,7 @@ export function HeroSection() {
             <div style={containerStyle}>
                 <div style={contentRowStyle}>
                     <div style={textColumnStyle}>
-                        <Text style={badgeStyle}>
-                            SYSTEM_STATUS: OPERATIONAL
-                        </Text>
+                        <Text style={badgeStyle}>DOCUMENTED CAPABILITIES</Text>
 
                         <Title level={1} style={headlineStyle}>
                             STOP GUESSING.
@@ -236,10 +234,11 @@ export function HeroSection() {
                         </Title>
 
                         <Paragraph style={descStyle}>
-                            Scaffold AI agent behaviors with a single CLI
-                            command, validate instruction quality in CI, and
-                            connect your editor to live lint intelligence via
-                            MCP.
+                            Lousy Agents is a CLI that scaffolds AI agent
+                            workspaces with <code>init</code>, validates agents,
+                            skills, and instructions in CI with{" "}
+                            <code>lint</code>, and connects your editor to the
+                            same lint intelligence through an MCP server.
                         </Paragraph>
 
                         <Flex
@@ -252,14 +251,16 @@ export function HeroSection() {
                                 size="large"
                                 href="/docs/quickstart"
                             >
-                                INITIALIZE_CLI
+                                READ_QUICKSTART
                             </Button>
                             <Button
                                 style={secondaryButtonStyle}
                                 size="large"
-                                href="/about"
+                                href="https://github.com/zpratt/lousy-agents"
+                                target="_blank"
+                                rel="noreferrer noopener"
                             >
-                                READ_MANIFESTO
+                                VIEW_ON_GITHUB
                             </Button>
                         </Flex>
                     </div>
@@ -284,7 +285,7 @@ export function HeroSection() {
                                         )}
                                     />
                                     <span style={terminalTitleStyle}>
-                                        shell — agent_v2.0.1
+                                        shell — lousy-agents
                                     </span>
                                 </div>
                                 <div style={terminalContentStyle}>
@@ -308,7 +309,8 @@ export function HeroSection() {
                                             marginBottom: "8px",
                                         }}
                                     >
-                                        [INFO] Scaffolding agent workspace...
+                                        Scaffolding agents, skills, and
+                                        instructions...
                                     </div>
                                     <div
                                         style={{
@@ -316,8 +318,8 @@ export function HeroSection() {
                                             marginBottom: "8px",
                                         }}
                                     >
-                                        [INFO] Writing skills, agents, and
-                                        instructions...
+                                        Writing .github/ and .claude/ config
+                                        files...
                                     </div>
                                     <div
                                         style={{
@@ -326,7 +328,7 @@ export function HeroSection() {
                                             gap: "4px",
                                         }}
                                     >
-                                        <span>[OK]</span>
+                                        <span>✓</span>
                                         <span
                                             style={{
                                                 backgroundColor:
@@ -351,7 +353,7 @@ export function HeroSection() {
                                                 color: "#c7c7ba",
                                             }}
                                         >
-                                            NODE_014 ACTIVE
+                                            Next: see /docs/quickstart
                                         </span>
                                         <div
                                             style={{

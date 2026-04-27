@@ -1,49 +1,31 @@
 import { Typography } from "antd";
+import type { ResolvedHomepageFeature } from "@/use-cases/select-available-features";
 
-const { Title, Paragraph, Text } = Typography;
+const { Title, Paragraph } = Typography;
 
-interface Feature {
-    icon: string;
-    title: string;
-    description: string;
-    version: string;
-    accentColor: string;
+const ACCENT_COLORS: Record<string, string> = {
+    init: "#bdce89",
+    new: "#a0d3c8",
+    lint: "#eebd8e",
+    "copilot-setup": "#cfb0e0",
+    "mcp-server": "#8ec4ee",
+    "agent-shell": "#e8a3a3",
+};
+
+const FALLBACK_ACCENT = "#bdce89";
+
+const ICON_BY_ID: Record<string, string> = {
+    init: "rocket_launch",
+    new: "add_box",
+    lint: "spellcheck",
+    "copilot-setup": "settings_suggest",
+    "mcp-server": "dns",
+    "agent-shell": "terminal",
+};
+
+interface CoreModulesSectionProps {
+    resolvedFeatures: readonly ResolvedHomepageFeature[];
 }
-
-const features: Feature[] = [
-    {
-        icon: "terminal",
-        title: "CLI Engine",
-        description:
-            "Low-latency command interface optimized for rapid agent orchestration and monitoring.",
-        version: "v2.0.1 // system.bin",
-        accentColor: "#bdce89",
-    },
-    {
-        icon: "spellcheck",
-        title: "Smart Linting",
-        description:
-            "Heuristic analysis of agent logic to prevent hallucination loops before they execute.",
-        version: "v2.0.1 // core.lint",
-        accentColor: "#eebd8e",
-    },
-    {
-        icon: "dns",
-        title: "MCP Server",
-        description:
-            "Multi-Agent Control Protocol server for horizontal scaling of cognitive workloads.",
-        version: "v2.0.1 // net.mcp",
-        accentColor: "#bdce89",
-    },
-    {
-        icon: "shield",
-        title: "Agent Shell",
-        description:
-            "Sandboxed runtime environment ensuring agents never leave the defined operational perimeter.",
-        version: "v2.0.1 // os.shell",
-        accentColor: "#eebd8e",
-    },
-];
 
 const sectionStyle: React.CSSProperties = {
     padding: "4rem 1.5rem",
@@ -79,9 +61,18 @@ const underlineStyle: React.CSSProperties = {
     marginBottom: "1rem",
 };
 
+const subheadingStyle: React.CSSProperties = {
+    fontFamily: "'Manrope', sans-serif",
+    fontSize: "1rem",
+    color: "#c7c7ba",
+    maxWidth: "40rem",
+    textAlign: "center",
+    marginTop: "0.5rem",
+};
+
 const gridStyle: React.CSSProperties = {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 480px), 1fr))",
+    gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
     gap: "1.5rem",
 };
 
@@ -89,13 +80,19 @@ const cardStyle = (accentColor: string): React.CSSProperties => ({
     backgroundColor: "#1e201c",
     padding: "2rem",
     borderLeft: `4px solid ${accentColor}`,
+    border: "1px solid rgba(70, 72, 62, 0.15)",
+    borderLeftWidth: "4px",
+    borderLeftColor: accentColor,
+    boxShadow: "0 4px 40px rgba(18, 20, 16, 0.06)",
     transition: "background-color 0.2s",
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
 });
 
 const iconStyle = (accentColor: string): React.CSSProperties => ({
-    fontSize: "2.25rem",
+    fontSize: "2rem",
     color: accentColor,
-    marginBottom: "1.5rem",
     display: "block",
 });
 
@@ -105,59 +102,80 @@ const titleStyle: React.CSSProperties = {
     fontSize: "1.25rem",
     color: "#e3e3dc",
     letterSpacing: "-0.02em",
-    textTransform: "uppercase" as const,
-    marginBottom: "1rem",
+    margin: 0,
 };
 
 const descriptionStyle: React.CSSProperties = {
     fontFamily: "'Manrope', sans-serif",
-    fontSize: "0.875rem",
+    fontSize: "0.9375rem",
     color: "#c7c7ba",
     lineHeight: 1.7,
-    marginBottom: "1.5rem",
+    margin: 0,
 };
 
-const versionStyle: React.CSSProperties = {
-    fontFamily: "'Courier New', Courier, monospace",
-    fontSize: "10px",
-    color: "#eebd8e",
-    opacity: 0.5,
+const linkStyle = (accentColor: string): React.CSSProperties => ({
+    fontFamily: "'Space Grotesk', sans-serif",
+    fontWeight: 600,
+    fontSize: "0.875rem",
+    color: accentColor,
     textTransform: "uppercase" as const,
-};
+    letterSpacing: "0.05em",
+    textDecoration: "none",
+    marginTop: "auto",
+    alignSelf: "flex-start",
+});
 
-export function CoreModulesSection() {
+export function CoreModulesSection({
+    resolvedFeatures,
+}: CoreModulesSectionProps) {
     return (
-        <section style={sectionStyle} aria-label="Core Modules">
+        <section style={sectionStyle} aria-label="Documented features">
             <div style={containerStyle}>
                 <div style={headerStyle}>
                     <Title level={2} style={headingStyle}>
-                        Core Modules
+                        Documented Features
                     </Title>
                     <div style={underlineStyle} aria-hidden="true" />
+                    <Paragraph style={subheadingStyle}>
+                        Every card below maps 1:1 to a published Lousy Agents
+                        docs page. If it's not documented, it isn't here.
+                    </Paragraph>
                 </div>
 
                 <div style={gridStyle}>
-                    {features.map((feature) => (
-                        <article
-                            key={feature.title}
-                            style={cardStyle(feature.accentColor)}
-                        >
-                            <span
-                                className="material-symbols-outlined"
-                                style={iconStyle(feature.accentColor)}
-                                aria-hidden="true"
+                    {resolvedFeatures.map((feature) => {
+                        const accentColor =
+                            ACCENT_COLORS[feature.id] ?? FALLBACK_ACCENT;
+                        const icon = ICON_BY_ID[feature.id] ?? "code";
+                        return (
+                            <article
+                                key={feature.id}
+                                style={cardStyle(accentColor)}
+                                data-feature-id={feature.id}
                             >
-                                {feature.icon}
-                            </span>
-                            <Title level={3} style={titleStyle}>
-                                {feature.title}
-                            </Title>
-                            <Paragraph style={descriptionStyle}>
-                                {feature.description}
-                            </Paragraph>
-                            <Text style={versionStyle}>{feature.version}</Text>
-                        </article>
-                    ))}
+                                <span
+                                    className="material-symbols-outlined"
+                                    style={iconStyle(accentColor)}
+                                    aria-hidden="true"
+                                >
+                                    {icon}
+                                </span>
+                                <Title level={3} style={titleStyle}>
+                                    {feature.title}
+                                </Title>
+                                <Paragraph style={descriptionStyle}>
+                                    {feature.summary}
+                                </Paragraph>
+                                <a
+                                    href={feature.docsHref}
+                                    style={linkStyle(accentColor)}
+                                    aria-label={`Learn more about ${feature.title}`}
+                                >
+                                    Learn more →
+                                </a>
+                            </article>
+                        );
+                    })}
                 </div>
             </div>
         </section>
