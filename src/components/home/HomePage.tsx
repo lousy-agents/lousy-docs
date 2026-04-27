@@ -1,17 +1,21 @@
 import { Flex } from "antd";
 import { useCallback, useState } from "react";
 import { CoreModulesSection } from "@/components/home/CoreModulesSection";
-import { DeveloperPatch } from "@/components/home/DeveloperPatch";
 import { HeroSection } from "@/components/home/HeroSection";
-import { SpecDrivenSection } from "@/components/home/SpecDrivenSection";
+import { QuickstartFlowSection } from "@/components/home/QuickstartFlowSection";
 import { MobileNavDrawer } from "@/components/layout/MobileNavDrawer";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { AntDProvider } from "@/components/providers/AntDProvider";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { HEADER_HEIGHT_PX } from "@/lib/layout-constants";
+import type { ResolvedHomepageFeature } from "@/use-cases/select-available-features";
 
-export function HomePage() {
+interface HomePageProps {
+    resolvedFeatures: readonly ResolvedHomepageFeature[];
+}
+
+export function HomePage({ resolvedFeatures }: HomePageProps) {
     const isMobile = useIsMobile();
     const [navDrawerOpen, setNavDrawerOpen] = useState(false);
 
@@ -36,9 +40,8 @@ export function HomePage() {
                 />
                 <main style={{ flex: 1, paddingTop: `${HEADER_HEIGHT_PX}px` }}>
                     <HeroSection />
-                    <CoreModulesSection />
-                    <SpecDrivenSection />
-                    <DeveloperPatch />
+                    <CoreModulesSection resolvedFeatures={resolvedFeatures} />
+                    <QuickstartFlowSection />
                 </main>
                 <SiteFooter />
             </Flex>

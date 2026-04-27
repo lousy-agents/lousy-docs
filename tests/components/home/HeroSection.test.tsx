@@ -2,47 +2,78 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { HeroSection } from "@/components/home/HeroSection";
 
+const BANNED_TERMS = [
+    "Multi-Agent",
+    "cognitive workloads",
+    "operational perimeter",
+    "hallucination loops",
+    "feedback loop",
+    "logic feedback loop",
+];
+
 describe("HeroSection", () => {
     describe("given no props", () => {
-        it("should render the main headline with stop guessing", () => {
+        it("renders the headline", () => {
             render(<HeroSection />);
 
-            expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-                /stop guessing/i,
+            expect(
+                screen.getByRole("heading", { level: 1 }),
+            ).toBeInTheDocument();
+        });
+
+        it("renders a subhead that mentions init, lint, and MCP", () => {
+            render(<HeroSection />);
+
+            const main = screen.getByRole("heading", { level: 1 }).parentElement
+                ?.parentElement;
+            const sectionText = main?.textContent ?? "";
+            expect(sectionText).toMatch(/\binit\b/);
+            expect(sectionText).toMatch(/\blint\b/);
+            expect(sectionText).toMatch(/\bMCP\b/);
+        });
+
+        it("renders no banned coined terms in the hero copy", () => {
+            const { container } = render(<HeroSection />);
+
+            const text = container.textContent ?? "";
+            for (const term of BANNED_TERMS) {
+                expect(text).not.toContain(term);
+            }
+        });
+
+        it("renders the primary CTA pointing to /docs/quickstart", () => {
+            render(<HeroSection />);
+
+            const links = screen.getAllByRole("link");
+            const quickstart = links.find(
+                (link) => link.getAttribute("href") === "/docs/quickstart",
             );
+            expect(quickstart).toBeDefined();
         });
 
-        it("should render the highlighted text start guiding", () => {
+        it("renders the secondary CTA pointing to the lousy-agents GitHub repo", () => {
             render(<HeroSection />);
 
-            expect(screen.getByText(/start guiding/i)).toBeInTheDocument();
+            const links = screen.getAllByRole("link");
+            const gh = links.find(
+                (link) =>
+                    link.getAttribute("href") ===
+                    "https://github.com/zpratt/lousy-agents",
+            );
+            expect(gh).toBeDefined();
         });
 
-        it("should render the system status badge", () => {
+        it("renders no anchor with an /about href", () => {
             render(<HeroSection />);
 
-            expect(
-                screen.getByText(/system_status: operational/i),
-            ).toBeInTheDocument();
+            const links = screen.getAllByRole("link");
+            const about = links.find(
+                (link) => link.getAttribute("href") === "/about",
+            );
+            expect(about).toBeUndefined();
         });
 
-        it("should render the initialize cli call-to-action", () => {
-            render(<HeroSection />);
-
-            expect(
-                screen.getByRole("link", { name: /initialize_cli/i }),
-            ).toBeInTheDocument();
-        });
-
-        it("should render the read manifesto call-to-action", () => {
-            render(<HeroSection />);
-
-            expect(
-                screen.getByRole("link", { name: /read_manifesto/i }),
-            ).toBeInTheDocument();
-        });
-
-        it("should render a terminal mockup with the init install command", () => {
+        it("renders the documented init terminal command", () => {
             render(<HeroSection />);
 
             expect(
@@ -50,12 +81,16 @@ describe("HeroSection", () => {
             ).toBeInTheDocument();
         });
 
-        it("should render the mascot image with descriptive alt text", () => {
-            render(<HeroSection />);
+        it("does not render a hardcoded version string like vN.N.N", () => {
+            const { container } = render(<HeroSection />);
 
-            const mascot = screen.getByRole("img", { name: /mascot/i });
-            expect(mascot).toBeInTheDocument();
-            expect(mascot).toHaveAttribute("src", "/mascot-160w.jpg");
+            expect(container.textContent ?? "").not.toMatch(/v\d+\.\d+\.\d+/);
+        });
+
+        it("does not render the agent_v window title", () => {
+            const { container } = render(<HeroSection />);
+
+            expect(container.textContent ?? "").not.toContain("agent_v");
         });
     });
 });
