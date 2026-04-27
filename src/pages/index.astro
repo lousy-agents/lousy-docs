@@ -1,10 +1,21 @@
 ---
+import { getCollection } from "astro:content";
 // biome-ignore lint/correctness/noUnusedImports: used in Astro HTML template
 import { HomePage } from "../components/home/HomePage";
 // biome-ignore lint/correctness/noUnusedImports: used in Astro HTML template
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { DOCUMENTED_FEATURES } from "../lib/documented-features";
+import { selectAvailableFeatures } from "../use-cases/select-available-features";
+
+const docs = await getCollection("docs");
+const availableSlugs = docs.map((d) => d.id);
+// biome-ignore lint/correctness/noUnusedVariables: used in Astro HTML template
+const resolvedFeatures = selectAvailableFeatures(
+    DOCUMENTED_FEATURES,
+    availableSlugs,
+);
 ---
 
 <BaseLayout title="lousy-docs — Analog Terminal" pagefindIgnore={true}>
-    <HomePage client:only="react" />
+    <HomePage client:only="react" resolvedFeatures={resolvedFeatures} />
 </BaseLayout>
