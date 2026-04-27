@@ -291,8 +291,8 @@ export type ResolvedHomepageFeature = {
 };
 
 export function selectAvailableFeatures(
-    inventory: HomepageFeatureInventoryItem[],
-    docsSlugs: string[],
+    inventory: readonly HomepageFeatureInventoryItem[],
+    availableSlugs: readonly string[],
 ): ResolvedHomepageFeature[] {
     // ... selector logic
 }
