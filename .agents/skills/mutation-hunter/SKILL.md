@@ -1,8 +1,7 @@
 ---
 name: mutation-hunter
 description: Uncover test coverage gaps by applying semantic mutations to production TypeScript code and identifying which mutations survive (tests still pass). Surviving mutations indicate areas where tests are insufficient to detect behavioral changes.
-argument-hint: "<mutations> — number of mutations to hunt (e.g., 10). Optionally scope to specific files with --target <glob> (default: src/**/*.ts excluding *.test.ts and index.ts)."
-allowed-tools: "read_file, edit_file, run_in_terminal, list_directory_contents, create_file"
+argument-hint: "<mutations> — number of mutations to hunt (e.g., 10). Optionally scope to specific files with --target <glob> (default: src/**/*.ts excluding *.d.ts, *.test.ts, and index.ts)."
 ---
 
 # Mutation Hunter
@@ -37,7 +36,7 @@ nvm use && npm test
 List all production TypeScript source files, excluding test files and index.ts (composition root):
 
 ```bash
-find src -name "*.ts" ! -name "*.test.ts" ! -name "index.ts" | sort
+find src -name "*.ts" ! -name "*.d.ts" ! -name "*.test.ts" ! -name "index.ts" | sort
 ```
 
 Focus mutations on files in `src/entities/`, `src/use-cases/`, `src/gateways/`, and `src/lib/`. These contain business logic where behavioral regressions matter most. Skip files that are purely type definitions (only `interface`/`type` declarations with no executable code).
@@ -308,7 +307,7 @@ For each surviving mutation, generate `advice` that is:
 ## Constraints
 
 - **Never** leave the codebase in a mutated state when finished.
-- **Never** mutate test files (`*.test.ts`), the composition root (`src/index.ts`), or pure type definition files.
+- **Never** mutate test files (`*.test.ts`), type definition files (`*.d.ts`), the composition root (`src/index.ts`), or pure type definition files.
 - **Never** apply more than one mutation at a time.
 - Work in small, atomic changes — single-line edits preferred.
 - Prefer mutations in **entities** and **use-cases** over **commands** and **gateways**, as business logic is the highest-value mutation target.
