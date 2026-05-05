@@ -1,6 +1,18 @@
 {
     "version": 1,
     "skills": {
+        "mutation-hunter": {
+            "source": "lousy-agents/skills",
+            "sourceType": "github",
+            "skillPath": "skills/mutation-hunter/SKILL.md",
+            "computedHash": "c5d8e92f948711a60a2272e78190b45dd10e93618a4b0438743084ab3c01cabb"
+        },
+        "triaging-pr-reviews": {
+            "source": "lousy-agents/skills",
+            "sourceType": "github",
+            "skillPath": "skills/triaging-pr-reviews/SKILL.md",
+            "computedHash": "f2ca933972dec57174ce9f16fa352b299f801898846de04952e7ab60dfb19000"
+        },
         "vercel-composition-patterns": {
             "source": "vercel-labs/agent-skills",
             "sourceType": "github",
