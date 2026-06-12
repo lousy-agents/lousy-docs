@@ -47,7 +47,7 @@
         "@vitejs/plugin-react": "6.0.2",
         "@vitest/ui": "4.1.8",
         "chance": "1.1.13",
-        "esbuild": "0.28.0",
+        "esbuild": "0.28.1",
         "happy-dom": "20.10.2",
         "jsdom": "29.1.1",
         "msw": "2.14.6",
