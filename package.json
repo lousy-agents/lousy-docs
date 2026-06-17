@@ -48,7 +48,7 @@
         "@vitest/ui": "4.1.9",
         "chance": "1.1.13",
         "esbuild": "0.28.1",
-        "happy-dom": "20.10.4",
+        "happy-dom": "20.10.5",
         "jsdom": "29.1.1",
         "msw": "2.14.6",
         "typescript": "6.0.3",
