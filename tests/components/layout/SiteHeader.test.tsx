@@ -104,6 +104,14 @@ describe("SiteHeader", () => {
             ).not.toBeInTheDocument();
         });
 
+        it("should not render a non-functional settings button", () => {
+            render(<SiteHeader isMobile={false} />);
+
+            expect(
+                screen.queryByRole("button", { name: /settings/i }),
+            ).not.toBeInTheDocument();
+        });
+
         describe("keyboard shortcut hint", () => {
             let userAgentSpy: MockInstance;
 
@@ -280,6 +288,14 @@ describe("SiteHeader", () => {
 
             expect(screen.queryByText("⌘K")).not.toBeInTheDocument();
             expect(screen.queryByText("Ctrl+K")).not.toBeInTheDocument();
+        });
+
+        it("should not render a non-functional settings button", () => {
+            render(<SiteHeader isMobile={true} />);
+
+            expect(
+                screen.queryByRole("button", { name: /settings/i }),
+            ).not.toBeInTheDocument();
         });
 
         it("should render a mobile menu button when a toggle handler is provided", () => {

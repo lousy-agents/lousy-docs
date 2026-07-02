@@ -167,18 +167,6 @@ function DesktopHeader({ currentPathname }: DesktopHeaderProps) {
                 <button
                     type="button"
                     style={iconButtonStyle}
-                    aria-label="Settings"
-                >
-                    <span
-                        className="material-symbols-outlined"
-                        aria-hidden="true"
-                    >
-                        settings
-                    </span>
-                </button>
-                <button
-                    type="button"
-                    style={iconButtonStyle}
                     aria-label="Open terminal"
                 >
                     <span
@@ -234,18 +222,6 @@ export function MobileHeader({ onMenuToggle, isMenuOpen }: MobileHeaderProps) {
                         aria-hidden="true"
                     >
                         search
-                    </span>
-                </button>
-                <button
-                    type="button"
-                    style={iconButtonStyle}
-                    aria-label="Settings"
-                >
-                    <span
-                        className="material-symbols-outlined"
-                        aria-hidden="true"
-                    >
-                        settings
                     </span>
                 </button>
             </Flex>
