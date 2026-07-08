@@ -50,7 +50,7 @@
         "esbuild": "0.28.1",
         "happy-dom": "20.10.6",
         "jsdom": "29.1.1",
-        "msw": "2.14.6",
+        "msw": "2.15.0",
         "typescript": "6.0.3",
         "vitest": "4.1.10",
         "whatwg-fetch": "3.6.20",
