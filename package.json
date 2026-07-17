@@ -54,6 +54,6 @@
         "typescript": "7.0.2",
         "vitest": "4.1.10",
         "whatwg-fetch": "3.6.20",
-        "wrangler": "4.111.0"
+        "wrangler": "4.112.0"
     }
 }
