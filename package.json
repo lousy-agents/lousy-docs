@@ -45,14 +45,14 @@
         "@types/react-dom": "19.2.7",
         "@upstash/context7-mcp": "4.0.5",
         "@vitejs/plugin-react": "6.1.1",
-        "@vitest/ui": "4.1.11",
+        "@vitest/ui": "5.0.0",
         "chance": "1.1.13",
         "esbuild": "0.28.2",
         "happy-dom": "20.14.0",
         "jsdom": "30.0.1",
         "msw": "2.15.0",
         "typescript": "7.0.2",
-        "vitest": "4.1.11",
+        "vitest": "5.0.0",
         "whatwg-fetch": "3.6.20",
         "wrangler": "4.129.0"
     }
