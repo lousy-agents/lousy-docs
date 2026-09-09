@@ -1,5 +1,5 @@
 ---
-applyTo: "**/spec.md"
+applyTo: ".github/specs/*.md"
 ---
 
 # Spec Development Instructions

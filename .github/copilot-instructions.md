@@ -6,7 +6,9 @@ applyTo: "**"
 
 An Astro TypeScript static site following Test-Driven Development, Clean Architecture, and strict validation workflows.
 
-This file is loaded for every file in the repository, so it carries the standards that apply everywhere. `CLAUDE.md` states the same standards for Claude Code; the two are maintained in parallel and neither loads the other, so a normative rule changed here shall be changed there in the same commit. Deeper detail lives in path-scoped files that load when you touch the code they govern: `.github/instructions/software-architecture.instructions.md` for layering, `.github/instructions/test.instructions.md` for test conventions, `.github/instructions/visual-verification.instructions.md` for UI changes, and `.github/instructions/pipeline.instructions.md` for workflows.
+`AGENTS.md` at the repository root is the source of record for the engineering standards. Copilot does not expand `@` import tokens, so this file deliberately restates those standards instead of pointing at them — the duplication is load-bearing, not an oversight to clean up. When a rule changes in `AGENTS.md`, change it here in the same commit.
+
+This file is loaded for every file in the repository, so it carries the standards that apply everywhere. Deeper detail lives in path-scoped files that load when you touch the code they govern: `.github/instructions/software-architecture.instructions.md` for layering, `.github/instructions/test.instructions.md` for test conventions, `.github/instructions/visual-verification.instructions.md` for UI changes, and `.github/instructions/pipeline.instructions.md` for workflows.
 
 ## Commands
 
