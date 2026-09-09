@@ -5,7 +5,7 @@ This directory contains feature specifications created through the spec-driven d
 ## Workflow Overview
 
 1. **Create a Spec Issue** — Use the "Copilot Feature To Spec" issue template to define your feature
-2. **Auto-Assignment** — Issues with the `copilot-ready` label automatically trigger Copilot assignment
+2. **Assignment** — Issues carry the `copilot-ready` label; assign the coding agent manually, as no workflow here watches that label
 3. **Spec Creation** — Copilot creates a structured specification in this directory
 4. **Implementation** — Follow the tasks in the spec to implement the feature
 
@@ -80,5 +80,4 @@ Use EARS (Easy Approach to Requirements Syntax) patterns:
 ## Related Files
 
 - `.github/ISSUE_TEMPLATE/feature-to-spec.yml` — Issue template for creating specs
-- `.github/workflows/assign-copilot.yml` — Workflow for auto-assigning Copilot
 - `.github/instructions/spec.instructions.md` — Detailed instructions for spec writing

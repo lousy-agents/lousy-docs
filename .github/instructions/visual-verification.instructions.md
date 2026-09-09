@@ -8,7 +8,7 @@ Code-level tests verify logic and syntax. This protocol verifies **rendered visu
 
 ## Trigger Conditions
 
-### Protocol is MANDATORY when the changeset modifies ANY of
+### The protocol is required when the changeset modifies any of
 
 - `src/components/**/*.{tsx,css}` — React components or component styles
 - `src/layouts/**/*.astro` — Astro layout templates
@@ -16,7 +16,7 @@ Code-level tests verify logic and syntax. This protocol verifies **rendered visu
 - `src/pages/**/*.astro` — Page composition (island mounting, directive changes)
 - `src/components/providers/AntDProvider.tsx` — Theme tokens (triggers multi-page spot check)
 
-### Protocol is SKIPPED when changes are limited to
+### The protocol is skipped when changes are limited to
 
 - `src/entities/` — Pure business logic
 - `src/use-cases/` — Application logic
@@ -30,7 +30,7 @@ When skipping, state: _"Visual verification skipped — no UI-layer files modifi
 
 ## Preconditions
 
-All three preconditions MUST be satisfied before modifying any CSS, layout, or component rendering code.
+All three preconditions shall be satisfied before modifying any CSS, layout, or component rendering code. The baseline is the only thing a later screenshot can be compared against, and it cannot be captured after the change.
 
 | # | Precondition | How to verify |
 |---|-------------|---------------|
@@ -38,7 +38,7 @@ All three preconditions MUST be satisfied before modifying any CSS, layout, or c
 | 2 | **Affected page navigable** | `browser_navigate` to the page under change. Content renders without console errors. |
 | 3 | **Baseline screenshot captured** | `browser_take_screenshot` of current state BEFORE any code change. This is the regression reference. |
 
-**Do NOT modify rendering code until all three preconditions are satisfied.** The baseline screenshot is the "measure before you cut" gate.
+Do not modify rendering code until all three preconditions are satisfied. The baseline screenshot is the "measure before you cut" gate.
 
 ---
 
@@ -65,9 +65,9 @@ LOOP {
 
 ### Mandatory rules
 
-- **Steps 4–6 are never optional.** Writing CSS and assuming it renders correctly is prohibited.
-- **The agent must describe the visual delta in words** — not just "looks good" but a specific observation (e.g., "Card border is now visible as a faint edge at ~15% opacity on the dark surface, matching the ghost border spec in DESIGN.md §4").
-- **Do not return control to the human until the visual loop confirms correctness.** The agent is its own Visual QA.
+- Steps 4–6 are never optional. Writing CSS and assuming it renders correctly is prohibited, because specificity conflicts and CSS-in-JS injection order are invisible in the source.
+- Describe the visual delta in words — not just "looks good" but a specific observation (e.g., "Card border is now visible as a faint edge at ~15% opacity on the dark surface, matching the ghost border spec in DESIGN.md §4").
+- Do not return control to the human until the visual loop confirms correctness. You are your own Visual QA here; a human asked to check rendering you never looked at is doing your verification for you.
 
 ---
 
@@ -91,22 +91,25 @@ Required when the component has `:hover`, `:focus`, `:focus-visible`, or `:activ
 1. browser_click on an element BEFORE the target (establishes focus context)
 2. browser_press_key "Tab" → moves focus to the target element
 3. browser_take_screenshot → capture :focus-visible state
-4. Verify ALL of:
-   - Focus outline is VISIBLE in the screenshot (not just present in CSS)
+4. Verify both of:
+   - Focus outline is visible in the screenshot, not merely present in CSS
    - Outline meets `DESIGN.md` §2 WCAG Compliance requirements (primary color, minimum width, contrast ratio)
 5. IF any check fails → fix CSS, reload, re-verify from step 1
-6. To programmatically verify contrast when screenshot analysis is ambiguous:
-   ```
-   browser_evaluate:
-     function: (el) => {
-       const style = getComputedStyle(el);
-       const parent = getComputedStyle(el.parentElement);
-       return { outline: style.outlineColor, bg: parent.backgroundColor };
-     }
-     ref: <target element ref>
-   ```
-   Compare returned values against the pre-verified reference: `#bdce89` on `#121410` = ~10.9:1 contrast.
 ```
+
+When screenshot analysis leaves the contrast ambiguous, read the computed values directly:
+
+```
+browser_evaluate:
+  function: (el) => {
+    const style = getComputedStyle(el);
+    const parent = getComputedStyle(el.parentElement);
+    return { outline: style.outlineColor, bg: parent.backgroundColor };
+  }
+  ref: <target element ref>
+```
+
+Compare the returned values against the pre-verified reference: `#bdce89` on `#121410` is ~10.9:1 contrast.
 
 ### Active/pressed state (if applicable)
 
@@ -116,7 +119,7 @@ Required when the component has `:hover`, `:focus`, `:focus-visible`, or `:activ
 3. Verify: pressed visual matches DESIGN.md button/interactive spec
 ```
 
-**Do not skip interactive states.** A `:focus-visible` rule that exists in the stylesheet but never actually renders (due to selector specificity, inheritance, or override) is a bug. The only way to catch it is to trigger the state and screenshot.
+Do not skip interactive states. A `:focus-visible` rule that exists in the stylesheet but never actually renders — lost to selector specificity, inheritance, or an override — is a bug, and the only way to catch it is to trigger the state and screenshot.
 
 ---
 
@@ -127,7 +130,7 @@ After all changes pass at the default viewport, verify at these breakpoints:
 | Viewport | Dimensions | Represents |
 |----------|-----------|------------|
 | Desktop | 1280 × 720 | Default — verify first |
-| Mobile | 390 × 844 | iPhone 14 — REQUIRED |
+| Mobile | 390 × 844 | iPhone 14 — required |
 | Tablet | 768 × 1024 | iPad portrait — recommended for layout-heavy changes |
 
 ```
@@ -157,7 +160,7 @@ When modifying `AntDProvider.tsx` theme tokens, `src/styles/global.css` custom p
 
 ## Postconditions
 
-The visual protocol is complete when ALL of these are true:
+The visual protocol is complete when all of these are true:
 
 | # | Postcondition | Evidence |
 |---|--------------|----------|
@@ -169,9 +172,9 @@ The visual protocol is complete when ALL of these are true:
 | 6 | Accessibility tree audited | `browser_snapshot` confirms correct ARIA roles and labels |
 | 7 | Standard TDD gate passes | See validation commands below |
 
-**The visual protocol adds to the TDD workflow. It does not replace it.** Both visual and code postconditions must pass before declaring the task complete.
+The visual protocol adds to the TDD workflow rather than replacing it: unit tests do not render CSS and a successful build proves nothing about appearance, so both visual and code postconditions shall pass before the task is complete.
 
-### MANDATORY: Final Validation
+### Final Validation
 
 After all visual checks pass, run the full validation suite:
 
@@ -239,14 +242,14 @@ For UI-layer changes, the TDD workflow becomes:
 6. ⭐ **Interactive states**: Hover/focus verification via MCP (if applicable)
 7. ⭐ **Responsive check**: Desktop + Mobile minimum
 8. **Refactor** → Keep tests green, re-verify visually if CSS changed
-9. **Validate** (see MANDATORY: Final Validation above):
+9. **Validate** (see Final Validation above):
    ```bash
    npx biome check && npm test && npm run build
    ```
 
 If any test or build failure occurs after a visual change, fix the root cause and re-enter the visual verification loop for any UI code that changed.
 
-Steps marked ⭐ are added by this protocol and are mandatory for UI-layer files.
+Steps marked ⭐ are added by this protocol and are required for UI-layer files.
 
 ---
 
