@@ -25,7 +25,7 @@ npm run lint:yaml       # Validate YAML syntax with yamllint
 
 If you add a job to `ci.yml`, add it to the `status` job's `needs` list and to the array it checks. A job left out of `status` still runs and still reports, but it cannot block a merge, so a failure in it is invisible to branch protection.
 
-`status` aggregates `ci.yml` only. Code scanning runs from GitHub's default setup rather than a workflow file in this repository, so its `Analyze` check appears on pull requests under its own workflow run and is not covered by `status`. Branch protection has to name that check separately.
+`status` aggregates `ci.yml` only. Code scanning runs from GitHub's default setup rather than a workflow file in this repository, so its `Analyze` check appears on pull requests under its own workflow run and is not covered by `status`. Branch protection names that check separately.
 
 ## Action Pinning Format
 

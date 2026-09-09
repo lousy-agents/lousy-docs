@@ -232,7 +232,7 @@ export const useProducts = createUseProductsHook({ getProductsUseCase });
 
 ### React Components (UI Adapters)
 
-Components receive data as props and focus purely on presentation. They use Ant Design primitives and must be wrapped in `AntDProvider` before rendering. Do **not** use `'use client'` — not applicable in Astro.
+Components receive data as props and focus purely on presentation. They use Ant Design primitives and shall be wrapped in `AntDProvider` before rendering. Do **not** use `'use client'` — not applicable in Astro.
 
 ```typescript
 // src/components/products/product-list.tsx

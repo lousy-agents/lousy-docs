@@ -174,12 +174,12 @@ Interactive components (dialogs, overlays, drawers, popovers, keyboard shortcuts
 
 ## Dependency Injection for Testing
 
-When you need to inject dependencies for testing:
+Inject dependencies through the seams the code already exposes, so the test exercises the same entry points production does and nothing test-only survives into the shipped API:
 
-- **Do** use constructor parameters, function parameters, or framework-provided mechanisms (e.g., context objects).
-- **Do** pass test doubles through the existing public API of the code under test.
-- **Do not** export special test-only functions like `_setTestDependencies()` or `_resetTestDependencies()`.
-- **Do not** modify module-level state from tests.
+- Do use constructor parameters, function parameters, or framework-provided mechanisms (e.g., context objects).
+- Do pass test doubles through the existing public API of the code under test.
+- Do not export special test-only functions like `_setTestDependencies()` or `_resetTestDependencies()`.
+- Do not modify module-level state from tests.
 
 ### Good Example (Dependency Injection via Parameters)
 

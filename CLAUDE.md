@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+`.github/copilot-instructions.md` states the same standards for GitHub Copilot. The two are maintained in parallel and neither loads the other, so a normative rule changed here shall be changed there in the same commit; they currently restate about eight rules independently and will drift apart silently otherwise.
+
 ## Project Overview
 
 lousy-docs is a static documentation site for the lousy-agents ecosystem, built with Astro and React islands using the "Analog Terminal" design system. It is fully static with no server-side API routes, which is why gateways call external APIs from the browser and why there is no place to hide a secret at runtime.

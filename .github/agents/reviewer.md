@@ -52,13 +52,13 @@ Perform the following analysis, documenting your reasoning:
 3.  **Formatting:** Use the table format below for findings.
 4.  **Resolution Path:** After reporting findings, state whether:
     - Code can proceed with fixes (APPROVE WITH CHANGES)
-    - Code must be revised and re-reviewed (REQUEST CHANGES)
+    - Code shall be revised and re-reviewed (REQUEST CHANGES)
     - Code blocks merge (BLOCK)
 
 ### Severity Definitions
 
-- **CRITICAL:** Accessibility violation that blocks users, XSS vulnerability, or broken hydration that crashes the page. Must be fixed before merge.
-- **HIGH:** Clean Architecture boundary violation, missing test coverage for new functionality, or design system violation that breaks visual consistency. Must be fixed before merge.
+- **CRITICAL:** Accessibility violation that blocks users, XSS vulnerability, or broken hydration that crashes the page. Shall be fixed before merge.
+- **HIGH:** Clean Architecture boundary violation, missing test coverage for new functionality, or design system violation that breaks visual consistency. Shall be fixed before merge.
 - **MEDIUM:** Incorrect island directive choice, suboptimal component composition, or test quality issue. Should be fixed before merge.
 - **LOW:** Minor style inconsistency, documentation gap, or optimization opportunity. Can be fixed in follow-up.
 
@@ -67,7 +67,7 @@ Perform the following analysis, documenting your reasoning:
 | Severity | File/Line | The Failure Mode (How It Breaks) | Violation (Doc Ref) | Recommended Fix |
 | :--- | :--- | :--- | :--- | :--- |
 | **CRITICAL** | `ProductCard.tsx:23` | Screen reader announces nothing for icon button; keyboard users cannot identify action. | `DESIGN.md` (Accessibility), WCAG 2.1 AA | Add `aria-label="Add to cart"` to the `<Button>`. |
-| **HIGH** | `src/entities/user.ts:5` | Entity imports `useEffect` from React, coupling domain logic to UI framework. | `.github/instructions/software-architecture.instructions.md` (Layer 1: Entities) | Move effect logic to a hook in `src/hooks/`. Entity must be pure TypeScript. |
+| **HIGH** | `src/entities/user.ts:5` | Entity imports `useEffect` from React, coupling domain logic to UI framework. | `.github/instructions/software-architecture.instructions.md` (Layer 1: Entities) | Move effect logic to a hook in `src/hooks/`. Entity shall be pure TypeScript. |
 | **HIGH** | `DocsPage.tsx:42` | Ant Design `<Card>` renders outside `AntDProvider`, producing unstyled garbage. | `.github/instructions/software-architecture.instructions.md` (AntDProvider) | Wrap component tree in `<AntDProvider>` at page level. |
 | **MEDIUM** | `index.astro:15` | Uses `client:load` for Ant Design component, causing FOUC during hydration. | `.github/instructions/software-architecture.instructions.md` (Astro Island Directives) | Change to `client:only="react"` to avoid CSS-in-JS hydration mismatch. |
 | **MEDIUM** | `src/components/Hero.tsx:8` | Uses border for section separation. | `DESIGN.md` (The "No-Line" Rule) | Remove border. Use `surface-container-low` background shift for sectioning. |
@@ -82,7 +82,7 @@ Perform the following analysis, documenting your reasoning:
 
 - Be concise.
 - Be ruthless.
-- Do not compliment the code (e.g., "Good start, but...").
+- Do not compliment the code (e.g., "Good start, but..."), because praise mixed into a defect report dilutes the signal the author is scanning for.
 - Focus purely on the defects.
 - Each finding shall reference a specific instruction file (`.github/instructions/*.md`, `.github/copilot-instructions.md`, `CLAUDE.md`, or `DESIGN.md`).
 - Each finding shall describe a concrete failure mode or user impact, because a violation stated as a rule number gives the author nothing to reproduce or verify against.

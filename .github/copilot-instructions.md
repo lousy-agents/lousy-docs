@@ -6,7 +6,7 @@ applyTo: "**"
 
 An Astro TypeScript static site following Test-Driven Development, Clean Architecture, and strict validation workflows.
 
-This file is loaded for every file in the repository, so it carries the standards that apply everywhere. Deeper detail lives in path-scoped files that load when you touch the code they govern: `.github/instructions/software-architecture.instructions.md` for layering, `.github/instructions/test.instructions.md` for test conventions, `.github/instructions/visual-verification.instructions.md` for UI changes, and `.github/instructions/pipeline.instructions.md` for workflows.
+This file is loaded for every file in the repository, so it carries the standards that apply everywhere. `CLAUDE.md` states the same standards for Claude Code; the two are maintained in parallel and neither loads the other, so a normative rule changed here shall be changed there in the same commit. Deeper detail lives in path-scoped files that load when you touch the code they govern: `.github/instructions/software-architecture.instructions.md` for layering, `.github/instructions/test.instructions.md` for test conventions, `.github/instructions/visual-verification.instructions.md` for UI changes, and `.github/instructions/pipeline.instructions.md` for workflows.
 
 ## Commands
 
@@ -112,9 +112,9 @@ async function doStuff(x) {
 **Rules:**
 - Always use TypeScript type hints
 - Use descriptive names for variables, functions, and modules
-- Functions must be small and have single responsibility
-- Avoid god functions and classes — break into smaller, focused units
-- Avoid repetitive code — extract reusable functions
+- Functions shall be small and have a single responsibility
+- Avoid god functions and classes — break them into smaller, focused units, because a function carrying several responsibilities has to be re-read in full to change any one of them
+- Avoid repetitive code — extract reusable functions, so a fix lands in one place instead of in every copy
 - Extract functions when there are multiple code paths
 - Favor immutability and pure functions
 - Avoid temporal coupling, so that a caller cannot break the code by reordering two calls that look independent
@@ -131,10 +131,10 @@ Tests are executable documentation. Use the Arrange-Act-Assert pattern, mock HTT
 
 - Describe behavior, not implementation. Name `it` blocks as specifications that read as complete sentences, so a failure report states what broke.
 - Use Chance.js to generate fixtures and extract each generated value to a variable, so it is never duplicated across arrange and assert.
-- Use Vitest, never Jest.
+- Use Vitest, never Jest — Jest globals will not resolve against the configured runner.
 - Mock HTTP with MSW, never `fetch` directly. A direct `fetch` mock asserts on the call rather than the contract, so it keeps passing after the request shape changes.
 - Reset MSW handlers between tests, because a handler left registered makes the next test pass for the wrong reason.
-- Tests must be deterministic and isolated — same result every run, no shared state.
+- Tests shall be deterministic and isolated — same result every run, no shared state, because a failure that depends on execution order is not reproducible and gets ignored.
 - Test happy paths, unhappy paths, and edge cases; every conditional path needs a meaningful assertion.
 - Never modify a test to make it pass without understanding the root cause. A test changed to match broken behavior removes the signal that something regressed.
 
@@ -152,7 +152,7 @@ This is a fully static site with no server at runtime, so anything the browser n
 
 ## GitHub Actions
 
-- Validation must be automated via GitHub Actions and runnable locally the same way, so that a green local run predicts a green CI run
+- Validation shall be automated via GitHub Actions and runnable locally the same way, so that a green local run predicts a green CI run
 - Validate all workflows using actionlint
 - Validate all YAML files using yamllint
 - Pin all third-party actions to an exact commit SHA with a version comment. A tag is mutable and can be repointed at new code, so a SHA is what makes the build reproducible and resistant to a compromised upstream release.

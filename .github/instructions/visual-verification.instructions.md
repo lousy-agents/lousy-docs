@@ -262,5 +262,5 @@ Steps marked ⭐ are added by this protocol and are required for UI-layer files.
 | **Single-viewport assumption** — Only checking at default viewport | Mobile layout breakage is the most common UI regression |
 | **Static-only verification** — Verifying default state, skipping `:hover`/`:focus` | Interactive states may have selector mismatches that only appear on interaction |
 | **Test-only declaration** — "All tests pass" as sole evidence for UI correctness | Unit tests don't render CSS. Build success doesn't verify visual design. |
-| **Premature handoff** — Asking the human to verify before self-verifying | The agent must be its own Visual QA. Return control only after autonomous verification. |
+| **Premature handoff** — Asking the human to verify before self-verifying | You are your own Visual QA; a human asked to check rendering you never looked at is doing your verification for you. Return control only after verifying. |
 | **Vague analysis** — "Looks correct" without specific observations | Always describe the specific visual property verified (color, spacing, opacity, font) |
