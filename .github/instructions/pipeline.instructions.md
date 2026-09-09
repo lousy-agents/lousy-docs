@@ -21,9 +21,11 @@ npm run lint:yaml       # Validate YAML syntax with yamllint
 
 ## The Aggregating Status Job
 
-`ci.yml` ends with a `status` job that runs `if: always()`, needs every other check job, and fails when any of them did not succeed. It exists so that branch protection has one required check to name instead of a list that has to be updated in the repository settings every time a job is added.
+`ci.yml` ends with a `status` job that runs `if: always()`, needs the other check jobs in that workflow (`lint`, `test`, `test-e2e`, `build`), and fails when any of them did not succeed. It exists so that branch protection has one required check to name for this workflow, instead of a list that has to be updated in the repository settings every time a job is added. `deploy` is excluded because it depends on `status` rather than feeding it.
 
 If you add a job to `ci.yml`, add it to the `status` job's `needs` list and to the array it checks. A job left out of `status` still runs and still reports, but it cannot block a merge, so a failure in it is invisible to branch protection.
+
+`status` aggregates `ci.yml` only. Code scanning runs from GitHub's default setup rather than a workflow file in this repository, so its `Analyze` check appears on pull requests under its own workflow run and is not covered by `status`. Branch protection has to name that check separately.
 
 ## Action Pinning Format
 
