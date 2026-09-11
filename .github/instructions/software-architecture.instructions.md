@@ -29,29 +29,36 @@ src/
 ├── use-cases/                 # Layer 2: Application business rules
 ├── gateways/                  # Layer 3: External API adapters
 ├── pages/                     # Layer 4: Astro pages (composition root)
-│   └── index.astro            # Each .astro file is a static route
+│   ├── index.astro            # Each .astro file is a static route
+│   └── docs/                  # Documentation routes
 ├── layouts/                   # Layer 4: Astro layout components
 │   └── BaseLayout.astro       # HTML shell (head, fonts, global styles)
 ├── components/                # Layer 3: React components (UI adapters)
 │   ├── providers/             # Context providers (e.g., AntDProvider)
 │   ├── layout/                # Site-wide layout components (Header, Footer)
-│   ├── ui/                    # Primitive UI components
-│   └── features/              # Feature-specific components
+│   ├── docs/                  # Documentation reading experience
+│   ├── home/                  # Homepage sections
+│   └── playground/            # Interactive linting tool
 ├── hooks/                     # Layer 3: React hooks for data fetching
 ├── styles/                    # Global CSS (CSS custom properties, resets)
+├── content/                   # Generated: docs fetched by scripts/fetch-docs.sh
 └── lib/                       # Layer 3: Configuration and utilities
 ```
+
+Components are grouped by feature area rather than by primitive-versus-feature, so a change to one part of the site touches one directory. `src/content/` is written by `scripts/fetch-docs.sh` on every dev run and build; edits to it are discarded, so treat it as build output.
 
 ## Layer 1: Entities
 
 **Location:** `src/entities/`
 
-- MUST NOT import from any other layer
-- MUST NOT depend on frameworks or infrastructure
-- MUST NOT use non-deterministic or side-effect-producing global APIs (e.g., `crypto.randomUUID()`, `Date.now()`, `Math.random()`)
-- MAY use pure, deterministic global APIs (e.g., `Intl.NumberFormat`, `parseInt()`, `JSON.parse()`)
-- MUST be plain TypeScript objects/classes with business logic
-- MAY contain validation and business rules
+Entities hold the rules that stay true regardless of how the site renders them, which is what lets them be tested without a DOM, a network, or a clock.
+
+- Shall not import from any other layer
+- Shall not depend on frameworks or infrastructure
+- Shall not use non-deterministic or side-effect-producing global APIs (e.g., `crypto.randomUUID()`, `Date.now()`, `Math.random()`), because a function whose output changes between calls cannot be asserted on without stubbing a global, and that stub then has to be maintained by every test that touches it
+- May use pure, deterministic global APIs (e.g., `Intl.NumberFormat`, `parseInt()`, `JSON.parse()`)
+- Shall be plain TypeScript objects/classes with business logic
+- May contain validation and business rules
 
 ```typescript
 // src/entities/product.ts
@@ -84,10 +91,12 @@ export function formatPrice(product: Product): string {
 
 **Location:** `src/use-cases/`
 
-- MUST only import from entities and ports (interfaces)
-- MUST define input/output DTOs
-- MUST define ports for external dependencies
-- MUST NOT import concrete implementations
+A use case names what the application does; the port is how it says what it needs without naming who provides it, so the same use case runs against a real gateway in production and a plain object in a test.
+
+- Shall only import from entities and ports (interfaces)
+- Shall define input/output DTOs
+- Shall define ports for external dependencies
+- Shall not import concrete implementations. Importing a gateway inverts the dependency: the use case then knows about HTTP, and a test for it needs a network stub.
 
 ```typescript
 // src/use-cases/get-products.ts
@@ -223,10 +232,10 @@ export const useProducts = createUseProductsHook({ getProductsUseCase });
 
 ### React Components (UI Adapters)
 
-Components receive data as props and focus purely on presentation. They use Ant Design primitives and must be wrapped in `AntDProvider` before rendering. Do **not** use `'use client'` — not applicable in Astro.
+Components receive data as props and focus purely on presentation. They use Ant Design primitives and shall be wrapped in `AntDProvider` before rendering. Do **not** use `'use client'` — not applicable in Astro.
 
 ```typescript
-// src/components/features/product-list.tsx
+// src/components/products/product-list.tsx
 import { Button, Flex, Typography } from 'antd';
 import type { Product } from '@/entities/product';
 import { formatPrice, isAvailableForPurchase } from '@/entities/product';
@@ -266,7 +275,7 @@ export function ProductList({ products, onAddToCart }: ProductListProps) {
 
 ### Ant Design Theme Provider
 
-All React component trees that use Ant Design MUST be wrapped in `AntDProvider`. The provider lives at `src/components/providers/AntDProvider.tsx` and applies the "Analog Terminal" dark theme from `DESIGN.md`.
+All React component trees that use Ant Design shall be wrapped in `AntDProvider`. The provider lives at `src/components/providers/AntDProvider.tsx` and applies the "Analog Terminal" dark theme from `DESIGN.md`. An unwrapped tree still renders, but with Ant Design's stock palette instead of the project theme, so the failure looks like a styling bug rather than a missing provider.
 
 ```typescript
 // src/components/providers/AntDProvider.tsx
@@ -335,7 +344,7 @@ Pages are the composition root: they import the layout and mount React component
 // biome-ignore lint/correctness/noUnusedImports: used in Astro HTML template
 import BaseLayout from "../layouts/BaseLayout.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in Astro HTML template
-import { ProductsPage } from "../components/features/ProductsPage";
+import { ProductsPage } from "../components/products/ProductsPage";
 ---
 
 <BaseLayout title="Products">
