@@ -21,7 +21,7 @@
     "dependencies": {
         "@astrojs/react": "5.0.7",
         "@astrojs/sitemap": "3.7.4",
-        "@lousy-agents/lint": "5.21.6",
+        "@lousy-agents/lint": "5.21.7",
         "antd": "6.6.3",
         "astro": "6.4.8",
         "astro-pagefind": "1.8.6",
