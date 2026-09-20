@@ -22,7 +22,7 @@
         "@astrojs/react": "5.0.7",
         "@astrojs/sitemap": "3.7.4",
         "@lousy-agents/lint": "5.21.15",
-        "antd": "6.6.4",
+        "antd": "6.6.5",
         "astro": "6.4.8",
         "astro-pagefind": "1.8.6",
         "pino": "10.3.1",
