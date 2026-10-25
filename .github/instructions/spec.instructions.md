@@ -1,5 +1,5 @@
 ---
-applyTo: "**/spec.md"
+applyTo: ".github/specs/*.md"
 ---
 
 # Spec Development Instructions
@@ -18,7 +18,7 @@ Act as a collaborative PM pair, not a passive assistant. This means:
 - **Identify gaps** — Flag missing acceptance criteria, edge cases, and error states.
 - **Guard scope** — Call out when a feature is too large for a single increment. Suggest phasing.
 - **Propose value** — Don't wait to be asked. Assess and state which value types a feature delivers.
-- **Ensure persona coverage** — Every spec must identify impacted personas. Push back if missing.
+- **Ensure persona coverage** — Every spec shall identify impacted personas. Push back if missing; a feature with no named persona has no one to validate it against.
 
 ## Collaboration Approach
 
@@ -40,7 +40,7 @@ When reviewing a spec:
 
 ## Using the Feature-to-Spec Issue Template
 
-This repository includes a GitHub issue template for streamlined spec creation with automatic Copilot assignment.
+This repository includes a GitHub issue template that structures a feature request into the sections a spec needs.
 
 ### Creating a Spec via Issue Template
 
@@ -51,23 +51,18 @@ This repository includes a GitHub issue template for streamlined spec creation w
 5. Optionally customize the **Extra Instructions** section for agent-specific guidance
 6. Submit the issue
 
-### Automatic Copilot Assignment
+### Copilot Assignment
 
-When you create an issue with the `copilot-ready` label (applied automatically by the template):
-
-1. The `assign-copilot.yml` workflow triggers
-2. Copilot is mentioned in a comment with your Extra Instructions
-3. Copilot begins working on the spec in `.github/specs/`
+The template applies the `copilot-ready` label and the `enhancement` label on submission. Assignment itself is manual: no workflow in this repository watches for that label, so assign the coding agent to the issue yourself. Treat `copilot-ready` as a marker for humans and for issue queries, not as a trigger.
 
 ### Related Files
 
 - `.github/ISSUE_TEMPLATE/feature-to-spec.yml` — The issue template
-- `.github/workflows/assign-copilot.yml` — Auto-assignment workflow
-- `.github/specs/` — Where completed specs are stored
+- `.github/specs/` — Where completed specs are stored, one markdown file per feature
 
 ## EARS Requirement Syntax
 
-All acceptance criteria must use EARS (Easy Approach to Requirements Syntax) patterns:
+All acceptance criteria shall use EARS (Easy Approach to Requirements Syntax) patterns. The value of these templates is that they force you to name the trigger, the actor, and the exception, which is exactly what an ambiguous criterion leaves out:
 
 | Pattern | Template | Use When |
 | --------- | ---------- | ---------- |
@@ -272,7 +267,7 @@ so that I can **<outcome>**.
 
 ### Verification
 
-Every task must include verification steps the agent can run:
+Every task shall include verification steps the agent can run, so that "done" is a command that exits zero rather than a judgment call:
 
 ```markdown
 **Verification**:
@@ -345,7 +340,7 @@ When implementing tasks from specs, avoid these common mistakes:
 
 When assigning a task to GitHub Copilot coding agent, include:
 
-1. **Link to spec file** — "See `specs/feature-name/spec.md`"
+1. **Link to spec file** — "See `.github/specs/feature-name.md`"
 2. **Task reference** — "Implement Task 3: Add validation"
 3. **Engineering guidance reference** — "Follow `.github/copilot-instructions.md`"
 
@@ -354,7 +349,7 @@ When assigning a task to GitHub Copilot coding agent, include:
 ```markdown
 ## Task
 
-Implement **Task 3: Add input validation** from `specs/workflow-triggers/spec.md`
+Implement **Task 3: Add input validation** from `.github/specs/workflow-triggers.md`
 
 ## Context
 
@@ -363,7 +358,7 @@ See the spec for full acceptance criteria and design context.
 
 ## References
 
-- Spec: `specs/workflow-triggers/spec.md` (Task 3)
+- Spec: `.github/specs/workflow-triggers.md` (Task 3)
 - Standards: `.github/copilot-instructions.md`
 
 ## Verification
@@ -376,7 +371,7 @@ See the spec for full acceptance criteria and design context.
 ### Example: Direct Prompt to Coding Agent
 
 ```
-Implement Task 3 from specs/workflow-triggers/spec.md
+Implement Task 3 from .github/specs/workflow-triggers.md
 
 Read the full spec for context. This task adds input validation
 for workflow trigger configurations.
