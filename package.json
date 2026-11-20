@@ -20,7 +20,7 @@
     },
     "dependencies": {
         "@astrojs/react": "5.0.7",
-        "@astrojs/sitemap": "3.7.4",
+        "@astrojs/sitemap": "3.7.6",
         "@lousy-agents/lint": "5.22.22",
         "antd": "6.6.8",
         "astro": "6.4.8",
