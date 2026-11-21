@@ -37,7 +37,7 @@
         "@modelcontextprotocol/server-sequential-thinking": "2026.8.31",
         "@playwright/mcp": "0.0.86",
         "@playwright/test": "1.65.1",
-        "@testing-library/jest-dom": "7.0.1",
+        "@testing-library/jest-dom": "8.0.0",
         "@testing-library/react": "16.3.3",
         "@testing-library/user-event": "14.6.13",
         "@types/chance": "1.1.8",
