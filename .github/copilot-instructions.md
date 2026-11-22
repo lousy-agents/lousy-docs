@@ -6,9 +6,13 @@ applyTo: "**"
 
 An Astro TypeScript static site following Test-Driven Development, Clean Architecture, and strict validation workflows.
 
+`AGENTS.md` at the repository root is the source of record for the engineering standards. Copilot does not expand `@` import tokens, so this file deliberately restates those standards instead of pointing at them — the duplication is load-bearing, not an oversight to clean up. When a rule changes in `AGENTS.md`, change it here in the same commit.
+
+This file is loaded for every file in the repository, so it carries the standards that apply everywhere. Deeper detail lives in path-scoped files that load when you touch the code they govern: `.github/instructions/software-architecture.instructions.md` for layering, `.github/instructions/test.instructions.md` for test conventions, `.github/instructions/visual-verification.instructions.md` for UI changes, and `.github/instructions/pipeline.instructions.md` for workflows.
+
 ## Commands
 
-Run `nvm use` before any npm command. During development, use file-scoped commands for faster feedback, and run the full validation suite (`npx biome check && npm test && npm run build`) before commits.
+Run `nvm use` before any npm command, because the toolchain is pinned by `.nvmrc` and a mismatched Node version produces failures that look like dependency bugs. While iterating, use the file-scoped forms for faster feedback; run the full validation suite before commits.
 
 ```bash
 # ALWAYS run first
@@ -39,11 +43,13 @@ npm run lint:workflows   # Validate GitHub Actions (actionlint)
 npm run lint:yaml        # Validate YAML (yamllint)
 ```
 
+`npm run dev` and `npm run build` both run `scripts/fetch-docs.sh` first, which clones documentation from the `zpratt/lousy-agents` repository into `src/content/docs`. That directory is generated, so edits to it are discarded on the next build. Set `DOCS_GITHUB_TOKEN` for authenticated fetches and `DOCS_REF=<tag|branch>` to pin a reproducible revision.
+
 ## Workflow: TDD Required
 
-Follow this exact sequence for ALL code changes. Work in small increments — make one change at a time and validate before proceeding.
+Follow this exact sequence for all code changes, working in small increments and validating before proceeding. Steps 2 and 3 are ordered so that a test failure proves the test can fail, which is the only evidence that it tests anything.
 
-1. **Research**: Search codebase for existing patterns, components, utilities. Use Context7 MCP tools for library/API documentation.
+1. **Research**: Search codebase for existing patterns, components, utilities. Use Context7 MCP tools for library/API documentation, because pinned versions here move faster than model knowledge.
 2. **Write failing test**: Create test describing desired behavior
 3. **Verify failure**: Run `npm test` — confirm clear failure message
 4. **Implement minimal code**: Write just enough to pass
@@ -51,30 +57,21 @@ Follow this exact sequence for ALL code changes. Work in small increments — ma
 6. **Refactor**: Clean up, remove duplication, keep tests green
 7. **Validate**: `npx biome check && npm test && npm run build`
 
-Task is NOT complete until all validation passes.
+A task is not complete until all validation passes. For UI-layer changes, `.github/instructions/visual-verification.instructions.md` adds mandatory screenshot steps between 5 and 6.
 
 ## Tech Stack
 
 - **Framework**: Astro (with React islands) — follow Astro conventions
 - **Language**: TypeScript (strict mode)
 - **Validation**: Zod for runtime validation of external data
-- **Testing**: Vitest (never Jest), MSW for HTTP mocking, Chance.js for test fixtures
-- **Linting**: Biome (never ESLint/Prettier separately)
-- **Logging**: Pino with JSON format and child loggers
+- **Testing**: Vitest (never Jest — Vitest is the configured runner and Jest globals will not resolve), MSW for HTTP mocking, Chance.js for test fixtures
+- **Linting**: Biome, which covers both lint and format. Do not add ESLint or Prettier separately; two formatters with different opinions fight on every save.
 - **HTTP**: fetch API only
 - **Architecture**: Clean Architecture principles
 
 ## Project Structure
 
-```
-.github/           GitHub Actions workflows
-src/               Application source code
-  components/      React components
-  layouts/         Astro layout components
-  pages/           Astro pages and routes
-tests/             Test files (mirror src/ structure)
-.nvmrc             Node.js version (latest LTS)
-```
+Source is layered by Clean Architecture, innermost first: `src/entities/`, `src/use-cases/`, then the adapters (`src/gateways/`, `src/hooks/`, `src/components/`, `src/lib/`), then infrastructure (`src/pages/`, `src/layouts/`). `src/styles/` holds global CSS and `src/content/` holds fetched documentation, which is generated rather than authored. Tests live in `tests/`, mirroring the `src/` structure. `.github/instructions/software-architecture.instructions.md` carries the full directory map and the import matrix.
 
 ## Code Style
 
@@ -117,169 +114,74 @@ async function doStuff(x) {
 **Rules:**
 - Always use TypeScript type hints
 - Use descriptive names for variables, functions, and modules
-- Functions must be small and have single responsibility
-- Avoid god functions and classes — break into smaller, focused units
-- Avoid repetitive code — extract reusable functions
+- Functions shall be small and have a single responsibility
+- Avoid god functions and classes — break them into smaller, focused units, because a function carrying several responsibilities has to be re-read in full to change any one of them
+- Avoid repetitive code — extract reusable functions, so a fix lands in one place instead of in every copy
 - Extract functions when there are multiple code paths
 - Favor immutability and pure functions
-- Avoid temporal coupling
+- Avoid temporal coupling, so that a caller cannot break the code by reordering two calls that look independent
 - Keep cyclomatic complexity low
 - Remove all unused imports and variables
-- Validate external data at runtime with Zod — never use type assertions (`as Type`) on API responses
-- Always check `response.ok` when using fetch
-- Run lint and tests after EVERY change
+- Validate external data at runtime with Zod — never use a type assertion (`as Type`) on an API response, because an assertion silences the compiler without checking anything, so malformed data reaches the UI as a runtime crash instead of a caught validation error
+- Always check `response.ok` when using fetch, because `fetch` rejects only on network failure and resolves normally on a 404 or 500
+- Never use an empty `catch` block that swallows an error silently — always log or rethrow, because a swallowed failure surfaces later as corrupted state with no trace of its origin
+- Run lint and tests after every change
 
 ## Testing Standards
 
-Tests are executable documentation. Use Arrange-Act-Assert pattern. Mock HTTP with MSW. Generate test fixtures with Chance.js.
+Tests are executable documentation. Use the Arrange-Act-Assert pattern, mock HTTP with MSW, and generate fixtures with Chance.js. `.github/instructions/test.instructions.md` carries the worked examples and the full rule set; it loads whenever you edit a test file. The rules that matter everywhere:
 
-```typescript
-import Chance from 'chance';
-import { http, HttpResponse } from 'msw';
-import { setupServer } from 'msw/node';
-import { beforeAll, afterAll, afterEach, describe, it, expect } from 'vitest';
-import { fetchUserById } from './user-service';
-
-const chance = new Chance();
-const server = setupServer();
-
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
-
-// ✅ Good - describes behavior, reads like documentation, uses generated fixtures
-describe('User retrieval', () => {
-  describe('given a valid user ID', () => {
-    it('returns the user details from the API', async () => {
-      // Arrange
-      const userId = chance.guid();
-      const expectedUser = { id: userId, name: chance.name() };
-      server.use(
-        http.get(`/api/users/${userId}`, () => {
-          return HttpResponse.json(expectedUser);
-        })
-      );
-
-      // Act
-      const result = await fetchUserById(userId);
-
-      // Assert
-      expect(result).toEqual(expectedUser);
-    });
-  });
-
-  describe('given an empty user ID', () => {
-    it('rejects with a validation error', async () => {
-      // Arrange - no server setup needed, validation happens before fetch
-
-      // Act & Assert
-      await expect(fetchUserById('')).rejects.toThrow('User ID required');
-    });
-  });
-
-  describe('given a non-existent user ID', () => {
-    it('rejects with an error containing the status code', async () => {
-      // Arrange
-      const userId = chance.guid();
-      server.use(
-        http.get(`/api/users/${userId}`, () => {
-          return new HttpResponse(null, { status: 404 });
-        })
-      );
-
-      // Act & Assert
-      await expect(fetchUserById(userId)).rejects.toThrow(
-        'Failed to fetch user: 404'
-      );
-    });
-  });
-
-  describe('given an invalid response shape', () => {
-    it('rejects with a validation error', async () => {
-      // Arrange
-      const userId = chance.guid();
-      server.use(
-        http.get(`/api/users/${userId}`, () => {
-          return HttpResponse.json({ invalid: 'data' });
-        })
-      );
-
-      // Act & Assert
-      await expect(fetchUserById(userId)).rejects.toThrow();
-    });
-  });
-});
-
-// ❌ Bad - implementation-focused, hardcoded values, duplicated test data
-describe('fetchUserById', () => {
-  it('works', async () => {
-    const user = { id: '123', name: 'Alice' };
-    server.use(
-      http.get('/api/users/123', () => HttpResponse.json(user))
-    );
-    const result = await fetchUserById('123'); // duplicated '123' across arrange/act/assert
-    expect(result).toEqual(user);
-  });
-});
-```
-
-**Rules:**
-- Tests are executable documentation — describe behavior, not implementation
-- Name `describe` blocks for features/scenarios, not function names
-- Name `it` blocks as specifications that read as complete sentences
-- Use nested `describe` blocks for "given/when" context
-- Use Chance.js to generate test fixtures — avoid hardcoded test data
-- Extract test data to constants — never duplicate values across arrange/act/assert
-- Use Vitest (never Jest)
-- Mock HTTP with MSW (never mock fetch directly)
-- Follow Arrange-Act-Assert pattern
-- Tests must be deterministic — same result every run
-- Reset handlers between tests for isolation
-- Avoid conditional logic in tests unless absolutely necessary
-- Ensure all code paths have corresponding tests
-- Test happy paths, unhappy paths, and edge cases
-- Never modify tests to pass without understanding root cause
+- Describe behavior, not implementation. Name `it` blocks as specifications that read as complete sentences, so a failure report states what broke.
+- Use Chance.js to generate fixtures and extract each generated value to a variable, so it is never duplicated across arrange and assert.
+- Use Vitest, never Jest — Jest globals will not resolve against the configured runner.
+- Mock HTTP with MSW, never `fetch` directly. A direct `fetch` mock asserts on the call rather than the contract, so it keeps passing after the request shape changes.
+- Reset MSW handlers between tests, because a handler left registered makes the next test pass for the wrong reason.
+- Tests shall be deterministic and isolated — same result every run, no shared state, because a failure that depends on execution order is not reproducible and gets ignored.
+- Test happy paths, unhappy paths, and edge cases; every conditional path needs a meaningful assertion.
+- Never modify a test to make it pass without understanding the root cause. A test changed to match broken behavior removes the signal that something regressed.
 
 ## Dependencies
 
 - Use latest LTS Node.js — check with `nvm ls-remote --lts`, update `.nvmrc`
-- Pin ALL dependencies to exact versions (no ^ or ~)
-- Use explicit version numbers when adding new dependencies
+- Pin all dependencies to exact versions, with no `^` or `~`. Renovate (`renovate.json`) proposes upgrades as reviewable pull requests, and a range defeats that by letting the installed tree drift without a diff.
 - Search npm for latest stable version before adding
 - Run `npm audit` after any dependency change
 - Ensure `package-lock.json` is updated correctly
-- Use Renovate (configured via `renovate.json`) to keep dependencies current
+
+## Secrets and Environment Variables
+
+This is a fully static site with no server at runtime, so anything the browser needs is in the shipped bundle. Astro inlines every `import.meta.env.PUBLIC_*` value at build time: `PUBLIC_CF_BEACON_TOKEN` and `PUBLIC_GOOGLE_SITE_VERIFICATION_TOKEN` are public by design. Never put a credential behind a `PUBLIC_` prefix, and never read a non-public secret from client code. Build-time-only values such as `DOCS_GITHUB_TOKEN` stay out of the bundle because only `scripts/fetch-docs.sh` reads them.
 
 ## GitHub Actions
 
-- Validation must be automated via GitHub Actions and runnable locally the same way
+- Validation shall be automated via GitHub Actions and runnable locally the same way, so that a green local run predicts a green CI run
 - Validate all workflows using actionlint
 - Validate all YAML files using yamllint
-- Pin all 3rd party Actions to specific version or commit SHA
-- Keep all 3rd party Actions updated to latest version
+- Pin all third-party actions to an exact commit SHA with a version comment. A tag is mutable and can be repointed at new code, so a SHA is what makes the build reproducible and resistant to a compromised upstream release.
+- Keep all third-party actions updated to latest version
 
 ## Boundaries
 
-**✅ Always do:**
+**Always do:**
 - Run `nvm use` before any npm command
 - Write tests before implementation (TDD)
 - Run lint and tests after every change
 - Run full validation before commits
-- Use existing patterns from codebase
+- Use existing patterns from the codebase
 - Work in small increments
 - Use Context7 MCP tools for code generation and documentation
 
-**⚠️ Ask first:**
+**Ask first** — each of these changes something the whole team inherits without review of the reasoning:
 - Adding new dependencies
 - Changing project structure
 - Modifying GitHub Actions workflows
-- Database schema changes
 
-**🚫 Never do:**
+**Never do:**
 - Skip the TDD workflow
-- Store secrets in code (use environment variables)
+- Store secrets in code, or expose one through a `PUBLIC_` environment variable
 - Use Jest (use Vitest)
 - Mock fetch directly (use MSW)
 - Modify tests to pass without fixing root cause
 - Add dependencies without explicit version numbers
 - Use type assertions (`as Type`) on external/API data
+- Use the `'use client'` directive — it is a Next.js directive with no meaning in Astro, so it is silently inert and misleads the next reader into thinking the island is configured
